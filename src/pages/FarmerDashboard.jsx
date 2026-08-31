@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -8,6 +8,7 @@ import {
   mockWeather,
   mockPestMonitoring,
   mockAdvisories,
+  statesAndDistricts,
 } from '../data/mockData';
 import { detectCropDisease } from '../services/api';
 import {
@@ -58,11 +59,34 @@ export default function FarmerDashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
 
-  // Settings form state
-  const [farmerName, setFarmerName] = useState(user?.name || 'Sardar Rameshwar Singh');
-  const [preferredLang, setPreferredLang] = useState('en');
-  const [smsAlerts, setSmsAlerts] = useState(true);
+  // Settings form state with localStorage persistence
+  const [farmerName, setFarmerName] = useState(() => {
+    const saved = localStorage.getItem('farmerName');
+    return saved || user?.name || 'Sardar Rameshwar Singh';
+  });
+  const [preferredLang, setPreferredLang] = useState(() => {
+    const saved = localStorage.getItem('preferredLang');
+    return saved || 'en';
+  });
+  const [smsAlerts, setSmsAlerts] = useState(() => {
+    const saved = localStorage.getItem('smsAlerts');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
   const [settingsNotice, setSettingsNotice] = useState('');
+
+  // Settings Location - State, District, Village with localStorage persistence
+  const [selectedState, setSelectedState] = useState(() => {
+    const saved = localStorage.getItem('selectedState');
+    return saved || 'Punjab';
+  });
+  const [selectedDistrict, setSelectedDistrict] = useState(() => {
+    const saved = localStorage.getItem('selectedDistrict');
+    return saved || 'Ludhiana';
+  });
+  const [selectedVillage, setSelectedVillage] = useState(() => {
+    const saved = localStorage.getItem('selectedVillage');
+    return saved || 'Sector 4';
+  });
 
   // Handle Image Upload
   const handleImageChange = (e) => {
@@ -72,6 +96,36 @@ export default function FarmerDashboard() {
       setUploadedImagePreview(URL.createObjectURL(file));
     }
   };
+
+  // Load settings from localStorage on component mount
+  useEffect(() => {
+    try {
+      // Load all saved settings from localStorage
+      const savedFarmerName = localStorage.getItem('farmerName');
+      const savedLang = localStorage.getItem('preferredLang');
+      const savedSmsAlerts = localStorage.getItem('smsAlerts');
+      const savedState = localStorage.getItem('selectedState');
+      const savedDistrict = localStorage.getItem('selectedDistrict');
+      const savedVillage = localStorage.getItem('selectedVillage');
+
+      if (savedFarmerName) setFarmerName(savedFarmerName);
+      if (savedLang) setPreferredLang(savedLang);
+      if (savedSmsAlerts) setSmsAlerts(JSON.parse(savedSmsAlerts));
+      if (savedState) setSelectedState(savedState);
+      if (savedDistrict) setSelectedDistrict(savedDistrict);
+      if (savedVillage) setSelectedVillage(savedVillage);
+
+      console.log('Settings loaded from localStorage:', {
+        farmerName: savedFarmerName,
+        lang: savedLang,
+        state: savedState,
+        district: savedDistrict,
+        village: savedVillage,
+      });
+    } catch (error) {
+      console.error('Error loading settings from localStorage:', error);
+    }
+  }, []);
 
   // Handle Quick Crop Health Analysis
   const handleQuickAnalyze = async (e) => {
@@ -89,6 +143,38 @@ export default function FarmerDashboard() {
 
     if (res.success) {
       setAnalysisResult(res.data);
+    }
+  };
+
+  // Handle Save Settings - Persist to localStorage
+  const handleSaveSettings = (e) => {
+    e.preventDefault();
+    
+    try {
+      // Save to localStorage
+      localStorage.setItem('farmerName', farmerName);
+      localStorage.setItem('preferredLang', preferredLang);
+      localStorage.setItem('smsAlerts', JSON.stringify(smsAlerts));
+      localStorage.setItem('selectedState', selectedState);
+      localStorage.setItem('selectedDistrict', selectedDistrict);
+      localStorage.setItem('selectedVillage', selectedVillage);
+      
+      console.log('Settings saved to localStorage:', {
+        farmerName,
+        preferredLang,
+        smsAlerts,
+        selectedState,
+        selectedDistrict,
+        selectedVillage,
+      });
+      
+      // Show success message
+      setSettingsNotice('✓ Settings saved successfully!');
+      setTimeout(() => setSettingsNotice(''), 3000);
+    } catch (error) {
+      console.error('Error saving settings to localStorage:', error);
+      setSettingsNotice('❌ Error saving settings. Check browser console.');
+      setTimeout(() => setSettingsNotice(''), 3000);
     }
   };
 
@@ -207,7 +293,7 @@ export default function FarmerDashboard() {
                   <span className="welcome-tag">SMART AGRICULTURE DASHBOARD</span>
                   <h1 className="welcome-title">Welcome back, {user?.name || farmerName}! 👋</h1>
                   <p className="welcome-sub">
-                    Field Location: <strong>{locationInput}</strong> • Today: <strong>31 Aug 2026</strong>
+                    Field Location: <strong>{selectedVillage}, {selectedDistrict}, {selectedState}</strong> • Today: <strong>31 Aug 2026</strong>
                   </p>
                   <div className="welcome-badge-box mt-12">
                     <span className="status-pulse pulse-green"></span>
@@ -685,11 +771,7 @@ export default function FarmerDashboard() {
 
               <div className="dash-card" style={{ maxWidth: '680px' }}>
                 <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setSettingsNotice('Settings saved successfully!');
-                    setTimeout(() => setSettingsNotice(''), 2000);
-                  }}
+                  onSubmit={handleSaveSettings}
                   className="validation-form"
                 >
                   <div className="form-group">
@@ -703,12 +785,47 @@ export default function FarmerDashboard() {
                   </div>
 
                   <div className="form-group">
-                    <label>Default Field Location</label>
+                    <label>State</label>
+                    <select
+                      value={selectedState}
+                      onChange={(e) => {
+                        setSelectedState(e.target.value);
+                        // Reset district to first available district of new state
+                        setSelectedDistrict(statesAndDistricts[e.target.value][0]);
+                      }}
+                      className="form-input"
+                    >
+                      {Object.keys(statesAndDistricts).map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>District</label>
+                    <select
+                      value={selectedDistrict}
+                      onChange={(e) => setSelectedDistrict(e.target.value)}
+                      className="form-input"
+                    >
+                      {statesAndDistricts[selectedState].map((district) => (
+                        <option key={district} value={district}>
+                          {district}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Village / Sector</label>
                     <input
                       type="text"
                       className="form-input"
-                      value={locationInput}
-                      onChange={(e) => setLocationInput(e.target.value)}
+                      value={selectedVillage}
+                      onChange={(e) => setSelectedVillage(e.target.value)}
+                      placeholder="Enter your village or sector name"
                     />
                   </div>
 
