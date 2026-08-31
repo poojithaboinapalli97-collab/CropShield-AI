@@ -10,6 +10,11 @@ import {
   AlertTriangle,
   Info,
   ArrowLeft,
+  CheckCircle2,
+  Tractor,
+  Briefcase,
+  Stethoscope,
+  Sparkles,
 } from 'lucide-react';
 
 export default function AuthPage() {
@@ -30,6 +35,13 @@ export default function AuthPage() {
   const [regConfirmPassword, setRegConfirmPassword] = useState('');
   const [regRole, setRegRole] = useState('Farmer');
   const [regError, setRegError] = useState('');
+
+  // Quick Fill Demo Credentials
+  const handleQuickFill = () => {
+    setLoginName('Sardar Rameshwar Singh');
+    setLoginPassword('demo123');
+    setLoginError('');
+  };
 
   // Handle Login Submit
   const handleLoginSubmit = (e) => {
@@ -79,200 +91,280 @@ export default function AuthPage() {
 
   return (
     <div className="auth-page-container">
-      <div className="auth-card-single">
-        {/* TOP BRAND HEADER (TITLE NAME ONLY) */}
-        <div className="auth-card-header-center">
-          <div className="auth-logo-row">
-            <div className="brand-icon-wrapper-large">
-              <Sprout size={28} />
-            </div>
-            <div>
-              <h1 className="auth-brand-name-title">
-                CropShield <span className="brand-ai">AI</span>
-              </h1>
-              <span className="brand-sih-tag">SIH 2026 • SIH26131</span>
-            </div>
+      {/* WHITE BOX 1: BRAND HEADER CARD */}
+      <div className="auth-white-card auth-brand-header-card">
+        <div className="auth-brand-badge-row">
+          <span className="brand-sih-tag-pill">SIH 2026 • Problem Statement SIH26131</span>
+        </div>
+        <div className="auth-logo-center">
+          <div className="brand-icon-wrapper-large">
+            <Sprout size={32} />
           </div>
-          <p className="auth-tagline-subtitle">
-            Early Detection. Smarter Decisions. Healthier Crops.
-          </p>
+          <div>
+            <h1 className="auth-brand-title">
+              CropShield <span className="brand-ai">AI</span>
+            </h1>
+          </div>
+        </div>
+        <p className="auth-tagline-subtitle">
+          Early Detection • Smarter Decisions • Healthier Crops
+        </p>
+      </div>
+
+      {/* WHITE BOX 2: DEMO DISCLAIMER CARD */}
+      <div className="auth-white-card auth-info-banner-card">
+        <div className="info-banner-content">
+          <Info size={18} className="icon-emerald-spin" />
+          <span>
+            <strong>SIH Prototype Mode:</strong> Instant access demo enabled. Switch role or fill details to test.
+          </span>
+        </div>
+      </div>
+
+      {/* WHITE BOX 3: MAIN FORM & TABS CARD */}
+      <div className="auth-white-card auth-main-form-card">
+        {/* MODE TOGGLE TABS */}
+        <div className="auth-tabs-header-white">
+          <button
+            className={`auth-tab-btn-white ${mode === 'login' ? 'active' : ''}`}
+            onClick={() => {
+              setMode('login');
+              setLoginError('');
+              setRegError('');
+            }}
+          >
+            <LogIn size={18} /> Sign In
+          </button>
+          <button
+            className={`auth-tab-btn-white ${mode === 'register' ? 'active' : ''}`}
+            onClick={() => {
+              setMode('register');
+              setLoginError('');
+              setRegError('');
+            }}
+          >
+            <UserPlus size={18} /> Create Account
+          </button>
         </div>
 
-        {/* AUTH FORM CONTAINER */}
-        <div className="auth-form-centered-body">
-          <div className="auth-demo-disclaimer-center">
-            <Info size={14} className="icon-amber" />
-            <span>SIH Prototype Demo Authentication</span>
-          </div>
+        {/* MODE 1: LOGIN FORM */}
+        {mode === 'login' && (
+          <div className="auth-form-body">
+            <div className="auth-form-title-group">
+              <h2>Welcome Back</h2>
+              <p>Sign in to access your crop health dashboard & risk alerts</p>
+            </div>
 
-          {/* MODE TOGGLE TABS */}
-          <div className="auth-tabs-header">
-            <button
-              className={`auth-tab-btn ${mode === 'login' ? 'active' : ''}`}
-              onClick={() => { setMode('login'); setLoginError(''); setRegError(''); }}
-            >
-              <LogIn size={16} /> Login
-            </button>
-            <button
-              className={`auth-tab-btn ${mode === 'register' ? 'active' : ''}`}
-              onClick={() => { setMode('register'); setLoginError(''); setRegError(''); }}
-            >
-              <UserPlus size={16} /> Create Account
-            </button>
-          </div>
+            {loginError && (
+              <div className="notice-banner banner-danger mb-12">
+                <AlertTriangle size={16} /> {loginError}
+              </div>
+            )}
 
-          {/* MODE 1: LOGIN FORM */}
-          {mode === 'login' && (
-            <div className="auth-form-body">
-              <div className="auth-form-title-group">
-                <h2>Welcome Back to CropShield AI</h2>
-                <p>Enter your credentials to access your smart farmer dashboard</p>
+            <form onSubmit={handleLoginSubmit} className="auth-form">
+              <div className="form-group">
+                <label className="form-label">Full Name</label>
+                <div className="input-with-icon">
+                  <User size={18} className="input-icon" />
+                  <input
+                    type="text"
+                    className="form-input icon-padded"
+                    placeholder="e.g. Sardar Rameshwar Singh"
+                    value={loginName}
+                    onChange={(e) => setLoginName(e.target.value)}
+                  />
+                </div>
               </div>
 
-              {loginError && (
-                <div className="notice-banner banner-danger mb-12">
-                  <AlertTriangle size={16} /> {loginError}
+              <div className="form-group">
+                <label className="form-label">Password</label>
+                <div className="input-with-icon">
+                  <Lock size={18} className="input-icon" />
+                  <input
+                    type="password"
+                    className="form-input icon-padded"
+                    placeholder="Enter demo password"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                  />
                 </div>
-              )}
+              </div>
 
-              <form onSubmit={handleLoginSubmit} className="auth-form">
-                <div className="form-group">
-                  <label className="form-label">Full Name</label>
-                  <div className="input-with-icon">
-                    <User size={16} className="input-icon" />
-                    <input
-                      type="text"
-                      className="form-input icon-padded"
-                      placeholder="e.g. Sardar Rameshwar Singh"
-                      value={loginName}
-                      onChange={(e) => setLoginName(e.target.value)}
-                    />
+              {/* DEMO CREDENTIALS QUICK FILL WHITE CARD */}
+              <div className="demo-credentials-card-white">
+                <div className="demo-credentials-header">
+                  <Sparkles size={16} className="icon-amber" />
+                  <strong>Demo Account Credentials</strong>
+                </div>
+                <div className="demo-credentials-details">
+                  <p>
+                    Name: <code>Sardar Rameshwar Singh</code>
+                  </p>
+                  <p>
+                    Password: <code>demo123</code>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="quick-fill-btn"
+                  onClick={handleQuickFill}
+                >
+                  ⚡ Auto-Fill Demo Credentials
+                </button>
+              </div>
+
+              <button type="submit" className="primary-btn-sm auth-submit-btn">
+                <LogIn size={20} /> Login to CropShield AI
+              </button>
+
+              <div className="auth-switch-prompt">
+                <span>New to CropShield AI?</span>
+                <button
+                  type="button"
+                  className="auth-inline-link"
+                  onClick={() => setMode('register')}
+                >
+                  Create an account &rarr;
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* MODE 2: CREATE ACCOUNT FORM */}
+        {mode === 'register' && (
+          <div className="auth-form-body">
+            <div className="auth-form-title-group">
+              <h2>Join CropShield AI</h2>
+              <p>Select your role and create an account for risk forecasting</p>
+            </div>
+
+            {regError && (
+              <div className="notice-banner banner-danger mb-12">
+                <AlertTriangle size={16} /> {regError}
+              </div>
+            )}
+
+            <form onSubmit={handleRegisterSubmit} className="auth-form">
+              <div className="form-group">
+                <label className="form-label">Full Name *</label>
+                <div className="input-with-icon">
+                  <User size={18} className="input-icon" />
+                  <input
+                    type="text"
+                    className="form-input icon-padded"
+                    placeholder="e.g. Gurpreet Singh"
+                    value={regName}
+                    onChange={(e) => setRegName(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* ROLE SELECTION WHITE BOX CARDS */}
+              <div className="form-group">
+                <label className="form-label">Select Your Role</label>
+                <div className="role-selector-grid">
+                  <div
+                    className={`role-box-card ${
+                      regRole === 'Farmer' ? 'selected' : ''
+                    }`}
+                    onClick={() => setRegRole('Farmer')}
+                  >
+                    <div className="role-card-header">
+                      <Tractor size={22} className="role-icon" />
+                      {regRole === 'Farmer' && (
+                        <CheckCircle2 size={16} className="role-check-icon" />
+                      )}
+                    </div>
+                    <div className="role-card-title">Farmer</div>
+                    <div className="role-card-desc">AI Scan & Dashboard</div>
+                  </div>
+
+                  <div
+                    className={`role-box-card ${
+                      regRole === 'Extension Worker' ? 'selected' : ''
+                    }`}
+                    onClick={() => setRegRole('Extension Worker')}
+                  >
+                    <div className="role-card-header">
+                      <Briefcase size={22} className="role-icon" />
+                      {regRole === 'Extension Worker' && (
+                        <CheckCircle2 size={16} className="role-check-icon" />
+                      )}
+                    </div>
+                    <div className="role-card-title">Extension Worker</div>
+                    <div className="role-card-desc">Field Reports & Survey</div>
+                  </div>
+
+                  <div
+                    className={`role-box-card ${
+                      regRole === 'Agriculture Expert' ? 'selected' : ''
+                    }`}
+                    onClick={() => setRegRole('Agriculture Expert')}
+                  >
+                    <div className="role-card-header">
+                      <Stethoscope size={22} className="role-icon" />
+                      {regRole === 'Agriculture Expert' && (
+                        <CheckCircle2 size={16} className="role-check-icon" />
+                      )}
+                    </div>
+                    <div className="role-card-title">Agri Expert</div>
+                    <div className="role-card-desc">Validation & Advisory</div>
                   </div>
                 </div>
+              </div>
 
+              <div className="form-row-2">
                 <div className="form-group">
-                  <label className="form-label">Password</label>
+                  <label className="form-label">Create Password *</label>
                   <div className="input-with-icon">
-                    <Lock size={16} className="input-icon" />
+                    <Lock size={18} className="input-icon" />
                     <input
                       type="password"
                       className="form-input icon-padded"
-                      placeholder="Enter demo password"
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
+                      placeholder="Create password"
+                      value={regPassword}
+                      onChange={(e) => setRegPassword(e.target.value)}
                     />
                   </div>
                 </div>
 
-                <div className="demo-credentials-box">
-                  <strong>Demo Account Credentials:</strong>
-                  <p>Name: <code>Sardar Rameshwar Singh</code> | Password: <code>demo123</code></p>
+                <div className="form-group">
+                  <label className="form-label">Confirm Password *</label>
+                  <div className="input-with-icon">
+                    <Lock size={18} className="input-icon" />
+                    <input
+                      type="password"
+                      className="form-input icon-padded"
+                      placeholder="Confirm password"
+                      value={regConfirmPassword}
+                      onChange={(e) => setRegConfirmPassword(e.target.value)}
+                    />
+                  </div>
                 </div>
-
-                <button type="submit" className="primary-btn-sm auth-submit-btn">
-                  <LogIn size={18} /> Login to CropShield AI
-                </button>
-
-                <div className="auth-switch-prompt">
-                  <span>Don't have an account?</span>
-                  <button type="button" className="auth-inline-link" onClick={() => setMode('register')}>
-                    Create Account &rarr;
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-
-          {/* MODE 2: CREATE ACCOUNT FORM */}
-          {mode === 'register' && (
-            <div className="auth-form-body">
-              <div className="auth-form-title-group">
-                <h2>Create Your CropShield Account</h2>
-                <p>Join India's AI-powered crop health & risk forecasting network</p>
               </div>
 
-              {regError && (
-                <div className="notice-banner banner-danger mb-12">
-                  <AlertTriangle size={16} /> {regError}
-                </div>
-              )}
+              <div className="auth-button-group">
+                <button
+                  type="submit"
+                  className="primary-btn-sm auth-submit-btn"
+                >
+                  <UserPlus size={20} /> Create Account
+                </button>
 
-              <form onSubmit={handleRegisterSubmit} className="auth-form">
-                <div className="form-group">
-                  <label className="form-label">Full Name *</label>
-                  <div className="input-with-icon">
-                    <User size={16} className="input-icon" />
-                    <input
-                      type="text"
-                      className="form-input icon-padded"
-                      placeholder="e.g. Gurpreet Singh"
-                      value={regName}
-                      onChange={(e) => setRegName(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Role</label>
-                  <select
-                    value={regRole}
-                    onChange={(e) => setRegRole(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="Farmer">Farmer</option>
-                    <option value="Extension Worker">Extension Worker</option>
-                    <option value="Agriculture Expert">Agriculture Expert</option>
-                  </select>
-                </div>
-
-                <div className="form-row-2">
-                  <div className="form-group">
-                    <label className="form-label">Create Password *</label>
-                    <div className="input-with-icon">
-                      <Lock size={16} className="input-icon" />
-                      <input
-                        type="password"
-                        className="form-input icon-padded"
-                        placeholder="Create password"
-                        value={regPassword}
-                        onChange={(e) => setRegPassword(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Confirm Password *</label>
-                    <div className="input-with-icon">
-                      <Lock size={16} className="input-icon" />
-                      <input
-                        type="password"
-                        className="form-input icon-padded"
-                        placeholder="Confirm password"
-                        value={regConfirmPassword}
-                        onChange={(e) => setRegConfirmPassword(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="auth-button-group">
-                  <button type="submit" className="primary-btn-sm auth-submit-btn">
-                    <UserPlus size={18} /> Create Account
-                  </button>
-
-                  <button
-                    type="button"
-                    className="secondary-btn-sm"
-                    onClick={() => setMode('login')}
-                  >
-                    <ArrowLeft size={16} /> Back to Login
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-        </div>
+                <button
+                  type="button"
+                  className="secondary-btn-sm"
+                  onClick={() => setMode('login')}
+                >
+                  <ArrowLeft size={16} /> Back to Login
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+

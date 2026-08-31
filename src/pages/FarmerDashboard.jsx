@@ -128,19 +128,39 @@ export default function FarmerDashboard() {
       </div>
 
       <div className="dashboard-container">
-        {/* SIDEBAR NAVIGATION */}
+        {/* SIDEBAR NAVIGATION - FARMER THEMED LEFT SIDE */}
         <aside className={`dash-sidebar ${sidebarOpen ? 'sidebar-mobile-open' : ''}`}>
           <div className="sidebar-farmer-profile">
             <div className="profile-avatar-wrapper">
               <img
-                src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=200&q=80"
+                src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=200&q=80"
                 alt="Farmer Profile Avatar"
                 className="profile-img-avatar"
               />
+              <span className="avatar-online-dot"></span>
             </div>
             <div className="profile-info">
               <h4 className="profile-name">{user?.name || farmerName}</h4>
-              <span className="profile-loc">Ludhiana, Punjab</span>
+              <span className="profile-loc">📍 Ludhiana, Punjab</span>
+              <div className="profile-farm-badge">
+                <span>🌾 12.5 Acres Wheat Farm</span>
+              </div>
+            </div>
+          </div>
+
+          {/* FARMER QUICK STATUS WIDGET IN SIDEBAR */}
+          <div className="sidebar-farm-widget">
+            <div className="widget-row">
+              <span className="widget-lbl">Active Crop</span>
+              <strong className="widget-val text-emerald">Wheat (Flowering)</strong>
+            </div>
+            <div className="widget-row">
+              <span className="widget-lbl">Crop Health Score</span>
+              <strong className="widget-val text-gold">94% Healthy</strong>
+            </div>
+            <div className="widget-row">
+              <span className="widget-lbl">Soil Moisture</span>
+              <strong className="widget-val text-sky">65% Optimal</strong>
             </div>
           </div>
 
