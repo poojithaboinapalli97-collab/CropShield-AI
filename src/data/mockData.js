@@ -1,0 +1,566 @@
+/**
+ * CropShield AI - Mock Dataset
+ * Problem Statement: SIH26131 (Smart Agriculture & Crop Health)
+ */
+
+export const mockCropDemoResults = {
+  Tomato: {
+    condition: 'Tomato Early Blight (Alternaria solani)',
+    confidence: 87,
+    riskLevel: 'High',
+    affectedArea: '34%',
+    explanation: 'Concentric ring lesions and chlorotic yellowing observed on lower foliage. Fungal spore germination accelerated by warm days and high night dew.',
+    suggestedNextStep: 'Isolate infected lower leaves and implement organic moisture management.',
+    sampleImage: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 22, y: 24, width: 36, height: 38, label: 'Early Blight Lesion', confidence: 0.88 },
+      { id: 2, x: 58, y: 44, width: 30, height: 32, label: 'Concentric Ring', confidence: 0.85 },
+    ],
+  },
+  Cotton: {
+    condition: 'Cotton Leaf Curl Virus (CLCuV)',
+    confidence: 84,
+    riskLevel: 'Medium',
+    affectedArea: '22%',
+    explanation: 'Upward leaf cupping and vein thickening detected. Whitefly vector activity observed in nearby field sectors.',
+    suggestedNextStep: 'Install yellow sticky traps and monitor whitefly population count.',
+    sampleImage: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 28, y: 32, width: 42, height: 44, label: 'Leaf Cupping', confidence: 0.86 },
+    ],
+  },
+  Rice: {
+    condition: 'Rice Paddy Blast (Magnaporthe oryzae)',
+    confidence: 91,
+    riskLevel: 'Critical',
+    affectedArea: '45%',
+    explanation: 'Spindle-shaped diamond lesions with greyish centers spotted on leaf blades. High moisture level increases neck rot risk.',
+    suggestedNextStep: 'Regulate standing water level and avoid excessive nitrogen application.',
+    sampleImage: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 18, y: 18, width: 48, height: 60, label: 'Spindle Blast Spot', confidence: 0.92 },
+    ],
+  },
+  Maize: {
+    condition: 'Fall Armyworm Symptoms (Spodoptera frugiperda)',
+    confidence: 89,
+    riskLevel: 'Medium',
+    affectedArea: '18%',
+    explanation: 'Pin-hole feeding damage and ragging on whorl leaves. Early instar larvae presence suspected.',
+    suggestedNextStep: 'Handpick larvae in small plots and apply neem seed kernel extract.',
+    sampleImage: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 15, y: 20, width: 50, height: 45, label: 'Whorl Damage', confidence: 0.90 },
+    ],
+  },
+  Chilli: {
+    condition: 'Chilli Leaf Curl & Thrips Distortion',
+    confidence: 86,
+    riskLevel: 'High',
+    affectedArea: '30%',
+    explanation: 'Boat-shaped upward curling of leaves with reduced leaf lamina size caused by thrips infestation.',
+    suggestedNextStep: 'Apply blue sticky traps and spray neem-based botanical formulation.',
+    sampleImage: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 25, y: 25, width: 40, height: 40, label: 'Thrips Cupping', confidence: 0.87 },
+    ],
+  },
+  Other: {
+    condition: 'General Leaf Spot / Nutrient Deficiency',
+    confidence: 82,
+    riskLevel: 'Low',
+    affectedArea: '12%',
+    explanation: 'Minor chlorotic spots observed. Symptoms resemble mild potassium deficiency rather than virulent pathogen.',
+    suggestedNextStep: 'Soil testing recommended before applying micronutrient spray.',
+    sampleImage: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 30, y: 30, width: 35, height: 35, label: 'Chlorotic Spot', confidence: 0.83 },
+    ],
+  },
+};
+
+export const mockDiseases = {
+  tomato_blight: {
+    id: 'sample-01',
+    crop: 'Tomato',
+    diseaseName: 'Early Blight',
+    scientificName: 'Alternaria solani',
+    confidence: 94.6,
+    severity: 'High',
+    affectedArea: '32%',
+    status: 'AI Confirmed',
+    sampleImage: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 20, y: 25, width: 35, height: 40, label: 'Early Blight (Lesion)', confidence: 0.95 },
+      { id: 2, x: 60, y: 45, width: 28, height: 30, label: 'Concentric Ring Pattern', confidence: 0.92 },
+    ],
+    symptoms: [
+      'Dark brown to black spots with concentric rings on lower leaves',
+      'Yellow halo surrounding necrotic lesions',
+      'Premature leaf drop leading to sunscald on tomato fruit',
+    ],
+    organicRemedies: [
+      'Spray Neem Oil (5ml/L water) every 7 days',
+      'Apply Trichoderma viride bio-fungicide to soil',
+      'Remove and destroy infected lower branches to reduce spore load',
+    ],
+    chemicalSolutions: [
+      'Mancozeb 75% WP @ 2.5g/L water',
+      'Copper Oxychloride 50% WP @ 3.0g/L water',
+      'Apply systemic fungicide Difenoconazole if infection exceeds 40%',
+    ],
+    preventiveAdvice: 'Maintain proper plant spacing (45cm x 60cm) to maximize airflow and avoid overhead drip irrigation.',
+    urgencyDays: 2,
+  },
+
+  rice_blast: {
+    id: 'sample-02',
+    crop: 'Rice / Paddy',
+    diseaseName: 'Paddy Blast',
+    scientificName: 'Magnaporthe oryzae',
+    confidence: 91.8,
+    severity: 'Critical',
+    affectedArea: '48%',
+    status: 'High Outbreak Alert',
+    sampleImage: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 15, y: 15, width: 50, height: 65, label: 'Spindle-shaped Leaf Spot', confidence: 0.93 },
+      { id: 2, x: 70, y: 30, width: 20, height: 40, label: 'Neck Rot Risk', confidence: 0.89 },
+    ],
+    symptoms: [
+      'Eye-shaped or spindle-shaped lesions with whitish-grey center and reddish-brown margin',
+      'Nodal blackening and neck rotting leading to empty grains (panicle blast)',
+    ],
+    organicRemedies: [
+      'Spray Pseudomonas fluorescens @ 10g/L water',
+      'Apply Panchagavya 3% spray during early morning hours',
+    ],
+    chemicalSolutions: [
+      'Tricyclazole 75% WP @ 0.6g/L water',
+      'Isoprothiolane 40% EC @ 1.5ml/L water during booting stage',
+    ],
+    preventiveAdvice: 'Avoid excessive nitrogenous fertilizer application. Keep field flooded with light water layer.',
+    urgencyDays: 1,
+  },
+
+  wheat_rust: {
+    id: 'sample-03',
+    crop: 'Wheat',
+    diseaseName: 'Stripe / Yellow Rust',
+    scientificName: 'Puccinia striiformis',
+    confidence: 96.2,
+    severity: 'High',
+    affectedArea: '28%',
+    status: 'AI Confirmed',
+    sampleImage: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 25, y: 10, width: 45, height: 75, label: 'Yellow Pustule Stripes', confidence: 0.97 },
+    ],
+    symptoms: [
+      'Bright yellow powdery pustules arranged in linear stripes on leaf surface',
+      'Chlorotic stripes turning dark brown as season progresses',
+    ],
+    organicRemedies: [
+      'Dusting sulfur @ 15 kg/hectare in early morning mist',
+      'Spray fermented cow urine + sour buttermilk solution (1:10 ratio)',
+    ],
+    chemicalSolutions: [
+      'Propiconazole 25% EC @ 1.0ml/L water',
+      'Tebuconazole 250 EC @ 1.2ml/L water',
+    ],
+    preventiveAdvice: 'Monitor relative humidity above 85% with temperatures around 10-15°C.',
+    urgencyDays: 3,
+  },
+
+  cotton_curl: {
+    id: 'sample-04',
+    crop: 'Cotton',
+    diseaseName: 'Cotton Leaf Curl Virus (CLCuV)',
+    scientificName: 'Begomovirus complex',
+    confidence: 88.9,
+    severity: 'Medium',
+    affectedArea: '19%',
+    status: 'Pending Expert Validation',
+    sampleImage: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 30, y: 35, width: 40, height: 45, label: 'Upward Leaf Cupping', confidence: 0.90 },
+      { id: 2, x: 10, y: 55, width: 25, height: 30, label: 'Vein Thickening', confidence: 0.86 },
+    ],
+    symptoms: [
+      'Upward or downward curling of leaf margins',
+      'Thickening of main veins on leaf undersides with enation outgrowths',
+      'Stunted plant growth and reduced boll formation',
+    ],
+    organicRemedies: [
+      'Spray Yellow Sticky Traps (10 traps/acre) for whitefly control',
+      'Spray Agniastra bio-pesticide (5% solution)',
+    ],
+    chemicalSolutions: [
+      'Imidacloprid 17.8% SL @ 0.3ml/L to control vector Whitefly (Bemisia tabaci)',
+      'Diafenthiuron 50% WP @ 1.2g/L water',
+    ],
+    preventiveAdvice: 'Eradicate weed hosts (Abutilon indicum) near field borders.',
+    urgencyDays: 4,
+  },
+
+  healthy_maize: {
+    id: 'sample-05',
+    crop: 'Maize / Corn',
+    diseaseName: 'Healthy Crop (No Disease Detected)',
+    scientificName: 'Zea mays (Optimal Health)',
+    confidence: 98.4,
+    severity: 'None',
+    affectedArea: '0%',
+    status: 'Optimal Health',
+    sampleImage: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
+    boundingBoxes: [
+      { id: 1, x: 10, y: 10, width: 80, height: 80, label: 'Vigorous Chlorophyll', confidence: 0.99 },
+    ],
+    symptoms: [
+      'Deep green pigmentation across all leaf blades',
+      'Strong central stalk with no lesions or pest bite marks',
+    ],
+    organicRemedies: [
+      'Continue regular soil organic matter addition (FYM @ 10 tonnes/ha)',
+    ],
+    chemicalSolutions: [
+      'No chemical intervention required.',
+    ],
+    preventiveAdvice: 'Maintain scheduled nitrogen fertigation during silking phase.',
+    urgencyDays: 0,
+  },
+};
+
+export const mockDashboardKPIs = {
+  overallHealthStatus: '85% Optimal',
+  healthStatusGrade: 'Good',
+  totalReportsFiled: 24,
+  activeAlertsCount: 3,
+  highRiskHotspotsCount: 2,
+};
+
+export const mockRecentAlerts = [
+  {
+    id: 'alt-001',
+    diseaseName: 'Stripe / Yellow Rust',
+    crop: 'Wheat (PBW 550)',
+    location: 'Ludhiana, Sector 4',
+    riskLevel: 'High',
+    date: 'Today, 10:30 AM',
+    actionRequired: 'Spray Propiconazole',
+  },
+  {
+    id: 'alt-002',
+    diseaseName: 'Paddy Blast Spores',
+    crop: 'Basmati Rice',
+    location: 'Karnal, Haryana',
+    riskLevel: 'Critical',
+    date: 'Today, 08:15 AM',
+    actionRequired: 'Tricyclazole 75% WP',
+  },
+  {
+    id: 'alt-003',
+    diseaseName: 'Whitefly Insect Surge',
+    crop: 'Cotton Plot B',
+    location: 'Bhatinda, Punjab',
+    riskLevel: 'Medium',
+    date: 'Yesterday, 04:45 PM',
+    actionRequired: 'Yellow Sticky Traps',
+  },
+  {
+    id: 'alt-004',
+    diseaseName: 'Early Blight Lesions',
+    crop: 'Tomato Polyhouse',
+    location: 'Nashik, Maharashtra',
+    riskLevel: 'Medium',
+    date: '28 Aug 2026',
+    actionRequired: 'Neem Oil Spray',
+  },
+];
+
+export const mockRecentReports = [
+  {
+    reportId: 'REP-2026-88912',
+    crop: 'Tomato (Heirloom)',
+    growthStage: 'Fruiting',
+    location: 'Pimplgaon, Nashik, MH',
+    diagnosis: 'Tomato Early Blight',
+    confidence: '87%',
+    riskLevel: 'High',
+    date: '31 Aug 2026',
+    status: 'Demo AI Analyzed',
+  },
+  {
+    reportId: 'REP-2026-88910',
+    crop: 'Cotton (Bt Cotton)',
+    growthStage: 'Vegetative',
+    location: 'Baramati, Pune, MH',
+    diagnosis: 'Cotton Leaf Curl Virus',
+    confidence: '84%',
+    riskLevel: 'Medium',
+    date: '30 Aug 2026',
+    status: 'Pending Expert Review',
+  },
+  {
+    reportId: 'REP-2026-88905',
+    crop: 'Rice (Basmati)',
+    growthStage: 'Flowering',
+    location: 'Karjat, Raigad, MH',
+    diagnosis: 'Paddy Leaf Blast',
+    confidence: '91%',
+    riskLevel: 'Critical',
+    date: '28 Aug 2026',
+    status: 'Agronomist Verified',
+  },
+  {
+    reportId: 'REP-2026-88899',
+    crop: 'Maize',
+    growthStage: 'Harvest',
+    location: 'Aurangabad, MH',
+    diagnosis: 'Fall Armyworm Damage',
+    confidence: '89%',
+    riskLevel: 'Medium',
+    date: '25 Aug 2026',
+    status: 'Demo AI Analyzed',
+  },
+];
+
+export const mockPestMonitoring = [
+  {
+    id: 'pest-01',
+    pestName: 'Whitefly (Bemisia tabaci)',
+    targetCrop: 'Cotton & Tomato',
+    infestationLevel: 'High (14 flies/leaf)',
+    recommendedControl: 'Imidacloprid 17.8% SL @ 0.3ml/L water',
+    lastObserved: 'Yesterday',
+  },
+  {
+    id: 'pest-02',
+    pestName: 'Fall Armyworm (Spodoptera frugiperda)',
+    targetCrop: 'Maize',
+    infestationLevel: 'Moderate (5% whorl damage)',
+    recommendedControl: 'Emamectin benzoate 5% SG @ 0.4g/L',
+    lastObserved: '3 days ago',
+  },
+  {
+    id: 'pest-03',
+    pestName: 'Brown Planthopper (BPH)',
+    targetCrop: 'Paddy Rice',
+    infestationLevel: 'Low',
+    recommendedControl: 'Maintain water level below tiller base',
+    lastObserved: '5 days ago',
+  },
+];
+
+export const mockAdvisories = [
+  {
+    id: 'adv-01',
+    title: 'PAU Wheat Yellow Rust Alert',
+    issuingBody: 'Punjab Agricultural University (PAU)',
+    date: '31 Aug 2026',
+    summary: 'High humidity & morning fog favor yellow rust spore dispersal across Ludhiana & Moga. Farmers advised to inspect field daily.',
+    urgent: true,
+  },
+  {
+    id: 'adv-02',
+    title: 'Paddy Blast Preventive Spray Schedule',
+    issuingBody: 'ICAR National Rice Research Institute',
+    date: '29 Aug 2026',
+    summary: 'Apply light flooded irrigation and spray Tricyclazole during booting stage for susceptible basmati varieties.',
+    urgent: false,
+  },
+];
+
+export const mockFarmerPlots = [
+  {
+    id: 'plot-101',
+    name: 'Wheat Sector Alpha',
+    location: 'Ludhiana, Punjab',
+    crop: 'Wheat (PBW 550)',
+    area: '4.5 Acres',
+    sowDate: '15 Nov 2025',
+    healthStatus: 'Warning',
+    lastScanDate: 'Yesterday, 4:20 PM',
+    threat: 'Stripe Rust Spores Detected',
+    riskScore: 72,
+  },
+  {
+    id: 'plot-102',
+    name: 'Paddy Field South',
+    location: 'Karnal, Haryana',
+    crop: 'Basmati Paddy',
+    area: '6.0 Acres',
+    sowDate: '20 Jun 2025',
+    healthStatus: 'Critical',
+    lastScanDate: 'Today, 09:15 AM',
+    threat: 'High Humidity Fungal Blast Risk',
+    riskScore: 88,
+  },
+  {
+    id: 'plot-103',
+    name: 'Tomato Polyhouse #2',
+    location: 'Nashik, Maharashtra',
+    crop: 'Tomato (Heirloom)',
+    area: '2.0 Acres',
+    sowDate: '05 Jan 2026',
+    healthStatus: 'Good',
+    lastScanDate: '3 days ago',
+    threat: 'Low Risk',
+    riskScore: 18,
+  },
+];
+
+export const mockWeather = {
+  current: {
+    temp: 29.4,
+    humidity: 86,
+    rainfall: 18.2, // mm
+    windSpeed: 14.5, // km/h
+    dewPoint: 24.1,
+    uvIndex: 7,
+    condition: 'Overcast & High Moisture',
+    district: 'Nashik District, Maharashtra',
+    riskLevel: 'High Risk (Fungal Dispersal)',
+  },
+  vulnerabilityIndices: {
+    fungalSpore: 84, // high
+    bacterialBlight: 65, // med-high
+    insectPest: 42, // med
+    rootRot: 78, // high
+  },
+  forecast7Days: [
+    { day: 'Mon', tempMax: 30, tempMin: 22, humidity: 88, riskScore: 82, dominantThreat: 'Fungal Leaf Spot' },
+    { day: 'Tue', tempMax: 31, tempMin: 23, humidity: 91, riskScore: 88, dominantThreat: 'Paddy Blast Spores' },
+    { day: 'Wed', tempMax: 28, tempMin: 21, humidity: 84, riskScore: 75, dominantThreat: 'Early Blight' },
+    { day: 'Thu', tempMax: 27, tempMin: 20, humidity: 76, riskScore: 54, dominantThreat: 'Aphid Surge' },
+    { day: 'Fri', tempMax: 29, tempMin: 21, humidity: 70, riskScore: 40, dominantThreat: 'Moderate' },
+    { day: 'Sat', tempMax: 32, tempMin: 23, humidity: 65, riskScore: 30, dominantThreat: 'Low Risk' },
+    { day: 'Sun', tempMax: 33, tempMin: 24, humidity: 62, riskScore: 25, dominantThreat: 'Low Risk' },
+  ],
+};
+
+export const mockRiskMapDistricts = [
+  {
+    id: 'dist-mh-nashik',
+    district: 'Nashik',
+    state: 'Maharashtra',
+    coords: { x: 35, y: 55 },
+    riskLevel: 'Medium',
+    riskScore: 58,
+    primaryCrop: 'Tomato & Grapes',
+    activeDisease: 'Downy Mildew & Early Blight',
+    affectedFarms: 890,
+    advisory: 'Unseasonal cloud cover detected. Ensure foliage aeration and preventative copper sprays.',
+  },
+  {
+    id: 'dist-pb-ludhiana',
+    district: 'Ludhiana',
+    state: 'Punjab',
+    coords: { x: 38, y: 22 }, // percentage placement on India SVG
+    riskLevel: 'High',
+    riskScore: 84,
+    primaryCrop: 'Wheat',
+    activeDisease: 'Stripe Rust',
+    affectedFarms: 1420,
+    advisory: 'High dew point coupled with night temperatures (12°C) accelerating Puccinia spore dispersal. Spray Propiconazole immediately.',
+  },
+  {
+    id: 'dist-ap-guntur',
+    district: 'Guntur',
+    state: 'Andhra Pradesh',
+    coords: { x: 52, y: 68 },
+    riskLevel: 'Critical',
+    riskScore: 92,
+    primaryCrop: 'Chilli & Paddy',
+    activeDisease: 'Black Thrips & Paddy Blast',
+    affectedFarms: 3100,
+    advisory: 'CRITICAL ALERT: Thrips outbreak spreading rapidly across 12 mandals. Biological control releases advised.',
+  },
+  {
+    id: 'dist-up-varanasi',
+    district: 'Varanasi',
+    state: 'Uttar Pradesh',
+    coords: { x: 62, y: 38 },
+    riskLevel: 'Medium',
+    riskScore: 62,
+    primaryCrop: 'Paddy & Vegetables',
+    affectedFarms: 1150,
+    advisory: 'Intermittent rains creating humid pockets. Drain stagnant water fields.',
+  },
+  {
+    id: 'dist-wb-hooghly',
+    district: 'Hooghly',
+    state: 'West Bengal',
+    coords: { x: 74, y: 46 },
+    riskLevel: 'High',
+    riskScore: 79,
+    primaryCrop: 'Potato & Rice',
+    activeDisease: 'Late Blight of Potato',
+    affectedFarms: 2240,
+    advisory: 'Foggy mornings favor Phytophthora infestans. Apply Cymoxanil + Mancozeb protective shield.',
+  },
+  {
+    id: 'dist-tn-thanjavur',
+    district: 'Thanjavur',
+    state: 'Tamil Nadu',
+    coords: { x: 48, y: 84 },
+    riskLevel: 'Low',
+    riskScore: 24,
+    primaryCrop: 'Paddy (Kuruvai)',
+    activeDisease: 'Minor Brown Planthopper',
+    affectedFarms: 310,
+    advisory: 'Favorable crop condition. Maintain regular monitoring.',
+  },
+];
+
+export const mockExpertQueue = [
+  {
+    scanId: 'CS-88912',
+    farmerName: 'Gurpreet Singh',
+    location: 'Moga, Punjab',
+    crop: 'Wheat',
+    aiPrediction: 'Yellow Rust',
+    aiConfidence: 89.2,
+    dateSubmitted: 'Today, 10:30 AM',
+    sampleImage: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80',
+    farmerNote: 'Yellow powder spreading fast on lower leaves after fog. Need urgent confirmation!',
+    status: 'Pending Review',
+  },
+  {
+    scanId: 'CS-88910',
+    farmerName: 'Ramesh Patil',
+    location: 'Sangli, Maharashtra',
+    crop: 'Cotton',
+    aiPrediction: 'Leaf Curl Virus',
+    aiConfidence: 84.5,
+    dateSubmitted: 'Today, 08:15 AM',
+    sampleImage: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&w=600&q=80',
+    farmerNote: 'Whiteflies seen under leaves. Is this viral curl or insect distortion?',
+    status: 'Pending Review',
+  },
+  {
+    scanId: 'CS-88905',
+    farmerName: 'Suresh Kumar',
+    location: 'Karnal, Haryana',
+    crop: 'Rice',
+    aiPrediction: 'Paddy Blast',
+    aiConfidence: 94.1,
+    dateSubmitted: 'Yesterday',
+    sampleImage: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=600&q=80',
+    farmerNote: 'Grey spindle marks on leaves',
+    status: 'Validated',
+    agronomistName: 'Dr. A. K. Sharma (PAU Agronomist)',
+    expertNotes: 'Confirmed Paddy Blast. Advised immediate Tricyclazole treatment.',
+  },
+];
+
+export const mockAdminStats = {
+  totalScans: 48920,
+  accuracyRate: 94.8, // %
+  validatedScans: 12450,
+  activeAlerts: 18,
+  agronomistsOnline: 34,
+  fastapiLatencyMs: 142,
+  modelName: 'YOLOv8x-CropShield-v3.pt',
+  regionalOutbreakIndex: 'Moderate-High (Northern & Western Belts)',
+};

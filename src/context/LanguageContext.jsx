@@ -1,0 +1,148 @@
+import React, { createContext, useContext, useState } from 'react';
+
+const translations = {
+  en: {
+    navHome: 'Home',
+    navDashboard: 'Farmer Dashboard',
+    navDetect: 'AI Disease Detection',
+    navWeather: 'Weather Risk',
+    navRiskMap: 'Risk Map',
+    navExpert: 'Expert Validation',
+    navAdmin: 'Admin Panel',
+    heroTag: 'SIH 2026 • PROBLEM STATEMENT SIH26131',
+    heroTitle: 'AI-Powered Early Crop Protection & Risk Forecasting',
+    heroDesc: 'Empowering Indian farmers with instant AI disease diagnosis, hyper-local microclimate risk modeling, and verified agronomist advisories.',
+    btnCheckCrop: 'Check Crop Health',
+    btnDashboard: 'View Dashboard',
+    disclaimerTitle: 'AI Transparency & Model Assurance',
+    disclaimerDesc: 'All predictions are computed using neural vision models (YOLOv8 architecture) calibrated with microclimate parameters. High-risk cases can be escalated directly to certified agronomists.',
+    statScans: 'Crops Scanned',
+    statAccuracy: 'Model Accuracy',
+    statDistricts: 'Districts Covered',
+    statResponse: 'Avg Response Time',
+    mockBadge: 'Demo Mode (FastAPI Ready)',
+  },
+  hi: {
+    navHome: 'मुख्य पृष्ठ',
+    navDashboard: 'किसान डैशबोर्ड',
+    navDetect: 'एआई रोग पहचान',
+    navWeather: 'मौसम जोखिम',
+    navRiskMap: 'जोखिम मानचित्र',
+    navExpert: 'विशेषज्ञ सत्यापन',
+    navAdmin: 'एडमिन पैनल',
+    heroTag: 'एसआईएच 2026 • समस्या कथन SIH26131',
+    heroTitle: 'एआई संचालित फसल सुरक्षा और मौसम जोखिम पूर्वानुमान',
+    heroDesc: 'भारतीय किसानों को त्वरित एआई फसल रोग निदान, सूक्ष्म जलवायु जोखिम मॉडल और कृषि विशेषज्ञों की सलाह से सशक्त बनाना।',
+    btnCheckCrop: 'फसल स्वास्थ्य जांचें',
+    btnDashboard: 'डैशबोर्ड देखें',
+    disclaimerTitle: 'एआई पारदर्शिता और मॉडल आश्वासन',
+    disclaimerDesc: 'सभी पूर्वानुमान YOLOv8 विज़न मॉडल द्वारा तैयार किए जाते हैं। उच्च जोखिम वाले मामलों की पुष्टि प्रमाणित कृषि वैज्ञानिकों द्वारा की जाती है।',
+    statScans: 'स्कैन की गई फसलें',
+    statAccuracy: 'मॉडल सटीकता',
+    statDistricts: 'कवर किए गए जिले',
+    statResponse: 'औसत प्रतिक्रिया समय',
+    mockBadge: 'डेमो मोड (FastAPI तैयार)',
+  },
+  mr: {
+    navHome: 'मुख्यपृष्ठ',
+    navDashboard: 'शेतकरी डॅशबोर्ड',
+    navDetect: 'एआय रोग निदान',
+    navWeather: 'हवामान धोके',
+    navRiskMap: 'धोका नकाशा',
+    navExpert: 'तज्ज्ञ पडताळणी',
+    navAdmin: 'अ‍ॅडमिन पॅनेल',
+    heroTag: 'SIH 2026 • समस्या विधान SIH26131',
+    heroTitle: 'एआय द्वारे पीक रोग शोध आणि हवामान अंदाज',
+    heroDesc: 'भारतीय शेतकऱ्यांना त्वरित एआय पीक रोग निदान आणि कृषी तज्ज्ञांचा सल्ला देऊन सक्षम करणे.',
+    btnCheckCrop: 'पिकांचे आरोग्य तपासा',
+    btnDashboard: 'डॅशबोर्ड पहा',
+    disclaimerTitle: 'एआय पारदर्शकता',
+    disclaimerDesc: 'सर्व निदान YOLOv8 मॉडेलद्वारे केले जातात आणि तज्ज्ञांकडून पडताळले जाऊ शकतात.',
+    statScans: 'स्कॅन पिके',
+    statAccuracy: 'मॉडेल अचूकता',
+    statDistricts: 'जिल्हे',
+    statResponse: 'प्रतिसाद वेळ',
+    mockBadge: 'डेमो मोड (FastAPI तयार)',
+  },
+  pa: {
+    navHome: 'ਮੁੱਖ ਪੰਨਾ',
+    navDashboard: 'ਕਿਸਾਨ ਡੈਸ਼ਬੋਰਡ',
+    navDetect: 'ਏਆਈ ਬੀਮਾਰੀ ਜਾਂਚ',
+    navWeather: 'ਮੌਸਮ ਖਤਰਾ',
+    navRiskMap: 'ਖਤਰਾ ਨਕਸ਼ਾ',
+    navExpert: 'ਮਾਹਰ ਤਸਦੀਕ',
+    navAdmin: 'ਐਡਮਿਨ ਪੈਨਲ',
+    heroTag: 'SIH 2026 • ਸਮੱਸਿਆ SIH26131',
+    heroTitle: 'ਏਆਈ ਨਾਲ ਫਸਲ ਦੀ ਸੁਰੱਖਿਆ ਅਤੇ ਮੌਸਮ ਦਾ ਅਨੁਮਾਨ',
+    heroDesc: 'ਕਿਸਾਨਾਂ ਲਈ ਫਸਲੀ ਬੀਮਾਰੀਆਂ ਦੀ ਤੁਰੰਤ ਪਛਾਣ ਅਤੇ ਖੇਤੀਬਾੜੀ ਮਾਹਰਾਂ ਦੀ ਸਲਾਹ।',
+    btnCheckCrop: 'ਫਸਲ ਦੀ ਜਾਂਚ ਕਰੋ',
+    btnDashboard: 'ਡੈਸ਼ਬੋਰਡ ਵੇਖੋ',
+    disclaimerTitle: 'ਏਆਈ ਪਾਰਦਰਸ਼ਤਾ',
+    disclaimerDesc: 'ਸਾਰੇ ਅਨੁਮਾਨ YOLOv8 ਮਾਡਲ ਦੁਆਰਾ ਕੀਤੇ ਜਾਂਦੇ ਹਨ।',
+    statScans: 'ਜਾਂਚ ਕੀਤੀਆਂ ਫਸਲਾਂ',
+    statAccuracy: 'ਮਾਡਲ ਸ਼ੁੱਧਤਾ',
+    statDistricts: 'ਜ਼ਿਲ੍ਹੇ',
+    statResponse: 'ਔਸਤ ਸਮਾਂ',
+    mockBadge: 'ਡੈਮੋ ਮੋਡ (FastAPI ਤਿਆਰ)',
+  },
+  te: {
+    navHome: 'హోమ్',
+    navDashboard: 'రైతు డాష్‌బోర్డ్',
+    navDetect: 'AI వ్యాధి గుర్తింపు',
+    navWeather: 'వాతావరణ ప్రమాదం',
+    navRiskMap: 'రిస్క్ మ్యాప్',
+    navExpert: 'నిపుణుల ధృవీకరణ',
+    navAdmin: 'అడ్మిన్ ప్యానెల్',
+    heroTag: 'SIH 2026 • సమస్య SIH26131',
+    heroTitle: 'AI ఆధారిత పంట సంరక్షణ & వాతావరణ హెచ్చరికలు',
+    heroDesc: 'భారతీయ రైతులకు తక్షణ AI పంట వ్యాధి నిర్ధారణ మరియు వ్యవసాయ నిపుణుల సలహాలు.',
+    btnCheckCrop: 'పంట ఆరోగ్యాన్ని తనిఖీ చేయండి',
+    btnDashboard: 'డాష్‌బోర్డ్ చూడండి',
+    disclaimerTitle: 'AI పారదర్శకత',
+    disclaimerDesc: 'అన్ని అంచనాలు YOLOv8 మోడల్స్ ద్వారా లెక్కించబడతాయి.',
+    statScans: 'స్కాన్ చేసిన పంటలు',
+    statAccuracy: 'మోడల్ ఖచ్చితత్వం',
+    statDistricts: 'జిల్లాల సంఖ్య',
+    statResponse: 'సరాసరి సమయం',
+    mockBadge: 'డెమో మోడ్ (FastAPI సద్ధం)',
+  },
+  ta: {
+    navHome: 'முகப்பு',
+    navDashboard: 'விவசாயி டாஷ்போர்டு',
+    navDetect: 'AI நோய் கண்டறிதல்',
+    navWeather: 'வானிலை அபாயம்',
+    navRiskMap: 'அபாய வரைபடம்',
+    navExpert: 'நிபுணர் சரிபார்ப்பு',
+    navAdmin: 'நிர்வாகக் குழு',
+    heroTag: 'SIH 2026 • பிரச்சனை SIH26131',
+    heroTitle: 'செயற்கை நுண்ணறிவு பயிர் பாதுகாப்பு & வானிலை கணிப்பு',
+    heroDesc: 'விவசாயிகளுக்கு உடனடி AI நோய் கண்டறிதல் மற்றும் வேளாண் நிபுணர் ஆலோசனைகள்.',
+    btnCheckCrop: 'பயிர் ஆரோக்கியத்தை சரிபார்க்கவும்',
+    btnDashboard: 'டாஷ்போர்டைப் பார்க்கவும்',
+    disclaimerTitle: 'AI வெளிப்படைத்தன்மை',
+    disclaimerDesc: 'அனைத்து கணிப்புகளும் YOLOv8 மாதிரிகளால் கணக்கிடப்படுகின்றன.',
+    statScans: 'கண்டறியப்பட்ட பயிர்கள்',
+    statAccuracy: 'துல்லியம்',
+    statDistricts: 'மாவட்டங்கள்',
+    statResponse: 'சராசரி நேரம்',
+    mockBadge: 'டெமோ பயன்முறை',
+  },
+};
+
+const LanguageContext = createContext();
+
+export const LanguageProvider = ({ children }) => {
+  const [lang, setLang] = useState('en');
+
+  const t = (key) => {
+    return translations[lang]?.[key] || translations['en']?.[key] || key;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ lang, setLang, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+export const useLanguage = () => useContext(LanguageContext);
