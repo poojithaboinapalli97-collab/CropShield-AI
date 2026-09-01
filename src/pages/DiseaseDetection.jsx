@@ -1,879 +1,1081 @@
 import React, { useState } from 'react';
-import { mockCropDemoResults, mockRecentReports } from '../data/mockData';
-import BoundingBoxOverlay from '../components/BoundingBoxOverlay';
-import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
-import IpdmRecommender from '../components/IpdmRecommender';
-import SafePesticideGuide from '../components/SafePesticideGuide';
-import LabReferralModal from '../components/LabReferralModal';
-import FieldMonitoringTracker from '../components/FieldMonitoringTracker';
+import { useLanguage } from '../context/LanguageContext';
 import {
   UploadCloud,
   Scan,
-  CheckCircle2,
-  AlertTriangle,
-  FileText,
-  ShieldCheck,
-  RefreshCw,
-  Eye,
-  EyeOff,
   Leaf,
-  Info,
-  Send,
   X,
-  FileCheck,
-  MapPin,
-  HelpCircle,
-  Shield,
-  Bug,
-  CloudSun,
-  Sparkles,
-  ChevronDown,
-  ChevronUp,
-  FlaskConical,
-  Activity,
-  Layers,
-  Clock,
-  Building2,
-  Droplets,
-  AlertOctagon,
-  Percent,
-  Calculator,
-  Beaker,
+  AlertTriangle,
+  CheckCircle,
+  Loader2,
+  RefreshCw,
+  Languages,
 } from 'lucide-react';
 
+const API_URL = 'http://127.0.0.1:8001';
+
+const reportTranslations = {
+  en: {
+    resultTitle: 'AI Diagnosis Result',
+    resultSubtitle: 'Complete report returned by the CropShield AI model.',
+    reportLanguage: 'Report Language',
+    crop: 'Crop',
+    scientificName: 'Scientific Name',
+    condition: 'Detected Condition',
+    confidence: 'Confidence',
+    confidenceLevel: 'Confidence Level',
+    modelType: 'Model Type',
+    cropStage: 'Crop Stage',
+    location: 'Location',
+    high: 'High',
+    moderate: 'Moderate',
+    low: 'Low',
+    modelOutput: 'Real AI Model Output',
+    modelOutputText:
+      'Disease and confidence values shown above come directly from the CropShield AI FastAPI classification model.',
+    newScan: 'Start New Scan',
+  },
+
+  hi: {
+    resultTitle: 'एआई रोग निदान परिणाम',
+    resultSubtitle: 'CropShield AI मॉडल द्वारा दिया गया पूरा विवरण।',
+    reportLanguage: 'रिपोर्ट की भाषा',
+    crop: 'फसल',
+    scientificName: 'वैज्ञानिक नाम',
+    condition: 'पहचानी गई बीमारी',
+    confidence: 'विश्वसनीयता',
+    confidenceLevel: 'विश्वसनीयता स्तर',
+    modelType: 'मॉडल प्रकार',
+    cropStage: 'फसल अवस्था',
+    location: 'स्थान',
+    high: 'उच्च',
+    moderate: 'मध्यम',
+    low: 'कम',
+    modelOutput: 'वास्तविक एआई मॉडल परिणाम',
+    modelOutputText:
+      'ऊपर दिखाए गए बीमारी और विश्वसनीयता के मान CropShield AI FastAPI मॉडल से सीधे प्राप्त हुए हैं।',
+    newScan: 'नया स्कैन शुरू करें',
+  },
+
+  mr: {
+    resultTitle: 'एआय रोग निदान निकाल',
+    resultSubtitle: 'CropShield AI मॉडेलने दिलेला संपूर्ण अहवाल.',
+    reportLanguage: 'अहवालाची भाषा',
+    crop: 'पीक',
+    scientificName: 'शास्त्रीय नाव',
+    condition: 'आढळलेला रोग',
+    confidence: 'विश्वास पातळी',
+    confidenceLevel: 'विश्वास स्तर',
+    modelType: 'मॉडेल प्रकार',
+    cropStage: 'पिकाची अवस्था',
+    location: 'स्थान',
+    high: 'उच्च',
+    moderate: 'मध्यम',
+    low: 'कमी',
+    modelOutput: 'वास्तविक एआय मॉडेल निकाल',
+    modelOutputText:
+      'वरील रोग आणि विश्वासाचे मूल्य CropShield AI FastAPI मॉडेलमधून थेट मिळाले आहे.',
+    newScan: 'नवीन स्कॅन सुरू करा',
+  },
+
+  pa: {
+    resultTitle: 'ਏਆਈ ਬਿਮਾਰੀ ਜਾਂਚ ਨਤੀਜਾ',
+    resultSubtitle: 'CropShield AI ਮਾਡਲ ਵੱਲੋਂ ਪੂਰੀ ਰਿਪੋਰਟ।',
+    reportLanguage: 'ਰਿਪੋਰਟ ਦੀ ਭਾਸ਼ਾ',
+    crop: 'ਫਸਲ',
+    scientificName: 'ਵਿਗਿਆਨਕ ਨਾਮ',
+    condition: 'ਪਛਾਣੀ ਗਈ ਬਿਮਾਰੀ',
+    confidence: 'ਭਰੋਸਾ',
+    confidenceLevel: 'ਭਰੋਸੇ ਦਾ ਪੱਧਰ',
+    modelType: 'ਮਾਡਲ ਕਿਸਮ',
+    cropStage: 'ਫਸਲ ਦੀ ਅਵਸਥਾ',
+    location: 'ਸਥਾਨ',
+    high: 'ਉੱਚਾ',
+    moderate: 'ਦਰਮਿਆਨਾ',
+    low: 'ਘੱਟ',
+    modelOutput: 'ਅਸਲ ਏਆਈ ਮਾਡਲ ਨਤੀਜਾ',
+    modelOutputText:
+      'ਉੱਪਰ ਦਿੱਤੀ ਬਿਮਾਰੀ ਅਤੇ ਭਰੋਸੇ ਦੀ ਜਾਣਕਾਰੀ CropShield AI FastAPI ਮਾਡਲ ਤੋਂ ਸਿੱਧੀ ਆਈ ਹੈ।',
+    newScan: 'ਨਵਾਂ ਸਕੈਨ ਸ਼ੁਰੂ ਕਰੋ',
+  },
+
+  te: {
+    resultTitle: 'AI వ్యాధి నిర్ధారణ ఫలితం',
+    resultSubtitle: 'CropShield AI మోడల్ అందించిన పూర్తి నివేదిక.',
+    reportLanguage: 'నివేదిక భాష',
+    crop: 'పంట',
+    scientificName: 'శాస్త్రీయ పేరు',
+    condition: 'గుర్తించిన వ్యాధి',
+    confidence: 'నమ్మక స్థాయి',
+    confidenceLevel: 'నమ్మక స్థాయి',
+    modelType: 'మోడల్ రకం',
+    cropStage: 'పంట దశ',
+    location: 'ప్రదేశం',
+    high: 'అధికం',
+    moderate: 'మధ్యస్థం',
+    low: 'తక్కువ',
+    modelOutput: 'నిజమైన AI మోడల్ ఫలితం',
+    modelOutputText:
+      'పైన చూపిన వ్యాధి మరియు నమ్మక విలువలు CropShield AI FastAPI మోడల్ నుండి నేరుగా వచ్చాయి.',
+    newScan: 'కొత్త స్కాన్ ప్రారంభించండి',
+  },
+
+  ta: {
+    resultTitle: 'AI நோய் கண்டறிதல் முடிவு',
+    resultSubtitle: 'CropShield AI மாதிரி வழங்கிய முழுமையான அறிக்கை.',
+    reportLanguage: 'அறிக்கை மொழி',
+    crop: 'பயிர்',
+    scientificName: 'அறிவியல் பெயர்',
+    condition: 'கண்டறியப்பட்ட நோய்',
+    confidence: 'நம்பிக்கை',
+    confidenceLevel: 'நம்பிக்கை நிலை',
+    modelType: 'மாதிரி வகை',
+    cropStage: 'பயிர் நிலை',
+    location: 'இடம்',
+    high: 'அதிகம்',
+    moderate: 'மிதமானது',
+    low: 'குறைவு',
+    modelOutput: 'உண்மையான AI மாதிரி முடிவு',
+    modelOutputText:
+      'மேலே காட்டப்பட்ட நோய் மற்றும் நம்பிக்கை மதிப்புகள் CropShield AI FastAPI மாதிரியிலிருந்து நேரடியாக பெறப்பட்டவை.',
+    newScan: 'புதிய ஸ்கேன் தொடங்கவும்',
+  },
+
+  bn: {
+    resultTitle: 'এআই রোগ নির্ণয়ের ফলাফল',
+    resultSubtitle: 'CropShield AI মডেল থেকে পাওয়া সম্পূর্ণ রিপোর্ট।',
+    reportLanguage: 'রিপোর্টের ভাষা',
+    crop: 'ফসল',
+    scientificName: 'বৈজ্ঞানিক নাম',
+    condition: 'শনাক্ত রোগ',
+    confidence: 'নির্ভরযোগ্যতা',
+    confidenceLevel: 'নির্ভরযোগ্যতার স্তর',
+    modelType: 'মডেলের ধরন',
+    cropStage: 'ফসলের পর্যায়',
+    location: 'অবস্থান',
+    high: 'উচ্চ',
+    moderate: 'মাঝারি',
+    low: 'কম',
+    modelOutput: 'আসল এআই মডেলের ফলাফল',
+    modelOutputText:
+      'উপরে দেখানো রোগ এবং নির্ভরযোগ্যতার মান CropShield AI FastAPI মডেল থেকে সরাসরি এসেছে।',
+    newScan: 'নতুন স্ক্যান শুরু করুন',
+  },
+
+  gu: {
+    resultTitle: 'AI રોગ નિદાન પરિણામ',
+    resultSubtitle: 'CropShield AI મોડેલ દ્વારા આપવામાં આવેલ સંપૂર્ણ અહેવાલ.',
+    reportLanguage: 'અહેવાલની ભાષા',
+    crop: 'પાક',
+    scientificName: 'વૈજ્ઞાનિક નામ',
+    condition: 'ઓળખાયેલ રોગ',
+    confidence: 'વિશ્વસનીયતા',
+    confidenceLevel: 'વિશ્વસનીયતા સ્તર',
+    modelType: 'મોડેલ પ્રકાર',
+    cropStage: 'પાકનો તબક્કો',
+    location: 'સ્થાન',
+    high: 'ઉચ્ચ',
+    moderate: 'મધ્યમ',
+    low: 'ઓછું',
+    modelOutput: 'વાસ્તવિક AI મોડેલ પરિણામ',
+    modelOutputText:
+      'ઉપર દર્શાવેલ રોગ અને વિશ્વસનીયતાના મૂલ્યો CropShield AI FastAPI મોડેલમાંથી સીધા આવ્યા છે.',
+    newScan: 'નવું સ્કેન શરૂ કરો',
+  },
+
+  kn: {
+    resultTitle: 'AI ರೋಗ ಪತ್ತೆ ಫಲಿತಾಂಶ',
+    resultSubtitle: 'CropShield AI ಮಾದರಿಯಿಂದ ಬಂದ ಸಂಪೂರ್ಣ ವರದಿ.',
+    reportLanguage: 'ವರದಿ ಭಾಷೆ',
+    crop: 'ಬೆಳೆ',
+    scientificName: 'ವೈಜ್ಞಾನಿಕ ಹೆಸರು',
+    condition: 'ಪತ್ತೆಯಾದ ರೋಗ',
+    confidence: 'ನಂಬಿಕೆ',
+    confidenceLevel: 'ನಂಬಿಕೆ ಮಟ್ಟ',
+    modelType: 'ಮಾದರಿ ಪ್ರಕಾರ',
+    cropStage: 'ಬೆಳೆಯ ಹಂತ',
+    location: 'ಸ್ಥಳ',
+    high: 'ಹೆಚ್ಚು',
+    moderate: 'ಮಧ್ಯಮ',
+    low: 'ಕಡಿಮೆ',
+    modelOutput: 'ನಿಜವಾದ AI ಮಾದರಿ ಫಲಿತಾಂಶ',
+    modelOutputText:
+      'ಮೇಲೆ ತೋರಿಸಿರುವ ರೋಗ ಮತ್ತು ನಂಬಿಕೆಯ ಮೌಲ್ಯಗಳು CropShield AI FastAPI ಮಾದರಿಯಿಂದ ನೇರವಾಗಿ ಬಂದಿವೆ.',
+    newScan: 'ಹೊಸ ಸ್ಕ್ಯಾನ್ ಪ್ರಾರಂಭಿಸಿ',
+  },
+};
+
+const languageNames = {
+  en: 'English',
+  hi: 'हिंदी',
+  mr: 'मराठी',
+  pa: 'ਪੰਜਾਬੀ',
+  te: 'తెలుగు',
+  ta: 'தமிழ்',
+  bn: 'বাংলা',
+  gu: 'ગુજરાતી',
+  kn: 'ಕನ್ನಡ',
+};
+
 export default function DiseaseDetection() {
-  // Form State
-  const [selectedCrop, setSelectedCrop] = useState('Tomato');
-  const [growthStage, setGrowthStage] = useState('Fruiting');
-  const [village, setVillage] = useState('Pimplgaon Village');
-  const [district, setDistrict] = useState('Nashik');
-  const [selectedState, setSelectedState] = useState('Maharashtra');
+  const { lang } = useLanguage();
 
-  // Image Upload State
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [fileName, setFileName] = useState('');
-  const [fileSize, setFileSize] = useState('');
-  const [dragActive, setDragActive] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const reportText =
+    reportTranslations[lang] ||
+    reportTranslations.en;
 
-  // Analysis State
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [demoResult, setDemoResult] = useState(null);
-  const [showBoundingBoxes, setShowBoundingBoxes] = useState(true);
+  const selectedLanguageName =
+    languageNames[lang] ||
+    'English';
 
-  // Active Tool Modal / Tab States
-  const [activeTab, setActiveTab] = useState('diagnosis'); // 'diagnosis', 'ipdm', 'pesticide', 'followup'
-  const [isLabModalOpen, setIsLabModalOpen] = useState(false);
-  const [showWhySection, setShowWhySection] = useState(false);
+  // -----------------------------
+  // FORM STATE
+  // -----------------------------
+  const [selectedCrop, setSelectedCrop] =
+    useState('Tomato');
 
-  // History & Actions State
-  const [savedSuccess, setSavedSuccess] = useState('');
-  const [escalatedSuccess, setEscalatedSuccess] = useState('');
-  const [reportsHistory, setReportsHistory] = useState(mockRecentReports);
+  const [growthStage, setGrowthStage] =
+    useState('Fruiting');
 
-  // Preset Sample Crop Presets for Instant 1-Click Testing
-  const samplePresets = [
-    { crop: 'Tomato', label: 'Tomato Early Blight', presetKey: 'Tomato' },
-    { crop: 'Wheat', label: 'Wheat Yellow Rust', presetKey: 'Wheat' },
-    { crop: 'Rice', label: 'Rice Blast', presetKey: 'Rice' },
-    { crop: 'Cotton', label: 'Cotton Leaf Curl', presetKey: 'Cotton' },
-    { crop: 'Maize', label: 'Healthy Maize', presetKey: 'Maize' },
+  const [village, setVillage] =
+    useState('');
+
+  const [district, setDistrict] =
+    useState('');
+
+  // -----------------------------
+  // IMAGE STATE
+  // -----------------------------
+  const [imageFile, setImageFile] =
+    useState(null);
+
+  const [imagePreview, setImagePreview] =
+    useState(null);
+
+  const [fileName, setFileName] =
+    useState('');
+
+  const [fileSize, setFileSize] =
+    useState('');
+
+  // -----------------------------
+  // AI STATE
+  // -----------------------------
+  const [isAnalyzing, setIsAnalyzing] =
+    useState(false);
+
+  const [result, setResult] =
+    useState(null);
+
+  const [errorMessage, setErrorMessage] =
+    useState('');
+
+  // -----------------------------
+  // CROP OPTIONS
+  // -----------------------------
+  const cropOptions = [
+    'Tomato',
+    'Wheat',
+    'Rice / Paddy',
+    'Cotton',
+    'Maize / Corn',
+    'Chilli / Pepper',
   ];
 
-  // Handle File Selection
+  const growthOptions = [
+    'Seedling / Germination Stage',
+    'Vegetative Growth Stage',
+    'Flowering & Booting Stage',
+    'Fruiting / Grain Fill Stage',
+    'Maturity / Pre-Harvest Stage',
+  ];
+
+  // -----------------------------
+  // FORMAT DISEASE NAME
+  // -----------------------------
+  const formatDiseaseName = (name) => {
+    if (!name) return 'Unknown';
+
+    return name
+      .replace(/___/g, ' - ')
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (letter) =>
+        letter.toUpperCase()
+      );
+  };
+
+  // -----------------------------
+  // SCIENTIFIC NAME
+  // -----------------------------
+  const getScientificName = (crop) => {
+    const names = {
+      Tomato: 'Solanum lycopersicum',
+      Wheat: 'Triticum aestivum',
+      'Rice / Paddy': 'Oryza sativa',
+      Cotton: 'Gossypium hirsutum',
+      'Maize / Corn': 'Zea mays',
+      'Chilli / Pepper': 'Capsicum annuum',
+    };
+
+    return names[crop] || '';
+  };
+
+  // -----------------------------
+  // HANDLE FILE
+  // -----------------------------
   const processFile = (file) => {
     setErrorMessage('');
+    setResult(null);
+
     if (!file) return;
 
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const validTypes = [
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/webp',
+    ];
+
     if (!validTypes.includes(file.type)) {
-      setErrorMessage('Unsupported file format. Please upload a JPG, JPEG, PNG or WEBP image.');
+      setErrorMessage(
+        'Unsupported file format. Please upload JPG, JPEG, PNG or WEBP.'
+      );
+
       return;
     }
 
-    const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-    setFileName(file.name);
-    setFileSize(`${sizeInMB} MB`);
+    const sizeInMB =
+      (file.size / (1024 * 1024)).toFixed(2);
+
     setImageFile(file);
 
-    const reader = new FileReader();
+    setFileName(file.name);
+
+    setFileSize(`${sizeInMB} MB`);
+
+    const reader =
+      new FileReader();
+
     reader.onloadend = () => {
-      setImagePreview(reader.result);
+      setImagePreview(
+        reader.result
+      );
     };
+
     reader.readAsDataURL(file);
   };
 
-  const handleFileInput = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      processFile(e.target.files[0]);
+  // -----------------------------
+  // FILE INPUT
+  // -----------------------------
+  const handleFileChange = (event) => {
+    const file =
+      event.target.files?.[0];
+
+    if (file) {
+      processFile(file);
     }
   };
 
-  const handleDrag = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(true);
-    } else if (e.type === 'dragleave') {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      processFile(e.dataTransfer.files[0]);
-    }
-  };
-
+  // -----------------------------
+  // REMOVE IMAGE
+  // -----------------------------
   const handleRemoveImage = () => {
     setImageFile(null);
     setImagePreview(null);
     setFileName('');
     setFileSize('');
+    setResult(null);
     setErrorMessage('');
   };
 
-  // Quick Preset Selection
-  const handleSelectPreset = (preset) => {
-    setSelectedCrop(preset.crop);
-    const resultData = mockCropDemoResults[preset.crop];
-    if (resultData) {
-      setImagePreview(resultData.sampleImage);
-      setFileName(`sample_${preset.crop.toLowerCase()}_leaf.jpg`);
-      setFileSize('1.2 MB');
-      setImageFile(null);
-    }
-  };
+  // -----------------------------
+  // RUN AI PREDICTION
+  // -----------------------------
+  const handleDiagnosis = async () => {
+    if (!imageFile) {
+      setErrorMessage(
+        'Please upload a crop leaf image first.'
+      );
 
-  // Generate Practical Pathology Analysis Data
-  const generatePracticalData = (crop, isCustomUpload) => {
-    switch (crop) {
-      case 'Tomato':
-        return {
-          condition: 'Early Blight (Alternaria solani)',
-          scientificName: 'Alternaria solani Sorauer',
-          confidence: 94.6,
-          riskLevel: 'High',
-          affectedArea: '18.4%',
-          chlorosisPct: '22.8%',
-          necrosisPct: '9.4%',
-          sporePressure: 84,
-          lesionPattern: 'Concentric Target-Board Rings with Chlorotic Halo',
-          spreadStage: 'Stage 2: Active Sporulation & Foliar Expansion',
-          yieldLossRisk: '25% - 35% Loss if Untreated in 10 Days',
-          urgencyWindow: 'Within 24 Hours (Before Evening Humidity Surge)',
-          fracGroup: 'FRAC Group 3 (Triazoles) + FRAC Group M03 (Multi-site)',
-          explanation: 'Fungal conidiophores detected on lower leaf canopy. Concentric rings indicate active Alternaria mycelium expansion stimulated by warm temperatures (24-29°C) and dew formation.',
-          suggestedNextStep: 'Prune lower affected leaves to stop splash dispersal. Spray Mancozeb 75% WP @ 2.0g/L or Azoxystrobin @ 1.0ml/L.',
-          tankDosageGuide: {
-            chemicalName: 'Mancozeb 75% WP + Azoxystrobin 23% SC',
-            dosagePerLiter: '2.0 grams / Liter water',
-            perAcreWaterLiters: 200,
-            knapsackTanksNeeded: '12.5 Tanks (16-Liter Capacity)',
-            bucketSlurrySOP: 'Dissolve 400g Mancozeb in a 10L bucket first to form a smooth slurry before pouring into main sprayer tank.',
-            reEntryInterval: '24 Hours',
-            preHarvestInterval: '5 Days',
-          },
-          boundingBoxes: [
-            { id: 1, x: 22, y: 28, width: 34, height: 32, label: 'Alternaria Lesion', confidence: 0.96 },
-            { id: 2, x: 58, y: 44, width: 26, height: 28, label: 'Chlorotic Halo', confidence: 0.91 },
-          ],
-        };
-      case 'Wheat':
-        return {
-          condition: 'Yellow / Stripe Rust (Puccinia striiformis)',
-          scientificName: 'Puccinia striiformis f. sp. tritici',
-          confidence: 96.2,
-          riskLevel: 'Critical',
-          affectedArea: '26.2%',
-          chlorosisPct: '31.4%',
-          necrosisPct: '12.6%',
-          sporePressure: 92,
-          lesionPattern: 'Parallel Linear Yellow Uredinial Pustules along Leaf Veins',
-          spreadStage: 'Stage 3: Advanced Airborne Urediniospore Release',
-          yieldLossRisk: '40% - 60% Loss if Untreated in 7 Days',
-          urgencyWindow: 'Immediate (Within 12 Hours)',
-          fracGroup: 'FRAC Group 3 (DMI Propiconazole / Tebuconazole)',
-          explanation: 'Aggressive yellow rust pustules detected breaking through leaf epidermis. Night temperatures (10-14°C) and morning fog are enabling rapid spore germination across adjacent plots.',
-          suggestedNextStep: 'Spray Propiconazole 25% EC (Tilt) @ 1.0 ml/L water immediately across entire field boundary.',
-          tankDosageGuide: {
-            chemicalName: 'Propiconazole 25% EC @ 1.0ml/L',
-            dosagePerLiter: '1.0 ml / Liter water (200ml per acre)',
-            perAcreWaterLiters: 200,
-            knapsackTanksNeeded: '12.5 Tanks (16-Liter Capacity)',
-            bucketSlurrySOP: 'Mix 200ml Propiconazole in 10L clean water, stir well for 2 mins, then dilute to 200L tank volume.',
-            reEntryInterval: '24 Hours',
-            preHarvestInterval: '30 Days',
-          },
-          boundingBoxes: [
-            { id: 1, x: 20, y: 15, width: 28, height: 65, label: 'Stripe Rust Pustule', confidence: 0.97 },
-            { id: 2, x: 54, y: 22, width: 24, height: 55, label: 'Secondary Uredinia', confidence: 0.93 },
-          ],
-        };
-      case 'Rice':
-        return {
-          condition: 'Paddy Blast (Magnaporthe oryzae)',
-          scientificName: 'Magnaporthe oryzae / Pyricularia oryzae',
-          confidence: 93.8,
-          riskLevel: 'High',
-          affectedArea: '16.5%',
-          chlorosisPct: '19.2%',
-          necrosisPct: '8.4%',
-          sporePressure: 78,
-          lesionPattern: 'Spindle/Eye-shaped Lesions with Gray Centers and Brown Margins',
-          spreadStage: 'Stage 2: Foliar Blast Collar Infiltration',
-          yieldLossRisk: '30% - 45% Yield Loss if Neck Blast develops',
-          urgencyWindow: 'Within 24 Hours',
-          fracGroup: 'FRAC Group 1 (MBC) / FRAC Group 3 (Tricyclazole)',
-          explanation: 'Spindle-shaped necrotic lesions identified on paddy leaf blade. High nitrogen fertilization and relative humidity above 85% have accelerated fungal penetration.',
-          suggestedNextStep: 'Spray Tricyclazole 75% WP @ 0.6g/L or Isoprothiolane 40% EC @ 1.5ml/L.',
-          tankDosageGuide: {
-            chemicalName: 'Tricyclazole 75% WP (Beam)',
-            dosagePerLiter: '0.6 grams / Liter water (120g per acre)',
-            perAcreWaterLiters: 200,
-            knapsackTanksNeeded: '12.5 Tanks (16-Liter Capacity)',
-            bucketSlurrySOP: 'Pre-mix 120g powder in 5L water bucket until fully dissolved without lumps.',
-            reEntryInterval: '12 Hours',
-            preHarvestInterval: '14 Days',
-          },
-          boundingBoxes: [
-            { id: 1, x: 30, y: 35, width: 35, height: 25, label: 'Spindle Blast Lesion', confidence: 0.95 },
-          ],
-        };
-      case 'Cotton':
-        return {
-          condition: 'Cotton Leaf Curl Virus (CLCuV)',
-          scientificName: 'Begomovirus (Whitefly-transmitted)',
-          confidence: 91.5,
-          riskLevel: 'High',
-          affectedArea: '22.0%',
-          chlorosisPct: '28.0%',
-          necrosisPct: '5.0%',
-          sporePressure: 80,
-          lesionPattern: 'Upward Leaf Curling, Vein Thickening & Enations',
-          spreadStage: 'Stage 2: Systemic Viral Vector Proliferation',
-          yieldLossRisk: '30% - 50% Boll Formation Reduction',
-          urgencyWindow: 'Within 48 Hours Vector Control',
-          fracGroup: 'IRAC Group 4A (Neonicotinoids - Whitefly vector management)',
-          explanation: 'Viral enations on leaf undersides caused by Whitefly (Bemisia tabaci) feeding. Controlling vector population is mandatory to protect adjacent squares and bolls.',
-          suggestedNextStep: 'Install 15 Yellow Sticky Traps/Acre. Spray Diafenthiuron 50% WP @ 1.2g/L or Pyriproxyfen 10% EC @ 2ml/L.',
-          tankDosageGuide: {
-            chemicalName: 'Diafenthiuron 50% WP (Pegasus)',
-            dosagePerLiter: '1.2 grams / Liter water (240g per acre)',
-            perAcreWaterLiters: 200,
-            knapsackTanksNeeded: '12.5 Tanks (16-Liter Capacity)',
-            bucketSlurrySOP: 'Mix 240g in clean water slurry before adding to tank.',
-            reEntryInterval: '24 Hours',
-            preHarvestInterval: '21 Days',
-          },
-          boundingBoxes: [
-            { id: 1, x: 25, y: 20, width: 45, height: 50, label: 'Curled Leaf Margin', confidence: 0.92 },
-          ],
-        };
-      default:
-        return {
-          condition: 'Healthy Vigorous Foliage (No Active Pathogen)',
-          scientificName: `${crop} (Optimal Phenological Growth)`,
-          confidence: 98.2,
-          riskLevel: 'Low',
-          affectedArea: '0.0%',
-          chlorosisPct: '0.5%',
-          necrosisPct: '0.0%',
-          sporePressure: 12,
-          lesionPattern: 'Uniform Deep-Green Chlorophyll with Intact Cuticle',
-          spreadStage: 'Optimal Healthy Growth',
-          yieldLossRisk: '0% Expected Loss',
-          urgencyWindow: 'Routine Preventive Monitoring',
-          fracGroup: 'No chemical fungicide required',
-          explanation: 'Deep green pigmentation and intact leaf margins detected with zero necrotic lesions or pest puncture marks.',
-          suggestedNextStep: 'Maintain regular irrigation and balanced NPK fertigation during current phenological stage.',
-          tankDosageGuide: {
-            chemicalName: 'Bio-stimulant / Micronutrient Foliar Spray',
-            dosagePerLiter: '2.0 ml / Liter water (Zinc + Boron 2%)',
-            perAcreWaterLiters: 150,
-            knapsackTanksNeeded: '10 Tanks (16-Liter Capacity)',
-            bucketSlurrySOP: 'Dissolve nutrient mix in clean water and spray during cool morning hours.',
-            reEntryInterval: '0 Hours',
-            preHarvestInterval: '0 Days',
-          },
-          boundingBoxes: [
-            { id: 1, x: 15, y: 15, width: 70, height: 70, label: 'Healthy Chlorophyll', confidence: 0.99 },
-          ],
-        };
-    }
-  };
-
-  // Run AI Analysis
-  const handleAnalyze = (e) => {
-    e.preventDefault();
-    setErrorMessage('');
-    setSavedSuccess('');
-    setEscalatedSuccess('');
-
-    if (!imagePreview && !imageFile) {
-      setErrorMessage('Please upload a crop image or select a sample leaf preset below.');
       return;
     }
 
     setIsAnalyzing(true);
+    setErrorMessage('');
+    setResult(null);
 
-    setTimeout(() => {
+    try {
+      const formData =
+        new FormData();
+
+      formData.append(
+        'file',
+        imageFile
+      );
+
+      console.log(
+        'Sending image to:',
+        `${API_URL}/predict`
+      );
+
+      console.log(
+        'File:',
+        imageFile.name
+      );
+
+      const response =
+        await fetch(
+          `${API_URL}/predict`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+
+      console.log(
+        'API Status:',
+        response.status
+      );
+
+      if (!response.ok) {
+        const errorText =
+          await response.text();
+
+        console.error(
+          'API Error:',
+          errorText
+        );
+
+        throw new Error(
+          `API request failed: ${response.status}`
+        );
+      }
+
+      const data =
+        await response.json();
+
+      console.log(
+        'CropShield AI Result:',
+        data
+      );
+
+      const rawDisease =
+        data.disease ||
+        'Unknown';
+
+      const confidence =
+        Number(
+          data.confidence
+        ) || 0;
+
+      const readableDisease =
+        formatDiseaseName(
+          rawDisease
+        );
+
+      const finalResult = {
+        disease:
+          readableDisease,
+
+        rawDisease:
+          rawDisease,
+
+        confidence:
+          confidence,
+
+        crop:
+          selectedCrop,
+
+        growthStage:
+          growthStage,
+
+        village:
+          village ||
+          'Not provided',
+
+        district:
+          district ||
+          'Not provided',
+
+        scientificName:
+          getScientificName(
+            selectedCrop
+          ),
+
+        image:
+          imagePreview,
+
+        modelType:
+          data.type ||
+          'classification',
+
+        boxes:
+          data.boxes ||
+          [],
+      };
+
+      setResult(
+        finalResult
+      );
+
+    } catch (error) {
+      console.error(
+        'Prediction error:',
+        error
+      );
+
+      setErrorMessage(
+        'Unable to connect to CropShield AI backend. Make sure FastAPI is running on http://127.0.0.1:8001'
+      );
+
+    } finally {
       setIsAnalyzing(false);
-      const practicalData = generatePracticalData(selectedCrop, !!imageFile);
-      setDemoResult({
-        ...practicalData,
-        crop: selectedCrop,
-        growthStage,
-        location: `${village}, ${district}, ${selectedState}`,
-        image: imagePreview || mockCropDemoResults[selectedCrop]?.sampleImage,
-      });
-      setActiveTab('diagnosis');
-    }, 700);
+    }
   };
 
-  const handleSaveReport = () => {
-    if (!demoResult) return;
-    const newReport = {
-      reportId: `REP-2026-${Math.floor(88000 + Math.random() * 1000)}`,
-      crop: selectedCrop,
-      growthStage,
-      location: `${district}, ${selectedState}`,
-      diagnosis: demoResult.condition,
-      confidence: `${demoResult.confidence}%`,
-      riskLevel: demoResult.riskLevel,
-      date: '01 Sep 2026',
-      status: 'AI Confirmed Diagnosis',
-    };
-    setReportsHistory([newReport, ...reportsHistory]);
-    setSavedSuccess('Diagnostic report saved successfully to your analysis history!');
-    setTimeout(() => setSavedSuccess(''), 3000);
+  // -----------------------------
+  // CONFIDENCE LEVEL
+  // -----------------------------
+  const getConfidenceLevel = (
+    confidence
+  ) => {
+    if (confidence >= 80)
+      return reportText.high;
+
+    if (confidence >= 50)
+      return reportText.moderate;
+
+    return reportText.low;
   };
 
+  // -----------------------------
+  // RETURN UI
+  // -----------------------------
   return (
     <div className="disease-detection-page">
-      {/* 1. CLEAN PAGE HEADER */}
+
+      {/* HEADER */}
       <div className="page-header-clean">
+
         <div className="title-area">
+
           <span className="sih-badge-inline">
-            <Sparkles size={13} /> SIH26131 • PRECISION AGRI-VISION & VERNACULAR ADVISORY
+            SIH26131 • PRECISION AGRI-VISION
           </span>
-          <h1 className="page-title">Practical AI Crop Disease Diagnosis & IPDM Suite</h1>
+
+          <h1 className="page-title">
+            Practical AI Crop Disease Diagnosis
+          </h1>
+
           <p className="page-subtitle">
-            Upload any crop leaf photo for instant lesion localization, practical pathology metrics, vernacular voice advisory in 9 Indian languages, exact tank dilution formulas, and KVK referral.
+            Upload a crop leaf photo for AI-powered
+            disease classification and agricultural
+            guidance.
           </p>
+
         </div>
+
       </div>
 
-      {/* ERROR STATE ALERT BANNER */}
+      {/* ERROR */}
       {errorMessage && (
         <div className="notice-banner banner-danger mb-16">
-          <AlertTriangle size={18} />
-          <span>{errorMessage}</span>
+
+          <AlertTriangle size={20} />
+
+          <span>
+            {errorMessage}
+          </span>
+
         </div>
       )}
 
-      {/* QUICK PRESET SAMPLE STRIP */}
-      <div className="preset-samples-strip">
-        <span className="preset-strip-lbl">Instant Diagnostic Presets:</span>
-        <div className="preset-pills-row">
-          {samplePresets.map((preset) => (
-            <button
-              key={preset.crop}
-              type="button"
-              className={`preset-pill-btn ${selectedCrop === preset.crop && !imageFile ? 'active' : ''}`}
-              onClick={() => handleSelectPreset(preset)}
-            >
-              <Leaf size={14} className="icon-green" />
-              <span>{preset.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* MAIN CARD */}
+      <div className="dash-card">
 
-      {/* 2. STREAMLINED UPLOAD & FORM CARD */}
-      <div className="dash-card clean-detection-card">
-        <form onSubmit={handleAnalyze} className="clean-detection-layout">
-          {/* UPLOAD DROPZONE BOX */}
-          <div className="clean-upload-zone">
-            {!imagePreview ? (
-              <div
-                className={`clean-drag-box ${dragActive ? 'dropzone-active' : ''}`}
-                onDragEnter={handleDrag}
-                onDragOver={handleDrag}
-                onDragLeave={handleDrag}
-                onDrop={handleDrop}
-              >
-                <input
-                  type="file"
-                  id="main-crop-image-input"
-                  accept="image/jpeg, image/jpg, image/png, image/webp"
-                  onChange={handleFileInput}
-                  className="file-input-hidden"
-                />
-                <label htmlFor="main-crop-image-input" className="clean-drag-label">
-                  <div className="upload-icon-circle-sm">
-                    <UploadCloud size={24} className="icon-green" />
-                  </div>
-                  <div>
-                    <strong>Drag & drop any crop leaf image here</strong>
-                    <p className="sub-txt-sm">Upload real farm photo (JPG, PNG, WEBP)</p>
-                  </div>
-                  <span className="browse-files-btn-sm">Browse Device Camera / File</span>
-                </label>
-              </div>
-            ) : (
-              <div className="clean-image-preview">
-                <div className="clean-preview-frame">
-                  <img src={imagePreview} alt="Selected crop leaf" className="clean-preview-img" />
-                </div>
-                <div className="clean-file-bar">
-                  <span className="file-name-tag">{fileName || 'uploaded_crop_leaf.jpg'} ({fileSize || '1.4 MB'})</span>
-                  <div className="file-actions-row">
-                    <label htmlFor="main-crop-image-input" className="link-action-btn">
-                      Change Photo
-                    </label>
-                    <button type="button" className="remove-link-btn" onClick={handleRemoveImage}>
-                      <X size={14} /> Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+        <div className="section-heading">
+
+          <div className="title-with-icon">
+
+            <Scan
+              size={22}
+              className="icon-green"
+            />
+
+            <div>
+
+              <h2>
+                AI Disease Detection
+              </h2>
+
+              <p className="sub-title-text">
+                Upload a clear image of the crop leaf.
+              </p>
+
+            </div>
+
           </div>
 
-          {/* CROP DETAILS & CONTROLS */}
-          <div className="clean-form-controls">
-            <div className="form-group">
-              <label className="form-label">Crop Plant Type</label>
-              <select
-                value={selectedCrop}
-                onChange={(e) => setSelectedCrop(e.target.value)}
-                className="form-select"
+        </div>
+
+        {/* UPLOAD AREA */}
+        {!imagePreview ? (
+
+          <label
+            className="upload-area"
+            htmlFor="leaf-image-upload"
+          >
+
+            <UploadCloud
+              size={48}
+              className="icon-green"
+            />
+
+            <h3>
+              Upload Crop Leaf Image
+            </h3>
+
+            <p>
+              JPG, JPEG, PNG or WEBP
+            </p>
+
+            <input
+              id="leaf-image-upload"
+              type="file"
+              accept="image/jpeg,image/jpg,image/png,image/webp"
+              onChange={handleFileChange}
+              hidden
+            />
+
+          </label>
+
+        ) : (
+
+          <div className="image-preview-section">
+
+            <div className="preview-header">
+
+              <div>
+
+                <strong>
+                  Selected crop leaf
+                </strong>
+
+                <p>
+                  {fileName} ({fileSize})
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                className="secondary-btn-sm"
+                onClick={handleRemoveImage}
               >
-                <option value="Tomato">Tomato (Solanum lycopersicum)</option>
-                <option value="Wheat">Wheat (Triticum aestivum)</option>
-                <option value="Rice">Rice / Paddy (Oryza sativa)</option>
-                <option value="Cotton">Cotton (Gossypium hirsutum)</option>
-                <option value="Maize">Maize / Corn (Zea mays)</option>
-                <option value="Chilli">Chilli / Pepper (Capsicum annuum)</option>
-              </select>
+
+                <X size={16} />
+
+                Remove
+
+              </button>
+
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Crop Phenological Stage</label>
-              <select
-                value={growthStage}
-                onChange={(e) => setGrowthStage(e.target.value)}
-                className="form-select"
-              >
-                <option value="Seedling">Seedling / Germination Stage</option>
-                <option value="Vegetative">Vegetative Growth Stage</option>
-                <option value="Flowering">Flowering & Booting Stage</option>
-                <option value="Fruiting">Fruiting / Grain Fill Stage</option>
-                <option value="Harvest">Maturity / Pre-Harvest Stage</option>
-              </select>
-            </div>
+            <div className="image-preview-wrapper">
 
-            <div className="form-group">
-              <label className="form-label">Field Location (Village & District)</label>
-              <input
-                type="text"
-                value={`${village}, ${district}`}
-                onChange={(e) => setVillage(e.target.value)}
-                className="form-input"
-                placeholder="e.g. Pimplgaon, Nashik"
+              <img
+                src={imagePreview}
+                alt="Selected crop leaf"
+                className="leaf-preview"
               />
+
             </div>
 
-            <button type="submit" className="primary-btn-sm analyze-submit-btn" disabled={isAnalyzing}>
-              {isAnalyzing ? (
-                <>
-                  <RefreshCw size={18} className="spin-icon" /> Computing Neural Pathology Diagnosis...
-                </>
-              ) : (
-                <>
-                  <Scan size={18} /> Run Practical AI Diagnosis
-                </>
+          </div>
+
+        )}
+
+        {/* FORM */}
+        <div className="form-grid mt-16">
+
+          {/* CROP */}
+          <div className="form-group">
+
+            <label>
+              Crop Plant Type
+            </label>
+
+            <select
+              value={selectedCrop}
+              onChange={(event) =>
+                setSelectedCrop(
+                  event.target.value
+                )
+              }
+            >
+
+              {cropOptions.map(
+                (crop) => (
+                  <option
+                    key={crop}
+                    value={crop}
+                  >
+                    {crop}
+                  </option>
+                )
               )}
-            </button>
+
+            </select>
+
           </div>
-        </form>
+
+          {/* GROWTH STAGE */}
+          <div className="form-group">
+
+            <label>
+              Crop Phenological Stage
+            </label>
+
+            <select
+              value={growthStage}
+              onChange={(event) =>
+                setGrowthStage(
+                  event.target.value
+                )
+              }
+            >
+
+              {growthOptions.map(
+                (stage) => (
+                  <option
+                    key={stage}
+                    value={stage}
+                  >
+                    {stage}
+                  </option>
+                )
+              )}
+
+            </select>
+
+          </div>
+
+          {/* VILLAGE */}
+          <div className="form-group">
+
+            <label>
+              Village Name
+            </label>
+
+            <input
+              type="text"
+              placeholder="Enter village name"
+              value={village}
+              onChange={(event) =>
+                setVillage(
+                  event.target.value
+                )
+              }
+            />
+
+          </div>
+
+          {/* DISTRICT */}
+          <div className="form-group">
+
+            <label>
+              District
+            </label>
+
+            <input
+              type="text"
+              placeholder="Enter district"
+              value={district}
+              onChange={(event) =>
+                setDistrict(
+                  event.target.value
+                )
+              }
+            />
+
+          </div>
+
+        </div>
+
+        {/* DIAGNOSIS BUTTON */}
+        <div className="action-area mt-16">
+
+          <button
+            type="button"
+            className="primary-btn"
+            onClick={handleDiagnosis}
+            disabled={
+              !imageFile ||
+              isAnalyzing
+            }
+          >
+
+            {isAnalyzing ? (
+
+              <>
+                <Loader2
+                  size={20}
+                  className="spin"
+                />
+
+                Analyzing...
+
+              </>
+
+            ) : (
+
+              <>
+                <Scan size={20} />
+
+                Run Practical AI Diagnosis
+
+              </>
+
+            )}
+
+          </button>
+
+        </div>
+
       </div>
 
-      {/* LOADING SPINNER STATE */}
-      {isAnalyzing && (
-        <div className="loading-card-clean">
-          <RefreshCw size={36} className="spin-icon icon-green mb-12" />
-          <h3>Processing Image with YOLOv8 Neural Agri-Vision...</h3>
-          <p>Localizing foliar lesion contours, concentric rings, chlorosis percentage, and pathogen pressure index</p>
-        </div>
-      )}
+      {/* RESULT */}
+      {result && (
 
-      {/* 3. CLEAN DIAGNOSTIC RESULT DASHBOARD */}
-      {demoResult && !isAnalyzing && (
-        <div className="clean-result-container">
-          {/* RESULT TABS NAVIGATION BAR */}
-          <div className="result-section-tabs">
-            <button
-              type="button"
-              onClick={() => setActiveTab('diagnosis')}
-              className={`sec-tab-btn ${activeTab === 'diagnosis' ? 'sec-tab-active' : ''}`}
-            >
-              <Scan size={16} /> 1. Visual Pathology & Spoken Voice
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('ipdm')}
-              className={`sec-tab-btn ${activeTab === 'ipdm' ? 'sec-tab-active' : ''}`}
-            >
-              <Layers size={16} /> 2. 4-Tier IPDM Strategy
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('pesticide')}
-              className={`sec-tab-btn ${activeTab === 'pesticide' ? 'sec-tab-active' : ''}`}
-            >
-              <FlaskConical size={16} /> 3. Safe Dosage & Tank Dilution Guide
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('followup')}
-              className={`sec-tab-btn ${activeTab === 'followup' ? 'sec-tab-active' : ''}`}
-            >
-              <Clock size={16} /> 4. Post-Treatment Healing Tracker
-            </button>
+        <div className="dash-card mt-16">
+
+          <div className="section-heading">
+
+            <div className="title-with-icon">
+
+              <CheckCircle
+                size={24}
+                className="icon-green"
+              />
+
+              <div>
+
+                <h2>
+                  {reportText.resultTitle}
+                </h2>
+
+                <p className="sub-title-text">
+                  {reportText.resultSubtitle}
+                </p>
+
+              </div>
+
+            </div>
+
           </div>
 
-          {/* TAB 1: VISUAL DIAGNOSIS & BOUNDING BOX OVERLAY */}
-          {activeTab === 'diagnosis' && (
-            <div className="tab-pane-content">
-              {/* AUDIO ADVISORY VOICE PLAYER (ALL INDIAN PREFERRED LANGUAGES) */}
-              <AudioAdvisoryPlayer
-                title={`Diagnosis: ${demoResult.condition} on ${demoResult.crop}`}
-                summaryText={demoResult.explanation}
-                advisorySteps={[
-                  demoResult.suggestedNextStep,
-                  'Prune and destroy infected lower leaves away from field borders',
-                  'Maintain optimal aeration and switch to drip irrigation to keep canopy dry',
-                  'Consult the 4-Tier IPDM tab for biological remedies before chemical spraying',
-                ]}
-                diseaseData={demoResult}
-                className="mb-20"
+          <div className="report-language-box">
+
+            <Languages size={18} />
+
+            <span>
+              {reportText.reportLanguage}
+            </span>
+
+            <strong>
+              {selectedLanguageName}
+            </strong>
+
+          </div>
+
+          <div className="result-grid">
+
+            {/* IMAGE */}
+            <div className="result-image-container result-box">
+
+              <img
+                src={result.image}
+                alt="Analyzed crop leaf"
+                className="result-image"
               />
 
-              {/* PRACTICAL ANALYSED DATA SUMMARY TILES */}
-              <div className="practical-analytics-banner mb-20">
-                <div className="analytic-tile">
-                  <span className="analytic-lbl">Leaf Chlorosis (Yellowing)</span>
-                  <strong className="analytic-val text-amber">{demoResult.chlorosisPct || '22.8%'}</strong>
-                  <span className="analytic-sub">Loss of Chlorophyll</span>
-                </div>
+            </div>
 
-                <div className="analytic-tile">
-                  <span className="analytic-lbl">Leaf Necrosis (Dead Tissue)</span>
-                  <strong className="analytic-val text-danger">{demoResult.necrosisPct || '9.4%'}</strong>
-                  <span className="analytic-sub">Cellular Breakdown</span>
-                </div>
+            {/* RESULT DETAILS */}
+            <div className="result-details">
 
-                <div className="analytic-tile">
-                  <span className="analytic-lbl">Spore Pressure Index</span>
-                  <strong className="analytic-val text-purple">{demoResult.sporePressure || 84}/100</strong>
-                  <span className="analytic-sub">Mills Risk Model</span>
-                </div>
+              <div className="result-item">
 
-                <div className="analytic-tile">
-                  <span className="analytic-lbl">Estimated Yield Loss</span>
-                  <strong className="analytic-val text-danger">{demoResult.yieldLossRisk || '25% - 35%'}</strong>
-                  <span className="analytic-sub">If Untreated in 10 Days</span>
-                </div>
+                <span>
+                  {reportText.crop}
+                </span>
+
+                <strong>
+                  {result.crop}
+                </strong>
+
               </div>
 
-              <div className="result-main-grid">
-                {/* LEFT COLUMN: BOUNDING BOX VISUALIZER */}
-                <div className="dash-card visualizer-card">
-                  <div className="visualizer-header">
-                    <div className="title-with-icon">
-                      <Scan size={20} className="icon-green" />
-                      <h4>YOLOv8 Lesion Localization & Bounding Boxes</h4>
-                    </div>
-                    <button
-                      type="button"
-                      className="toggle-box-btn-sm"
-                      onClick={() => setShowBoundingBoxes(!showBoundingBoxes)}
-                    >
-                      {showBoundingBoxes ? <EyeOff size={14} /> : <Eye size={14} />}
-                      <span>{showBoundingBoxes ? 'Hide Bounding Boxes' : 'Show Boxes'}</span>
-                    </button>
-                  </div>
+              <div className="result-item">
 
-                  <div className="visualizer-body">
-                    <BoundingBoxOverlay
-                      imageUrl={demoResult.image}
-                      boundingBoxes={demoResult.boundingBoxes}
-                      showBoxes={showBoundingBoxes}
-                    />
-                  </div>
+                <span>
+                  {reportText.scientificName}
+                </span>
 
-                  {demoResult.boundingBoxes && demoResult.boundingBoxes.length > 0 && (
-                    <div className="detected-boxes-pills">
-                      <span className="boxes-lbl">Detected Lesion Contours:</span>
-                      {demoResult.boundingBoxes.map((b) => (
-                        <span key={b.id} className="box-pill">
-                          🎯 {b.label} ({Math.round(b.confidence * 100)}% Confidence)
-                        </span>
-                      ))}
-                    </div>
+                <strong>
+                  {result.scientificName}
+                </strong>
+
+              </div>
+
+              <div className="result-item result-item-highlight">
+
+                <span>
+                  {reportText.condition}
+                </span>
+
+                <strong className="disease-name">
+                  {result.disease}
+                </strong>
+
+              </div>
+
+              <div className="result-item result-item-highlight confidence-item">
+
+                <span>
+                  {reportText.confidence}
+                </span>
+
+                <strong>
+                  {result.confidence.toFixed(2)}%
+                </strong>
+
+              </div>
+
+              <div className="result-item">
+
+                <span>
+                  {reportText.confidenceLevel}
+                </span>
+
+                <strong>
+                  {getConfidenceLevel(
+                    result.confidence
                   )}
+                </strong>
 
-                  {/* PRACTICAL PATHOLOGY PATTERN CARD */}
-                  <div className="practical-pattern-box mt-14">
-                    <div className="pattern-header">
-                      <MicroscopeIcon />
-                      <strong>Visual Pathology Symptom Pattern:</strong>
-                    </div>
-                    <p className="pattern-desc">{demoResult.lesionPattern}</p>
-                    <div className="spread-stage-badge">
-                      <span>Status:</span> <strong>{demoResult.spreadStage}</strong>
-                    </div>
-                  </div>
-                </div>
-
-                {/* RIGHT COLUMN: DIAGNOSIS & QUICK PRACTICAL ACTIONS */}
-                <div className="dash-card result-info-card">
-                  <div className="result-header-row">
-                    <div>
-                      <span className="crop-pill-sm">{demoResult.crop}</span>
-                      <h2 className="disease-title">{demoResult.condition}</h2>
-                      <p className="scientific-name-sub">
-                        <em>{demoResult.scientificName}</em>
-                      </p>
-                      <p className="location-txt-sm">
-                        <MapPin size={13} /> {demoResult.location}
-                      </p>
-                    </div>
-
-                    <div className="result-metrics">
-                      <div className="metric-badge">
-                        <span className="metric-num">{demoResult.confidence}%</span>
-                        <span className="metric-lbl">Model Confidence</span>
-                      </div>
-                      <div className="metric-badge">
-                        <span
-                          className={`metric-num ${
-                            demoResult.riskLevel === 'Critical' || demoResult.riskLevel === 'High'
-                              ? 'val-danger'
-                              : 'val-warning'
-                          }`}
-                        >
-                          {demoResult.riskLevel}
-                        </span>
-                        <span className="metric-lbl">Threat Severity</span>
-                      </div>
-                      <div className="metric-badge">
-                        <span className="metric-num text-purple">{demoResult.affectedArea}</span>
-                        <span className="metric-lbl">Affected Canopy</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="result-body-content">
-                    <div className="info-block">
-                      <h5>Pathological Diagnostic Explanation</h5>
-                      <p>{demoResult.explanation}</p>
-                    </div>
-
-                    {/* PRACTICAL FIELD DOSAGE & TANK MIXING PREVIEW */}
-                    {demoResult.tankDosageGuide && (
-                      <div className="practical-tank-guide-box">
-                        <div className="tank-guide-head">
-                          <Calculator size={16} className="icon-green" />
-                          <strong>Practical 1-Acre Sprayer Tank Calculation:</strong>
-                        </div>
-                        <div className="tank-guide-grid">
-                          <div className="tank-item">
-                            <span className="t-lbl">Recommended Chemical</span>
-                            <strong className="t-val text-emerald">{demoResult.tankDosageGuide.chemicalName}</strong>
-                          </div>
-                          <div className="tank-item">
-                            <span className="t-lbl">Dilution Ratio</span>
-                            <strong className="t-val">{demoResult.tankDosageGuide.dosagePerLiter}</strong>
-                          </div>
-                          <div className="tank-item">
-                            <span className="t-lbl">Water Required</span>
-                            <strong className="t-val">{demoResult.tankDosageGuide.perAcreWaterLiters} Liters / Acre</strong>
-                          </div>
-                          <div className="tank-item">
-                            <span className="t-lbl">Knapsack Refills</span>
-                            <strong className="t-val">{demoResult.tankDosageGuide.knapsackTanksNeeded}</strong>
-                          </div>
-                        </div>
-                        <div className="slurry-sop-line">
-                          <Beaker size={14} className="icon-amber" />
-                          <span><strong>Bucket Slurry SOP:</strong> {demoResult.tankDosageGuide.bucketSlurrySOP}</span>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="info-block mt-12">
-                      <h5>Recommended Immediate Next Step</h5>
-                      <p>{demoResult.suggestedNextStep}</p>
-                    </div>
-
-                    {/* ACTION BUTTONS ROW */}
-                    <div className="actions-button-row">
-                      <button type="button" className="primary-btn-sm" onClick={handleSaveReport}>
-                        <FileCheck size={16} /> Save Diagnostic Report
-                      </button>
-
-                      <button
-                        type="button"
-                        className="btn-escalate-lab"
-                        onClick={() => setIsLabModalOpen(true)}
-                      >
-                        <Building2 size={16} /> Refer to KVK Extension / Lab
-                      </button>
-
-                      <button
-                        type="button"
-                        className="secondary-btn-sm"
-                        onClick={() => setActiveTab('ipdm')}
-                      >
-                        <Layers size={16} /> View 4-Tier IPDM Plan →
-                      </button>
-                    </div>
-
-                    {savedSuccess && <div className="notice-banner banner-success mt-12">{savedSuccess}</div>}
-                    {escalatedSuccess && <div className="notice-banner banner-success mt-12">{escalatedSuccess}</div>}
-                  </div>
-                </div>
               </div>
 
-              {/* EXPANDABLE "WHY THIS RESULT?" SECTION */}
-              <div className="dash-card accordion-card mt-16">
-                <button
-                  type="button"
-                  className="accordion-header-btn"
-                  onClick={() => setShowWhySection(!showWhySection)}
-                >
-                  <div className="title-with-icon">
-                    <HelpCircle size={20} className="icon-green" />
-                    <div>
-                      <h4>Why this result? (Multi-Modal AI Telemetry Breakdown)</h4>
-                      <p className="sub-title-text">Click to view vision, weather, and pest factors correlated in this diagnosis</p>
-                    </div>
-                  </div>
-                  {showWhySection ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </button>
+              <div className="result-item">
 
-                {showWhySection && (
-                  <div className="accordion-body-content">
-                    <div className="why-grid">
-                      <div className="why-item">
-                        <Scan size={18} className="icon-green" />
-                        <div>
-                          <strong>Image Pathology Symptoms</strong>
-                          <p>YOLOv8 vision model localizes concentric foliar necrosis, chlorotic halos, and tissue desiccation.</p>
-                        </div>
-                      </div>
+                <span>
+                  {reportText.modelType}
+                </span>
 
-                      <div className="why-item">
-                        <CloudSun size={18} className="icon-amber" />
-                        <div>
-                          <strong>Weather Microclimate</strong>
-                          <p>Relative humidity &gt;80% and dew formation strongly correlate with active spore germination.</p>
-                        </div>
-                      </div>
+                <strong>
+                  {result.modelType}
+                </strong>
 
-                      <div className="why-item">
-                        <Leaf size={18} className="icon-green" />
-                        <div>
-                          <strong>Crop Stage Vulnerability</strong>
-                          <p>{growthStage} stage foliage has lower cellular resistance against fungal penetration.</p>
-                        </div>
-                      </div>
-
-                      <div className="why-item">
-                        <Bug size={18} className="icon-purple" />
-                        <div>
-                          <strong>Vector Traps & Pests</strong>
-                          <p>Cross-referenced with regional pheromone and sticky trap data to check vector transmission.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
-            </div>
-          )}
 
-          {/* TAB 2: INTEGRATED PEST & DISEASE MANAGEMENT (IPDM) */}
-          {activeTab === 'ipdm' && (
-            <div className="tab-pane-content">
-              <IpdmRecommender
-                cropName={demoResult.crop}
-                diseaseName={demoResult.condition}
-                onOpenPesticideCalc={() => setActiveTab('pesticide')}
-              />
-            </div>
-          )}
+              <div className="result-item">
 
-          {/* TAB 3: SAFE PESTICIDE GUIDE & DOSAGE CALCULATOR */}
-          {activeTab === 'pesticide' && (
-            <div className="tab-pane-content">
-              <SafePesticideGuide
-                initialCrop={demoResult.crop}
-                initialDisease={demoResult.condition}
-                onClose={() => setActiveTab('diagnosis')}
-              />
-            </div>
-          )}
+                <span>
+                  {reportText.cropStage}
+                </span>
 
-          {/* TAB 4: POST-TREATMENT RECOVERY TRACKER */}
-          {activeTab === 'followup' && (
-            <div className="tab-pane-content">
-              <FieldMonitoringTracker
-                onNewScanClick={() => {
-                  setActiveTab('diagnosis');
-                  handleRemoveImage();
-                  window.scrollTo({ top: 100, behavior: 'smooth' });
-                }}
-              />
+                <strong>
+                  {result.growthStage}
+                </strong>
+
+              </div>
+
+              <div className="result-item">
+
+                <span>
+                  {reportText.location}
+                </span>
+
+                <strong>
+                  {result.village}, {result.district}
+                </strong>
+
+              </div>
+
             </div>
-          )}
+
+          </div>
+
+          {/* MODEL OUTPUT */}
+          <div className="result-notice mt-16">
+
+            <Leaf size={20} />
+
+            <div>
+
+              <strong>
+                {reportText.modelOutput}
+              </strong>
+
+              <p>
+                {reportText.modelOutputText}
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* NEW SCAN */}
+          <button
+            type="button"
+            className="secondary-btn-sm mt-16"
+            onClick={handleRemoveImage}
+          >
+
+            <RefreshCw size={16} />
+
+            {reportText.newScan}
+
+          </button>
+
         </div>
       )}
 
-      {/* KVK LAB REFERRAL MODAL */}
-      {isLabModalOpen && demoResult && (
-        <LabReferralModal
-          cropName={demoResult.crop}
-          diseaseName={demoResult.condition}
-          farmerLocation={demoResult.location}
-          onClose={() => setIsLabModalOpen(false)}
-          onTicketGenerated={(ticket) => {
-            setEscalatedSuccess(`Lab referral case #${ticket.ticketId} escalated to ${ticket.lab.name}!`);
-            setTimeout(() => setEscalatedSuccess(''), 4000);
-          }}
-        />
-      )}
-    </div>
-  );
-}
+      {/* FOOTER INFO */}
+      <div className="dash-card mt-16">
 
-// Microscopic Icon SVG component
-function MicroscopeIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 18h8" />
-      <path d="M3 22h18" />
-      <path d="M14 22a7 7 0 1 0 0-14h-1" />
-      <path d="M9 14h2" />
-      <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z" />
-      <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3" />
-    </svg>
+        <div className="title-with-icon">
+
+          <Leaf
+            size={20}
+            className="icon-green"
+          />
+
+          <div>
+
+            <h3>
+              CropShield AI
+            </h3>
+
+            <p className="sub-title-text">
+              SIH 2026 • Problem Statement SIH26131
+            </p>
+
+          </div>
+
+        </div>
+
+        <p className="mt-12">
+          AI-powered crop health diagnostic platform
+          designed for early disease identification.
+          AI screening results should be confirmed with
+          appropriate agricultural expertise before
+          important treatment decisions.
+        </p>
+
+      </div>
+
+    </div>
   );
 }
