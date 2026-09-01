@@ -652,3 +652,517 @@ export const statesAndDistricts = {
     'Ranipet',
   ],
 };
+
+// ==========================================
+// 1. INTEGRATED PEST & DISEASE MANAGEMENT (IPDM)
+// ==========================================
+export const mockIpdmProtocols = {
+  'Tomato Early Blight': {
+    crop: 'Tomato',
+    diseaseName: 'Tomato Early Blight (Alternaria solani)',
+    severityGrade: 'Severe (Grade III)',
+    spreadVelocity: '12% / 48 hrs without intervention',
+    tier1_cultural: [
+      { id: 'c1', title: 'Foliage Pruning & Sanitation', desc: 'Prune bottom 12 inches of foliage to eliminate soil-borne splash transmission.', icon: '✂️' },
+      { id: 'c2', title: 'Crop Rotation', desc: 'Rotate with non-solanaceous crops (e.g. Maize, Legumes) for minimum 2 years.', icon: '🔄' },
+      { id: 'c3', title: 'Drip Irrigation Conversion', desc: 'Switch strictly to subsurface drip irrigation; prevent evening overhead sprinkling.', icon: '💧' },
+      { id: 'c4', title: 'Straw Mulching', desc: 'Apply 3-inch organic paddy straw mulch beneath canopy to trap fungal spores in soil.', icon: '🌾' },
+    ],
+    tier2_physical: [
+      { id: 'p1', title: 'Sticky Traps & Mesh Barriers', desc: 'Deploy 12 yellow sticky sheets per acre to suppress vector thrips and whiteflies.', icon: '🪤' },
+      { id: 'p2', title: 'Sanitary Rogueing', desc: 'Collect infected leaves in airtight bio-bags and solarize or burn away from field.', icon: '🔥' },
+    ],
+    tier3_biological: [
+      { id: 'b1', title: 'Trichoderma viride Soil Inoculation', desc: 'Apply 2.5 kg/ha T. viride enriched in 250 kg Farm Yard Manure during soil preparation.', icon: '🦠' },
+      { id: 'b2', title: 'Pseudomonas fluorescens 1% WP Spray', desc: 'Foliar spray @ 5g/L water at first sign of concentric yellowing lesions.', icon: '🌿' },
+      { id: 'b3', title: 'Neem Kernel Seed Extract (NSKE 5%)', desc: 'Spray cold-pressed NSKE 50ml/10L water every 10 days for botanical protection.', icon: '🍃' },
+    ],
+    tier4_chemical: [
+      { id: 'ch1', title: 'Mancozeb 75% WP (FRAC M03 - Multi-site)', desc: 'Preventative contact fungicide @ 2.5g/L water (600g/acre in 200L water). PHI: 3 days.', icon: '🧪' },
+      { id: 'ch2', title: 'Azoxystrobin 18.2% + Difenoconazole 11.4% SC (FRAC 11 + 3)', desc: 'Curative systemic spray @ 1.0ml/L water if leaf necrosis exceeds 25%. PHI: 5 days.', icon: '⚗️' },
+      { id: 'ch3', title: 'Resistance Management Rule', desc: 'Alternate FRAC 11 strobilurins with FRAC 3 triazoles; max 2 sprays of same class per season.', icon: '⚠️' },
+    ],
+  },
+  'Wheat Yellow Rust': {
+    crop: 'Wheat',
+    diseaseName: 'Stripe / Yellow Rust (Puccinia striiformis)',
+    severityGrade: 'Critical (Outbreak Alert)',
+    spreadVelocity: '25% / 24 hrs in foggy weather',
+    tier1_cultural: [
+      { id: 'c1', title: 'Resistant Variety Adoption', desc: 'Plant recommended rust-resistant varieties like DBW 187, DBW 303, or PBW 725.', icon: '🌾' },
+      { id: 'c2', title: 'Balanced Nitrogen Fertigation', desc: 'Avoid excessive top-dressing urea; split nitrogen doses with adequate potassium (K).', icon: '⚖️' },
+      { id: 'c3', title: 'Weed Host Eradication', desc: 'Clear wild grasses (Phalaris minor, Bromus) around field bunds harboring urediniospores.', icon: '🌿' },
+    ],
+    tier2_physical: [
+      { id: 'p1', title: 'Early Warning Visual Grid', desc: 'Mark 5 observation quadrants per acre; inspect weekly during 10-15°C fog windows.', icon: '🔍' },
+    ],
+    tier3_biological: [
+      { id: 'b1', title: 'Bacillus subtilis Bio-Shield', desc: 'Spray B. subtilis strain QST 713 @ 4ml/L during vegetative tillering stage.', icon: '🦠' },
+      { id: 'b2', title: 'Fermented Butter-Milk & Cow Urine Formulation', desc: 'Traditional bio-formulation (1L sour buttermilk + 1L cow urine in 10L water) @ morning mist.', icon: '🐄' },
+    ],
+    tier4_chemical: [
+      { id: 'ch1', title: 'Propiconazole 25% EC (FRAC 3 - DMI Triazole)', desc: 'Systemic curative @ 1.0ml/L (200ml/acre in 200L water). PHI: 30 days. Spray on initial yellow stripe appearance.', icon: '🧪' },
+      { id: 'ch2', title: 'Tebuconazole 25.9% EC (FRAC 3)', desc: 'Alternate spray @ 1.25ml/L if rust pustules spread to flag leaf. PHI: 21 days.', icon: '⚗️' },
+    ],
+  },
+  'Rice Paddy Blast': {
+    crop: 'Rice',
+    diseaseName: 'Rice Paddy Blast (Magnaporthe oryzae)',
+    severityGrade: 'Critical (Panicle Threat)',
+    spreadVelocity: '30% / 48 hrs in night dew',
+    tier1_cultural: [
+      { id: 'c1', title: 'Water Layer Regulation', desc: 'Maintain shallow standing water (2-3 cm); avoid prolonged drought stress followed by flooding.', icon: '💧' },
+      { id: 'c2', title: 'Silicon Soil Amendment', desc: 'Apply Calcium Silicate slag @ 200 kg/acre to strengthen leaf epidermal cell walls against fungal penetration.', icon: '🧱' },
+      { id: 'c3', title: 'Field Border Burning of Stubbles', desc: 'Safely compost or decompose previous season stubbles with microbial consortia.', icon: '🌾' },
+    ],
+    tier2_physical: [
+      { id: 'p1', title: 'Light Traps for Vector Vectors', desc: 'Install 1 solar light trap per 2 acres to monitor leafhoppers and blast spore dispersal.', icon: '💡' },
+    ],
+    tier3_biological: [
+      { id: 'b1', title: 'Pseudomonas fluorescens Seed & Foliar', desc: 'Seed treatment @ 10g/kg seed + Foliar spray @ 2.5kg/ha at panicle initiation.', icon: '🦠' },
+      { id: 'b2', title: 'Panchagavya Organic Spray', desc: 'Spray 3% Panchagavya solution during early morning to boost plant systemic resistance.', icon: '🍃' },
+    ],
+    tier4_chemical: [
+      { id: 'ch1', title: 'Tricyclazole 75% WP (FRAC I1 - Melanin Biosynthesis)', desc: 'Specific anti-blast fungicide @ 0.6g/L water (120g/acre in 200L water). PHI: 30 days.', icon: '🧪' },
+      { id: 'ch2', title: 'Kasugamycin 3% SL (FRAC 24 - Antibiotic)', desc: 'Bactericidal & fungicidal translaminar spray @ 2.0ml/L for leaf and neck blast. PHI: 14 days.', icon: '⚗️' },
+    ],
+  },
+  'Cotton Leaf Curl': {
+    crop: 'Cotton',
+    diseaseName: 'Cotton Leaf Curl Virus (CLCuV)',
+    severityGrade: 'High (Vector-Borne)',
+    spreadVelocity: 'Vector dependent (Whitefly surge)',
+    tier1_cultural: [
+      { id: 'c1', title: 'Synchronized Regional Sowing', desc: 'Complete sowing within 15-day window to escape peak whitefly migration wave.', icon: '📅' },
+      { id: 'c2', title: 'Border Barrier Cropping', desc: 'Plant 2 rows of Bajra/Sorghum/Maize as dense wind-barrier around cotton field perimeter.', icon: '🌽' },
+      { id: 'c3', title: 'Eradicate Weed Reservoir Hosts', desc: 'Remove Peeli Booti (Abutilon indicum) and Kanghi from field channels.', icon: '🌱' },
+    ],
+    tier2_physical: [
+      { id: 'p1', title: 'Yellow Sticky Trap Grid', desc: 'Install 20 yellow sticky sheets per acre at canopy height to capture adult whiteflies.', icon: '🪤' },
+    ],
+    tier3_biological: [
+      { id: 'b1', title: 'Beauveria bassiana 1.15% WP', desc: 'Entomopathogenic bio-fungicide @ 5g/L water targeting whitefly nymphs.', icon: '🦠' },
+      { id: 'b2', title: 'Chrysoperla carnea (Green Lacewing) Release', desc: 'Release 500-1000 predatory grubs per acre as biological voracious whitefly predators.', icon: '🐞' },
+    ],
+    tier4_chemical: [
+      { id: 'ch1', title: 'Pyriproxyfen 10% + Bifenthrin 10% EC', desc: 'Insect growth regulator + pyrethroid @ 2ml/L to break whitefly reproductive cycle. PHI: 15 days.', icon: '🧪' },
+      { id: 'ch2', title: 'Diafenthiuron 50% WP (IRAC 12A)', desc: 'Mite & whitefly control @ 1.2g/L with fumigant action in canopy. PHI: 21 days.', icon: '⚗️' },
+    ],
+  },
+  'Healthy Maize': {
+    crop: 'Maize',
+    diseaseName: 'Healthy Crop (Preventive Care)',
+    severityGrade: 'Optimal (Grade 0)',
+    spreadVelocity: 'No disease present',
+    tier1_cultural: [
+      { id: 'c1', title: 'Balanced NPK Nutrition', desc: 'Apply recommended N:P:K (120:60:40 kg/ha) with timely split applications.', icon: '🌾' },
+      { id: 'c2', title: 'Adequate Plant Density', desc: 'Maintain 60cm x 20cm spacing for optimal sunlight interception.', icon: '☀️' },
+    ],
+    tier2_physical: [
+      { id: 'p1', title: 'Pheromone Trap Monitoring', desc: 'Place 4 FAW monitoring traps per hectare for early pest detection.', icon: '🪤' },
+    ],
+    tier3_biological: [
+      { id: 'b1', title: 'Organic FYM + Bio-Fertilizers', desc: 'Incorporate Azotobacter and PSB bio-fertilizers to sustain microbial root zone health.', icon: '🌱' },
+    ],
+    tier4_chemical: [
+      { id: 'ch1', title: 'No Chemical Application Required', desc: 'Zero synthetic chemical intervention recommended for healthy fields.', icon: '✅' },
+    ],
+  },
+};
+
+// ==========================================
+// 2. SAFE PESTICIDE & INPUT USAGE REGISTRY
+// ==========================================
+export const mockSafePesticidesRegistry = [
+  {
+    id: 'pest-chem-01',
+    tradeName: 'Mancozeb 75% WP',
+    activeIngredient: 'Mancozeb (Dithiocarbamate)',
+    targetDisease: 'Early & Late Blight, Leaf Spot',
+    targetCrops: ['Tomato', 'Potato', 'Wheat', 'Chilli'],
+    dosePerAcreGramsOrMl: 600,
+    unit: 'grams',
+    recommendedWaterLitersPerAcre: 200,
+    dilutionRatePerLiter: '2.5 - 3.0 g / L',
+    preHarvestIntervalDays: 3,
+    maxResidueLimitPpm: '3.0 ppm (Codex Alimentarius)',
+    cibrcRegNumber: 'CIR-14289/92/Mancozeb(WP)-412',
+    hazardBand: 'Blue (Moderately Toxic - Caution)',
+    beeSafety: 'Safe (Low toxicity to adult Apis mellifera)',
+    aquaticToxicity: 'High (Do not spray within 15m of water bodies)',
+    livestockWithholdingDays: 7,
+    ppeRequired: ['Face Shield / Mask', 'Nitrile Gloves', 'Long Rubber Boots', 'Apron'],
+    optimalSprayingWindow: '06:30 AM - 09:30 AM (Wind < 8 km/h, Temp < 28°C)',
+    rainFastnessHours: 4,
+    tankMixCompatibility: 'Compatible with Imidacloprid and Cypermethrin. Incompatible with Bordeaux mixture & Lime sulfur.',
+  },
+  {
+    id: 'pest-chem-02',
+    tradeName: 'Propiconazole 25% EC (Tilt)',
+    activeIngredient: 'Propiconazole (Triazole - FRAC 3)',
+    targetDisease: 'Yellow Stripe Rust, Sheath Blight, Karnal Bunt',
+    targetCrops: ['Wheat', 'Rice', 'Groundnut'],
+    dosePerAcreGramsOrMl: 200,
+    unit: 'ml',
+    recommendedWaterLitersPerAcre: 200,
+    dilutionRatePerLiter: '1.0 ml / L',
+    preHarvestIntervalDays: 30,
+    maxResidueLimitPpm: '0.05 ppm',
+    cibrcRegNumber: 'CIR-28910/98/Propiconazole(EC)-882',
+    hazardBand: 'Yellow (Highly Toxic - Warning)',
+    beeSafety: 'Moderate (Avoid spraying during active crop flowering)',
+    aquaticToxicity: 'Very High (Strict 25m buffer from canals/ponds)',
+    livestockWithholdingDays: 21,
+    ppeRequired: ['Chemical Vapor Respirator (N95+)', 'Chemical Gauntlets', 'Safety Goggles', 'Waterproof Overalls'],
+    optimalSprayingWindow: '07:00 AM - 10:00 AM or 04:30 PM - 06:30 PM',
+    rainFastnessHours: 2,
+    tankMixCompatibility: 'Do not mix with alkaline substances. Apply alone for optimal systemic translaminar absorption.',
+  },
+  {
+    id: 'pest-chem-03',
+    tradeName: 'Tricyclazole 75% WP (Beam)',
+    activeIngredient: 'Tricyclazole (Triazolobenzothiazole - FRAC I1)',
+    targetDisease: 'Paddy Leaf Blast, Neck Blast, Node Blast',
+    targetCrops: ['Rice / Paddy'],
+    dosePerAcreGramsOrMl: 120,
+    unit: 'grams',
+    recommendedWaterLitersPerAcre: 200,
+    dilutionRatePerLiter: '0.6 g / L',
+    preHarvestIntervalDays: 30,
+    maxResidueLimitPpm: '0.01 ppm (EU Import Tolerant Spec)',
+    cibrcRegNumber: 'CIR-09412/86/Tricyclazole(WP)-104',
+    hazardBand: 'Blue (Moderately Toxic)',
+    beeSafety: 'Safe (Non-toxic to honeybees)',
+    aquaticToxicity: 'Moderate (Avoid direct drainage runoff for 48h)',
+    livestockWithholdingDays: 14,
+    ppeRequired: ['Dust Mask', 'Rubber Gloves', 'Protective Eyewear'],
+    optimalSprayingWindow: 'Early Morning before wind speeds pick up (>10 km/h)',
+    rainFastnessHours: 1,
+    tankMixCompatibility: 'Compatible with Cartap Hydrochloride and Isoprothiolane.',
+  },
+  {
+    id: 'pest-chem-04',
+    tradeName: 'Chlorantraniliprole 18.5% SC (Coragen)',
+    activeIngredient: 'Chlorantraniliprole (Anthranilic diamide - IRAC 28)',
+    targetDisease: 'Fall Armyworm, Stem Borer, Bollworm, Diamondback Moth',
+    targetCrops: ['Maize', 'Rice', 'Cotton', 'Tomato', 'Sugarcane'],
+    dosePerAcreGramsOrMl: 60,
+    unit: 'ml',
+    recommendedWaterLitersPerAcre: 200,
+    dilutionRatePerLiter: '0.3 - 0.4 ml / L',
+    preHarvestIntervalDays: 14,
+    maxResidueLimitPpm: '0.5 ppm',
+    cibrcRegNumber: 'CIR-61023/2009/Chlorantraniliprole(SC)-34',
+    hazardBand: 'Green (Slightly Toxic - Caution)',
+    beeSafety: 'High Safety Margin (Safe for adult bees and larvae once spray dries)',
+    aquaticToxicity: 'Low to Moderate',
+    livestockWithholdingDays: 3,
+    ppeRequired: ['Basic Face Mask', 'Rubber Gloves', 'Protective Eyeglasses'],
+    optimalSprayingWindow: '06:00 AM - 10:00 AM (Direct spray into central leaf whorl)',
+    rainFastnessHours: 2,
+    tankMixCompatibility: 'Highly compatible with bio-fungicides and micronutrient foliar sprays.',
+  },
+  {
+    id: 'pest-chem-05',
+    tradeName: 'Neem Azadirachtin 10,000 PPM (Econeem Plus)',
+    activeIngredient: 'Azadirachtin 1% EC (Botanical Bio-Pesticide)',
+    targetDisease: 'Whiteflies, Aphids, Jassids, Early Instar Caterpillars',
+    targetCrops: ['All Crops (Tomato, Cotton, Chilli, Wheat, Rice, Vegetables)'],
+    dosePerAcreGramsOrMl: 400,
+    unit: 'ml',
+    recommendedWaterLitersPerAcre: 200,
+    dilutionRatePerLiter: '2.0 ml / L',
+    preHarvestIntervalDays: 0,
+    maxResidueLimitPpm: 'Exempt from MRL (Zero chemical residue)',
+    cibrcRegNumber: 'CIR-31415/2001/Azadirachtin(EC)-190',
+    hazardBand: 'Green (Eco-friendly / Bio-Safe)',
+    beeSafety: 'Completely Safe for Pollinators and Beneficial Parasitoids',
+    aquaticToxicity: 'Non-toxic at recommended field dilutions',
+    livestockWithholdingDays: 0,
+    ppeRequired: ['Cotton Gloves', 'Normal Dust Mask'],
+    optimalSprayingWindow: 'Evening (05:00 PM - 07:00 PM) to avoid UV photolysis of Azadirachtin',
+    rainFastnessHours: 6,
+    tankMixCompatibility: 'Can be mixed with all microbial bio-agents (Trichoderma, Beauveria, Bt).',
+  },
+];
+
+// ==========================================
+// 3. SMART PEST-TRAP & SENSOR TELEMETRY HUB
+// ==========================================
+export const mockPestTrapData = [
+  {
+    trapId: 'TRAP-PB-101',
+    trapName: 'Solar Smart Trap Alpha',
+    location: 'Plot 4, Ludhiana, Punjab',
+    crop: 'Wheat & Mustard',
+    pestTarget: 'Aphid & Puccinia Spore Cloud',
+    dailyCatchCount: 42,
+    weeklyCatchCount: 218,
+    economicThresholdLimit: 30,
+    status: 'Breach Alert',
+    riskLevel: 'High',
+    lastAutomatedCountDate: 'Today, 06:00 AM (Optical AI Cam)',
+    lureType: 'Yellow Sticky + High-Lumen 395nm UV LED',
+    batteryLevel: 94,
+    sevenDayTrend: [12, 18, 22, 28, 35, 39, 42],
+  },
+  {
+    trapId: 'TRAP-MH-204',
+    trapName: 'Pheromone Trap Delta',
+    location: 'Block B, Nashik, Maharashtra',
+    crop: 'Tomato Polyhouse',
+    pestTarget: 'Tuta absoluta (Tomato Leafminer)',
+    dailyCatchCount: 8,
+    weeklyCatchCount: 44,
+    economicThresholdLimit: 15,
+    status: 'Normal',
+    riskLevel: 'Low',
+    lastAutomatedCountDate: 'Today, 07:30 AM',
+    lureType: 'Tutalure Pheromone Septum',
+    batteryLevel: 88,
+    sevenDayTrend: [10, 9, 7, 8, 6, 7, 8],
+  },
+  {
+    trapId: 'TRAP-AP-309',
+    trapName: 'Smart Optical Trap South',
+    location: 'Sector 2, Guntur, Andhra Pradesh',
+    crop: 'Chilli & Cotton',
+    pestTarget: 'Black Thrips (Thrips parvispinus)',
+    dailyCatchCount: 78,
+    weeklyCatchCount: 460,
+    economicThresholdLimit: 25,
+    status: 'Critical Outbreak',
+    riskLevel: 'Critical',
+    lastAutomatedCountDate: 'Today, 05:45 AM',
+    lureType: 'Blue Sticky Sheet + Kairomone Lure',
+    batteryLevel: 91,
+    sevenDayTrend: [22, 34, 45, 56, 68, 72, 78],
+  },
+  {
+    trapId: 'TRAP-KA-412',
+    trapName: 'FAW Smart Funnel Trap',
+    location: 'Maize Plot 1, Dharwad, Karnataka',
+    crop: 'Maize (Hybrid)',
+    pestTarget: 'Fall Armyworm (Spodoptera frugiperda)',
+    dailyCatchCount: 16,
+    weeklyCatchCount: 82,
+    economicThresholdLimit: 10,
+    status: 'Threshold Exceeded',
+    riskLevel: 'Medium',
+    lastAutomatedCountDate: 'Yesterday, 08:00 PM',
+    lureType: 'FAW-Lure (Z9-14:Ac)',
+    batteryLevel: 82,
+    sevenDayTrend: [4, 6, 8, 11, 14, 15, 16],
+  },
+];
+
+export const mockSensorNodes = [
+  {
+    nodeId: 'SENSOR-NODE-LUD-01',
+    nodeName: 'Canopy Microclimate Station #1',
+    field: 'Wheat Sector Alpha, Ludhiana',
+    canopyTemp: 22.4, // °C
+    canopyHumidity: 88.5, // %
+    leafWetnessHours: 7.2, // hrs/day (Crucial for spore germination)
+    soilMoisture15cm: 72.0, // %
+    soilMoisture30cm: 64.5, // %
+    soilTemperature: 19.8, // °C
+    solarRadiation: 450, // W/m²
+    sporeGerminationRiskIndex: 86, // High
+    status: 'Active (Online)',
+    battery: 96,
+    lastPing: '2 mins ago',
+  },
+  {
+    nodeId: 'SENSOR-NODE-NSK-02',
+    nodeName: 'Polyhouse IoT Node #3',
+    field: 'Tomato Polyhouse #2, Nashik',
+    canopyTemp: 27.8,
+    canopyHumidity: 65.2,
+    leafWetnessHours: 3.1,
+    soilMoisture15cm: 58.0,
+    soilMoisture30cm: 52.0,
+    soilTemperature: 23.5,
+    solarRadiation: 680,
+    sporeGerminationRiskIndex: 32, // Low
+    status: 'Active (Online)',
+    battery: 89,
+    lastPing: '5 mins ago',
+  },
+  {
+    nodeId: 'SENSOR-NODE-GTR-03',
+    nodeName: 'Field IoT Beacon #7',
+    field: 'Chilli Sector C, Guntur',
+    canopyTemp: 33.1,
+    canopyHumidity: 79.4,
+    leafWetnessHours: 5.8,
+    soilMoisture15cm: 41.0,
+    soilMoisture30cm: 48.0,
+    soilTemperature: 28.2,
+    solarRadiation: 810,
+    sporeGerminationRiskIndex: 78, // High
+    status: 'Active (Online)',
+    battery: 92,
+    lastPing: '1 min ago',
+  },
+];
+
+// ==========================================
+// 4. KVKs & ACCREDITED DIAGNOSTIC LABORATORIES
+// ==========================================
+export const mockKvkAndLabs = [
+  {
+    labId: 'LAB-KVK-PB-01',
+    name: 'Krishi Vigyan Kendra (KVK) & Plant Clinic Ludhiana',
+    institution: 'Punjab Agricultural University (PAU)',
+    state: 'Punjab',
+    district: 'Ludhiana',
+    distanceKm: 14.2,
+    contactPerson: 'Dr. Paramjit Singh (Plant Pathologist)',
+    phone: '+91 161 240 1960',
+    emergencyHelpline: '1800-180-1551',
+    address: 'PAU Campus, Ferozepur Road, Ludhiana, Punjab 141004',
+    testingCapabilities: ['Microscopic Spore Identification', 'PCR Virus Detection', 'Fungicide Resistance Bio-assay', 'Soil Nematode Count'],
+    turnaroundTime: '24 - 48 Hours',
+    rating: 4.9,
+    activeCasesAccepted: true,
+  },
+  {
+    labId: 'LAB-KVK-MH-02',
+    name: 'Regional Plant Health & Molecular Pathology Lab',
+    institution: 'Mahatma Phule Krishi Vidyapeeth (MPKV)',
+    state: 'Maharashtra',
+    district: 'Nashik',
+    distanceKm: 22.8,
+    contactPerson: 'Dr. Sunita Deshmukh (Extension Specialist)',
+    phone: '+91 253 257 8891',
+    emergencyHelpline: '1800-233-4000',
+    address: 'MPKV Agriculture College Campus, Dindori Road, Nashik 422003',
+    testingCapabilities: ['ELISA Viral Screening', 'Bacterial Culture & Isolation', 'Pesticide Residue Gas Chromatography'],
+    turnaroundTime: '24 - 72 Hours',
+    rating: 4.8,
+    activeCasesAccepted: true,
+  },
+  {
+    labId: 'LAB-KVK-AP-03',
+    name: 'Advanced Disease Diagnostic & Bio-Control Laboratory',
+    institution: 'Acharya N.G. Ranga Agricultural University (ANGRAU)',
+    state: 'Andhra Pradesh',
+    district: 'Guntur',
+    distanceKm: 18.5,
+    contactPerson: 'Dr. K. Venkata Rao (Senior Entomologist)',
+    phone: '+91 863 234 4022',
+    emergencyHelpline: '1800-425-3536',
+    address: 'RARS Campus, Lam, Guntur, Andhra Pradesh 522034',
+    testingCapabilities: ['Thrips Species DNA Barcoding', 'Blast Spore Virulence Testing', 'Trichoderma Quality Check'],
+    turnaroundTime: '24 - 48 Hours',
+    rating: 4.9,
+    activeCasesAccepted: true,
+  },
+  {
+    labId: 'LAB-ICAR-HR-04',
+    name: 'ICAR - Indian Institute of Wheat and Barley Research (IIWBR)',
+    institution: 'Indian Council of Agricultural Research (ICAR)',
+    state: 'Haryana',
+    district: 'Karnal',
+    distanceKm: 31.0,
+    contactPerson: 'Dr. R. K. Sharma (National Rust Surveillance Lead)',
+    phone: '+91 184 226 7490',
+    emergencyHelpline: '1800-180-2000',
+    address: 'Agronomy Road, Karnal, Haryana 132001',
+    testingCapabilities: ['Pathotype Rust Race Identification', 'Gene Deployment Profiling', 'National Rust Epidemic Forecasting'],
+    turnaroundTime: '12 - 24 Hours (Urgent Triage)',
+    rating: 5.0,
+    activeCasesAccepted: true,
+  },
+];
+
+// ==========================================
+// 5. POST-TREATMENT FIELD RECOVERY & CONTINUOUS LEARNING CASES
+// ==========================================
+export const mockFieldRecoveryCases = [
+  {
+    caseId: 'REC-2026-001',
+    farmerName: 'Gurpreet Singh',
+    location: 'Ludhiana, Punjab',
+    crop: 'Wheat (PBW 550)',
+    diagnosedDisease: 'Wheat Yellow Rust',
+    detectionDate: '18 Feb 2026',
+    treatmentApplied: 'Propiconazole 25% EC @ 1ml/L + Foliar Potassium',
+    day0Severity: 36, // %
+    day7Severity: 14, // %
+    day14Severity: 2, // % (Full recovery)
+    day0Image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80',
+    day7Image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80',
+    day14Image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=600&q=80',
+    status: 'Fully Recovered (95% Efficacy)',
+    farmerRating: 5,
+    farmerFeedback: 'Yellow rust pustules dried completely within 6 days after recommended spray. Flag leaf protected and grain filling normal.',
+    aiModelLearnedFeedback: 'Positive efficacy verified for Propiconazole on Puccinia under 88% humidity.',
+  },
+  {
+    caseId: 'REC-2026-002',
+    farmerName: 'Balwant Patil',
+    location: 'Nashik, Maharashtra',
+    crop: 'Tomato (Heirloom)',
+    diagnosedDisease: 'Tomato Early Blight',
+    detectionDate: '22 Feb 2026',
+    treatmentApplied: 'Bottom Leaf Pruning + Mancozeb 75% WP @ 2.5g/L + Trichoderma viride',
+    day0Severity: 34,
+    day7Severity: 18,
+    day14Severity: 6,
+    day0Image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=600&q=80',
+    day7Image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=600&q=80',
+    day14Image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=600&q=80',
+    status: 'Recovered & Controlled (88% Efficacy)',
+    farmerRating: 5,
+    farmerFeedback: 'Pruning lower leaves stopped splash infection. New shoots emerging clean and lesion-free.',
+    aiModelLearnedFeedback: 'Combined cultural pruning + bio-inoculant increased systemic recovery velocity by 34%.',
+  },
+  {
+    caseId: 'REC-2026-003',
+    farmerName: 'K. Subba Rao',
+    location: 'Guntur, Andhra Pradesh',
+    crop: 'Chilli (Teja)',
+    diagnosedDisease: 'Black Thrips & Leaf Distortion',
+    detectionDate: '25 Feb 2026',
+    treatmentApplied: 'Blue Sticky Traps (20/acre) + Beauveria bassiana bio-spray',
+    day0Severity: 48,
+    day7Severity: 26,
+    day14Severity: 12,
+    day0Image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=600&q=80',
+    day7Image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=600&q=80',
+    day14Image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=600&q=80',
+    status: 'Significant Improvement (75% Efficacy)',
+    farmerRating: 4,
+    farmerFeedback: 'Thrips count reduced from 22/leaf to 3/leaf. Flowering initiated again.',
+    aiModelLearnedFeedback: 'Blue sticky traps captured 68% of adult vectors before egg laying.',
+  },
+];
+
+// ==========================================
+// 6. AGRICULTURAL OFFICIAL SURVEILLANCE DATA
+// ==========================================
+export const mockOfficialSurveillance = {
+  nationalThreatLevel: 'Level 2 - Elevated Surveillance (Northern & Deccan Belts)',
+  activeOutbreakClustersCount: 8,
+  totalMonitoredAcreage: 184500, // Acres
+  preventedCropLossEstimateCr: 42.8, // ₹ Crores
+  avgExtensionResponseSlaHours: 4.2, // Hours to agronomist review
+  targetedPesticideReductionPercent: 28.4, // % reduction in blanket spraying
+  regionalBufferStocks: [
+    { inputName: 'Trichoderma viride Bio-fungicide', district: 'Ludhiana Depot', availableTons: 18.5, requiredTons: 12.0, status: 'Adequate Buffer' },
+    { inputName: 'Propiconazole 25% EC', district: 'Punjab State Buffer', availableTons: 8.2, requiredTons: 6.5, status: 'Adequate' },
+    { inputName: 'Tricyclazole 75% WP', district: 'Karnal & Kurukshetra', availableTons: 5.4, requiredTons: 9.0, status: 'Low Stock Alert' },
+    { inputName: 'Yellow & Blue Sticky Sheets', district: 'Guntur & Krishna', availableTons: 45000, requiredTons: 35000, status: 'Adequate' },
+    { inputName: 'Beauveria bassiana Bio-agent', district: 'Maharashtra Depot', availableTons: 12.0, requiredTons: 10.5, status: 'Adequate' },
+  ],
+  outbreakVelocityByDistrict: [
+    { district: 'Guntur, AP', crop: 'Chilli', disease: 'Black Thrips', velocity: '+18% / week', severity: 'Critical', actionStatus: 'Containment Zone Declared' },
+    { district: 'Ludhiana, PB', crop: 'Wheat', disease: 'Stripe Rust', velocity: '+12% / week', severity: 'High', actionStatus: 'Emergency Spray Advisory Dispatched' },
+    { district: 'Hooghly, WB', crop: 'Potato', disease: 'Late Blight', velocity: '+9% / week', severity: 'High', actionStatus: 'KVK Field Surveillance Active' },
+    { district: 'Nashik, MH', crop: 'Tomato', disease: 'Early Blight', velocity: '+4% / week', severity: 'Moderate', actionStatus: 'Monitoring Trap Counts' },
+    { district: 'Karnal, HR', crop: 'Paddy', disease: 'Blast Spores', velocity: '+2% / week', severity: 'Low-Moderate', actionStatus: 'Precautionary Advisory Active' },
+  ],
+};
+

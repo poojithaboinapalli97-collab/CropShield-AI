@@ -24,6 +24,12 @@ import {
   FileDown,
   LogOut,
   Settings,
+  FlaskConical,
+  Building2,
+  Layers,
+  Activity,
+  Send,
+  HelpCircle,
 } from 'lucide-react';
 
 import {
@@ -33,8 +39,15 @@ import {
   mockWeather,
   mockPestMonitoring,
   mockAdvisories,
+  mockKvkAndLabs,
   statesAndDistricts,
 } from '../data/mockData';
+
+import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
+import PestAndSensorHub from '../components/PestAndSensorHub';
+import SafePesticideGuide from '../components/SafePesticideGuide';
+import FieldMonitoringTracker from '../components/FieldMonitoringTracker';
+import LabReferralModal from '../components/LabReferralModal';
 
 import { detectCropDisease } from '../services/api';
 
@@ -166,8 +179,23 @@ export default function FarmerDashboard() {
     },
     {
       id: 'pest',
-      label: 'Pest Monitoring',
+      label: 'Pest & Sensor Hub',
       icon: Bug,
+    },
+    {
+      id: 'pesticide',
+      label: 'Safe Pesticide Calc',
+      icon: FlaskConical,
+    },
+    {
+      id: 'recovery',
+      label: 'Recovery Tracker',
+      icon: Clock,
+    },
+    {
+      id: 'lab',
+      label: 'KVK & Lab Referrals',
+      icon: Building2,
     },
     {
       id: 'weather',
@@ -444,6 +472,19 @@ export default function FarmerDashboard() {
 
                 </div>
 
+              </div>
+
+              {/* VERNACULAR VOICE ADVISORY PLAYER */}
+              <div className="mb-20">
+                <AudioAdvisoryPlayer
+                  title={`PAU & ICAR Daily Farm Advisory for ${selectedDistrict}`}
+                  summaryText={`Current microclimate risk is moderate for ${selectedCrop}. Night relative humidity is above 82%, favorable for Puccinia rust and fungal blights. Inspect lower canopy foliage.`}
+                  advisorySteps={[
+                    'Maintain clean field bunds and check yellow sticky traps for vector surges',
+                    'Ensure morning irrigation only; avoid standing water around crop root collar',
+                    'Refer suspicious leaf spots to the nearest KVK laboratory via the portal',
+                  ]}
+                />
               </div>
 
               {/* KPI CARDS */}
@@ -1156,72 +1197,75 @@ export default function FarmerDashboard() {
 
           )}
 
-          {/* ================= PEST ================= */}
+          {/* ================= PEST & SENSOR TELEMETRY HUB ================= */}
 
           {activeTab === 'pest' && (
-
             <div className="subview-container">
-
-              <div className="page-header">
-
-                <h1 className="page-title">
-                  Pest & Insect Surveillance
-                </h1>
-
-                <p className="page-subtitle">
-                  Monitor agricultural pests and recommended control measures.
-                </p>
-
-              </div>
-
-              <div className="pest-cards-grid">
-
-                {mockPestMonitoring.map((pest) => (
-
-                  <div
-                    key={pest.id}
-                    className="dash-card"
-                  >
-
-                    <div className="dash-card-header">
-
-                      <div>
-
-                        <h3>
-                          {pest.pestName}
-                        </h3>
-
-                        <p className="sub-title-text">
-                          Target: {pest.targetCrop}
-                        </p>
-
-                      </div>
-
-                      <span className="status-pill pill-red">
-                        {pest.infestationLevel}
-                      </span>
-
-                    </div>
-
-                    <p>
-                      <strong>
-                        Recommended Control:
-                      </strong>{' '}
-                      {pest.recommendedControl}
-                    </p>
-
-                    <span className="pest-date">
-                      Last Observed: {pest.lastObserved}
-                    </span>
-
-                  </div>
-
-                ))}
-
-              </div>
-
+              <PestAndSensorHub
+                onTriggerAdvisory={(trap) => {
+                  alert(`Advisory trigger for ${trap.pestTarget}: Deploy sticky traps and check canopy wetness.`);
+                }}
+              />
             </div>
+          )}
 
+          {/* ================= SAFE PESTICIDE & DOSAGE GUIDE ================= */}
+
+          {activeTab === 'pesticide' && (
+            <div className="subview-container">
+              <SafePesticideGuide
+                cropName={selectedCrop}
+              />
+            </div>
+          )}
+
+          {/* ================= POST-TREATMENT RECOVERY TRACKER ================= */}
+
+          {activeTab === 'recovery' && (
+            <div className="subview-container">
+              <FieldMonitoringTracker
+                onNewScanClick={() => navigate('/detect')}
+              />
+            </div>
+          )}
+
+          {/* ================= KVK & LAB REFERRALS ================= */}
+
+          {activeTab === 'lab' && (
+            <div className="subview-container">
+              <div className="page-header">
+                <div>
+                  <span className="sih-badge-inline">ICAR & STATE EXTENSION DIRECTORY</span>
+                  <h1 className="page-title">Krishi Vigyan Kendra (KVK) & Diagnostic Labs</h1>
+                  <p className="page-subtitle">
+                    Locate accredited agricultural research stations and dispatch physical plant tissue samples for PCR & microscopy.
+                  </p>
+                </div>
+              </div>
+
+              <div className="lab-cards-selector-grid mt-16">
+                {mockKvkAndLabs.map((lab) => (
+                  <div key={lab.labId} className="lab-choice-card" style={{ cursor: 'default' }}>
+                    <div className="lab-choice-top">
+                      <h4 className="lab-choice-name">{lab.name}</h4>
+                      <span className="lab-distance-badge">{lab.distanceKm} km away</span>
+                    </div>
+                    <p className="lab-inst-text">{lab.institution}</p>
+                    <p className="lab-address">📍 {lab.address}</p>
+                    <div className="lab-meta-row mt-8">
+                      <span>👤 {lab.contactPerson}</span>
+                      <span>📞 {lab.phone}</span>
+                      <span>⏱️ SLA: {lab.turnaroundTime}</span>
+                    </div>
+                    <div className="lab-caps-tags mt-8">
+                      {lab.testingCapabilities.map((cap, i) => (
+                        <span key={i} className="cap-tag">{cap}</span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
 
           {/* ================= ADVISORIES ================= */}

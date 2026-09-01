@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWeatherRisk } from '../services/api';
+import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
 import {
   CloudSun,
   Thermometer,
@@ -12,6 +13,11 @@ import {
   ShieldAlert,
   ArrowUpRight,
   Info,
+  Clock,
+  FlaskConical,
+  Bug,
+  Sparkles,
+  Layers,
 } from 'lucide-react';
 
 export default function WeatherRisk() {
@@ -28,19 +34,28 @@ export default function WeatherRisk() {
 
   const { current, vulnerabilityIndices, forecast7Days } = weatherData;
 
+  const sprayWindows = [
+    { time: '06:00 AM - 09:30 AM', status: 'Optimal Window', condition: 'Wind < 6 km/h, Temp 22°C, Zero Rain Risk', safe: true },
+    { time: '11:00 AM - 03:00 PM', status: 'Unfavorable / Drift Risk', condition: 'High UV Photolysis, High Heat > 32°C', safe: false },
+    { time: '04:30 PM - 06:30 PM', status: 'Moderate Window', condition: 'Wind 8 km/h, Good Foliage Absorption', safe: true },
+    { time: '08:00 PM - Midnight', status: 'Night Dew / Wash Risk', condition: 'Heavy Dew Precipitation (>90% RH)', safe: false },
+  ];
+
   return (
     <div className="weather-page">
       <div className="page-header">
         <div>
-          <span className="sih-badge-inline">SIH26131 WEATHER ENGINE</span>
+          <span className="sih-badge-inline">
+            <Sparkles size={13} /> SIH26131 • MICROCLIMATE EPIDEMIOLOGY ENGINE
+          </span>
           <h1 className="page-title">Weather & Microclimate Disease Forecasting</h1>
           <p className="page-subtitle">
-            Correlating ambient temperature, relative humidity, and dew point to forecast fungal spore germination & insect multiplication.
+            Correlate ambient temperature, relative humidity, leaf wetness hours, and dew point to forecast fungal spore dispersal, insect generation cycles, and safe pesticide spray windows.
           </p>
         </div>
 
         <div className="location-select-box">
-          <label>District Location:</label>
+          <label>Target District:</label>
           <select
             value={selectedDistrict}
             onChange={(e) => setSelectedDistrict(e.target.value)}
@@ -50,8 +65,22 @@ export default function WeatherRisk() {
             <option value="Karnal, Haryana">Karnal, Haryana</option>
             <option value="Nashik, Maharashtra">Nashik, Maharashtra</option>
             <option value="Guntur, Andhra Pradesh">Guntur, Andhra Pradesh</option>
+            <option value="Hooghly, West Bengal">Hooghly, West Bengal</option>
           </select>
         </div>
+      </div>
+
+      {/* AUDIO VOICE ADVISORY PLAYER FOR WEATHER RISK */}
+      <div className="mb-20">
+        <AudioAdvisoryPlayer
+          title={`Weather & Microclimate Outbreak Forecast for ${selectedDistrict}`}
+          summaryText={`Current temperature is ${current.temp}°C with high relative humidity at ${current.humidity}%. Fungal spore dispersal risk index is ${vulnerabilityIndices.fungalSpore}%.`}
+          advisorySteps={[
+            'Foliage wetness exceeds 7 hours; high risk for Puccinia yellow rust and Alternaria blight',
+            'Safe spray window is tomorrow morning 06:00 AM to 09:30 AM before wind picks up',
+            'Avoid heavy nitrogen application during cloudy high-humidity periods',
+          ]}
+        />
       </div>
 
       {/* CURRENT WEATHER CARDS GRID */}
@@ -77,7 +106,7 @@ export default function WeatherRisk() {
         <div className="w-metric-card highlight-rain">
           <div className="w-icon-box"><CloudSun size={24} /></div>
           <div>
-            <span className="w-label">24h Rainfall</span>
+            <span className="w-label">24h Rainfall Probability</span>
             <h3 className="w-value">{current.rainfall} mm</h3>
             <span className="w-sub">{current.condition}</span>
           </div>
@@ -86,35 +115,60 @@ export default function WeatherRisk() {
         <div className="w-metric-card highlight-wind">
           <div className="w-icon-box"><Wind size={24} /></div>
           <div>
-            <span className="w-label">Wind Velocity</span>
+            <span className="w-label">Wind Velocity & Drift</span>
             <h3 className="w-value">{current.windSpeed} km/h</h3>
-            <span className="w-sub">Vector Dispersal Vector: SE</span>
+            <span className="w-sub">Vector Dispersal: SE Breeze</span>
           </div>
         </div>
       </div>
 
+      {/* OPTIMAL SPRAY APPLICATION WINDOWS */}
+      <section className="weather-section">
+        <div className="section-title-row">
+          <div className="title-with-icon">
+            <Clock size={20} className="icon-green" />
+            <h2>Precision Spray Timing & Drift Advisory</h2>
+          </div>
+          <span className="badge-pill badge-green">Prevent Chemical Wastage & Drift</span>
+        </div>
+
+        <div className="spray-windows-grid">
+          {sprayWindows.map((win, idx) => (
+            <div key={idx} className={`spray-win-card ${win.safe ? 'win-safe' : 'win-risky'}`}>
+              <div className="win-top">
+                <strong className="win-time">{win.time}</strong>
+                <span className={`win-status-badge ${win.safe ? 'badge-green' : 'badge-red'}`}>
+                  {win.status}
+                </span>
+              </div>
+              <p className="win-condition">{win.condition}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* VULNERABILITY GAUGES */}
       <section className="weather-section">
         <div className="section-title-row">
-          <h2>Microclimate Disease Vulnerability Index</h2>
-          <span className="badge-pill badge-amber"><Info size={13} /> Updated via Weather API</span>
+          <h2>Microclimate Disease & Pest Vulnerability Matrix</h2>
+          <span className="badge-pill badge-amber"><Info size={13} /> Calibrated with Field Sensors</span>
         </div>
 
         <div className="vulnerability-grid">
           <div className="v-card">
             <div className="v-header">
-              <h4>Fungal Spore Dispersal</h4>
+              <h4>Fungal Spore Germination (Mills Index)</h4>
               <span className="v-score val-danger">{vulnerabilityIndices.fungalSpore}%</span>
             </div>
             <div className="v-progress-track">
               <div className="v-progress-bar bar-fill-danger" style={{ width: `${vulnerabilityIndices.fungalSpore}%` }}></div>
             </div>
-            <p className="v-desc">Puccinia (Rust) and Alternaria (Blight) spores propagate rapidly above 80% humidity.</p>
+            <p className="v-desc">Puccinia (Yellow Rust) and Alternaria (Early Blight) spores propagate rapidly above 80% RH.</p>
           </div>
 
           <div className="v-card">
             <div className="v-header">
-              <h4>Bacterial Blight Risk</h4>
+              <h4>Bacterial Blight Risk (Xanthomonas)</h4>
               <span className="v-score val-warning">{vulnerabilityIndices.bacterialBlight}%</span>
             </div>
             <div className="v-progress-track">
@@ -125,18 +179,18 @@ export default function WeatherRisk() {
 
           <div className="v-card">
             <div className="v-header">
-              <h4>Root Rot & Dampening</h4>
+              <h4>Pythium & Root Rot Index</h4>
               <span className="v-score val-danger">{vulnerabilityIndices.rootRot}%</span>
             </div>
             <div className="v-progress-track">
               <div className="v-progress-bar bar-fill-danger" style={{ width: `${vulnerabilityIndices.rootRot}%` }}></div>
             </div>
-            <p className="v-desc">Excess waterlogging in soil leads to Pythium root rot infestation.</p>
+            <p className="v-desc">Excess waterlogging in soil leads to Pythium and Rhizoctonia root collar dampening.</p>
           </div>
 
           <div className="v-card">
             <div className="v-header">
-              <h4>Pest & Insect Vector Risk</h4>
+              <h4>Insect Vector Flight Velocity (GDD)</h4>
               <span className="v-score val-success">{vulnerabilityIndices.insectPest}%</span>
             </div>
             <div className="v-progress-track">
@@ -150,7 +204,8 @@ export default function WeatherRisk() {
       {/* 7-DAY FORECAST TIMELINE */}
       <section className="weather-section">
         <div className="section-title-row">
-          <h2>7-Day Disease Risk Forecast</h2>
+          <h2>7-Day Epidemiological Risk Curve</h2>
+          <span className="sub-title-text">Predictive spore pressure over the upcoming week</span>
         </div>
 
         <div className="forecast-timeline-grid">

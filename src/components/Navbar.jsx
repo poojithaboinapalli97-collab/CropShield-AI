@@ -91,6 +91,7 @@ export default function Navbar() {
                 <option value="pa">PA (ਪੰਜਾਬੀ)</option>
                 <option value="te">TE (తెలుగు)</option>
                 <option value="ta">TA (தமிழ்)</option>
+                <option value="bn">BN (বাংলা)</option>
               </select>
             </div>
 
