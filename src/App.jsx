@@ -51,6 +51,12 @@ function AppRoutes() {
             }
           />
           <Route
+            path="/home"
+            element={
+              isAuthenticated ? <Home /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
             path="/dashboard"
             element={
               <ProtectedRoute>

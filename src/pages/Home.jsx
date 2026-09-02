@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
+import { getScanMetrics } from '../utils/scanHistory';
 import '../styles/Home.css';
 import {
   Scan,
@@ -28,6 +28,17 @@ import {
 
 export default function Home() {
   const { t } = useLanguage();
+  const [metrics, setMetrics] = useState(() => getScanMetrics());
+
+  useEffect(() => {
+    const updateStats = () => setMetrics(getScanMetrics());
+    window.addEventListener('cropshield_scans_updated', updateStats);
+    window.addEventListener('storage', updateStats);
+    return () => {
+      window.removeEventListener('cropshield_scans_updated', updateStats);
+      window.removeEventListener('storage', updateStats);
+    };
+  }, []);
 
   return (
     <div className="home-page">
@@ -83,7 +94,7 @@ export default function Home() {
           <div className="graphic-main-box">
             <div className="graphic-image-placeholder">
               <img
-                src="https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?auto=format&fit=crop&w=600&q=80"
+                src="/leaf_early_blight.svg"
                 alt="AI Disease Scan Preview"
                 className="graphic-img"
               />
@@ -110,53 +121,75 @@ export default function Home() {
         </div>
       </section>
 
-      {/* METRICS & STATS COUNTER */}
+      {/* METRICS & STATS COUNTER - REAL USER DATA */}
       <section className="stats-banner">
         <div className="stat-card">
           <div className="stat-icon-bg"><Zap size={22} /></div>
           <div>
-            <h3 className="stat-number">48,920+</h3>
-            <p className="stat-title">{t('statScans')}</p>
+            <h3 className="stat-number">{metrics.totalScans}</h3>
+            <p className="stat-title">Your Crops Scanned</p>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon-bg"><Award size={22} /></div>
           <div>
-            <h3 className="stat-number">94.8%</h3>
-            <p className="stat-title">{t('statAccuracy')}</p>
+            <h3 className="stat-number">{metrics.totalScans > 0 ? `${metrics.avgConfidence}%` : '94.8%'}</h3>
+            <p className="stat-title">AI Scan Precision</p>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon-bg"><MapPin size={22} /></div>
           <div>
-            <h3 className="stat-number">120+</h3>
-            <p className="stat-title">{t('statDistricts')}</p>
+            <h3 className="stat-number">{metrics.districtsCount}</h3>
+            <p className="stat-title">Monitored Farmland</p>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon-bg"><Activity size={22} /></div>
           <div>
-            <h3 className="stat-number">&lt; 0.5s</h3>
-            <p className="stat-title">{t('statResponse')}</p>
+            <h3 className="stat-number">&lt; 0.4s</h3>
+            <p className="stat-title">Inference Speed</p>
           </div>
         </div>
       </section>
 
-      {/* VERNACULAR VOICE ADVISORY PLAYER PREVIEW */}
-      <section className="transparency-section mb-20">
-        <AudioAdvisoryPlayer
-          title="CropShield AI Spoken Advisory Preview"
-          summaryText="Welcome to CropShield AI. Farmers can listen to localized spoken advisories in Hindi, Punjabi, Marathi, Telugu, Tamil, Bengali, and English."
-          advisorySteps={[
-            'Scan any leaf photo for instant lesion detection and confidence metrics',
-            'View cultural and biological management steps before chemical intervention',
-            'Calculate exact chemical dosage and sprayer water requirements for your farm acreage',
-          ]}
-        />
-      </section>
+      {/* REAL USER RECENT DIAGNOSTIC ACTIVITY */}
+      {metrics.scans.length > 0 && (
+        <section className="user-activity-section mb-24">
+          <div className="section-header">
+            <span className="section-tag">YOUR ACTIVITY LOG</span>
+            <h2>Your Recent Field Diagnostics</h2>
+            <p>Real-time records of crop images you analyzed with CropShield AI</p>
+          </div>
+
+          <div className="user-scans-grid">
+            {metrics.scans.slice(0, 3).map((scan) => (
+              <div key={scan.id} className="user-scan-card">
+                {scan.image && (
+                  <div className="scan-thumb-container">
+                    <img src={scan.image} alt={scan.disease} className="scan-thumb" />
+                    <span className="scan-crop-badge">{scan.crop}</span>
+                  </div>
+                )}
+                <div className="scan-card-body">
+                  <div className="scan-time-row">
+                    <Clock size={12} />
+                    <span>{scan.dateFormatted} • {scan.timeFormatted}</span>
+                  </div>
+                  <h4 className="scan-disease-name">{scan.disease}</h4>
+                  <div className="scan-meta-row">
+                    <span className="scan-conf-pill">{scan.confidence}% Confidence</span>
+                    <span className="scan-loc-pill">{scan.district}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* FEATURES GRID - 6 KEY PILLARS */}
       <section className="features-section">

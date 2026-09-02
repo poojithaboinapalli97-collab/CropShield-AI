@@ -43,7 +43,6 @@ import {
   statesAndDistricts,
 } from '../data/mockData';
 
-import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
 import PestAndSensorHub from '../components/PestAndSensorHub';
 import SafePesticideGuide from '../components/SafePesticideGuide';
 import FieldMonitoringTracker from '../components/FieldMonitoringTracker';
@@ -58,10 +57,12 @@ export default function FarmerDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const [selectedCrop, setSelectedCrop] = useState('Wheat');
+  const [selectedCrop, setSelectedCrop] = useState(
+    user?.crop || 'Wheat'
+  );
   const [growthStage, setGrowthStage] = useState('Flowering & Booting');
   const [locationInput, setLocationInput] = useState(
-    'Ludhiana District, Sector 4, Punjab'
+    user?.district && user?.state ? `${user.district} District, ${user.state}` : 'Ludhiana District, Sector 4, Punjab'
   );
 
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -82,11 +83,11 @@ export default function FarmerDashboard() {
   );
 
   const [selectedState, setSelectedState] = useState(
-    localStorage.getItem('selectedState') || 'Punjab'
+    user?.state || localStorage.getItem('selectedState') || 'Punjab'
   );
 
   const [selectedDistrict, setSelectedDistrict] = useState(
-    localStorage.getItem('selectedDistrict') || 'Ludhiana'
+    user?.district || localStorage.getItem('selectedDistrict') || 'Ludhiana'
   );
 
   const [selectedVillage, setSelectedVillage] = useState(
@@ -474,19 +475,6 @@ export default function FarmerDashboard() {
 
               </div>
 
-              {/* VERNACULAR VOICE ADVISORY PLAYER */}
-              <div className="mb-20">
-                <AudioAdvisoryPlayer
-                  title={`PAU & ICAR Daily Farm Advisory for ${selectedDistrict}`}
-                  summaryText={`Current microclimate risk is moderate for ${selectedCrop}. Night relative humidity is above 82%, favorable for Puccinia rust and fungal blights. Inspect lower canopy foliage.`}
-                  advisorySteps={[
-                    'Maintain clean field bunds and check yellow sticky traps for vector surges',
-                    'Ensure morning irrigation only; avoid standing water around crop root collar',
-                    'Refer suspicious leaf spots to the nearest KVK laboratory via the portal',
-                  ]}
-                />
-              </div>
-
               {/* KPI CARDS */}
 
               <div className="kpi-cards-grid">
@@ -854,7 +842,6 @@ export default function FarmerDashboard() {
                       </div>
 
                       <div className="q-res-remedy">
-
                         <strong>
                           Recommended Action:
                         </strong>{' '}
@@ -865,7 +852,7 @@ export default function FarmerDashboard() {
                         to="/detect"
                         className="view-full-report-link"
                       >
-                        View Complete Diagnostic Report →
+                        View Complete Diagnostic Report & Voice Advisory →
                       </Link>
 
                     </div>

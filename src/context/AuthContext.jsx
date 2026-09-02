@@ -19,12 +19,13 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = (name, role = 'Farmer') => {
+  const login = (name, role = 'Farmer', extraData = {}) => {
     const userData = {
-      name: name || 'Sardar Rameshwar Singh',
+      name: name || (role === 'Farmer' ? 'Sardar Rameshwar Singh' : role === 'Agronomist' ? 'Dr. A. K. Sharma' : 'Dr. Rajeshwar Rao, IAS'),
       role: role || 'Farmer',
       isAuthenticated: true,
       loginTime: new Date().toLocaleTimeString(),
+      ...extraData,
     };
     sessionStorage.setItem('cropshield_user', JSON.stringify(userData));
     setUser(userData);
@@ -36,8 +37,16 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (updatedData) => {
+    setUser((prev) => {
+      const merged = prev ? { ...prev, ...updatedData } : updatedData;
+      sessionStorage.setItem('cropshield_user', JSON.stringify(merged));
+      return merged;
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user?.isAuthenticated, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, isAuthenticated: !!user?.isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );

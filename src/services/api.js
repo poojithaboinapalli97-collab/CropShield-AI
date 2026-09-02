@@ -10,8 +10,8 @@
 import { mockDiseases, mockWeather, mockRiskMapDistricts, mockExpertQueue, mockAdminStats } from '../data/mockData';
 
 // Configurable FastAPI backend endpoint
-let API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
-let useMockData = true; // Default to true until live FastAPI backend is verified
+let API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://127.0.0.1:8001';
+let useMockData = false; // Default to live FastAPI backend at http://127.0.0.1:8001/predict
 
 export const setApiMode = (isMock, customUrl = null) => {
   useMockData = isMock;
@@ -27,8 +27,8 @@ export const getApiConfig = () => ({
 
 /**
  * Detect crop disease using uploaded image or preset key
- * FastAPI equivalent: POST /api/v1/detect
- * Body: FormData { file: File, crop_type: string }
+ * FastAPI equivalent: POST http://127.0.0.1:8001/predict
+ * Body: FormData { file: File }
  */
 export const detectCropDisease = async (fileOrPresetKey, cropType = 'auto') => {
   if (useMockData) {
@@ -56,27 +56,36 @@ export const detectCropDisease = async (fileOrPresetKey, cropType = 'auto') => {
     };
   }
 
-  // Live FastAPI Request
+  // Live FastAPI Request to http://127.0.0.1:8001/predict
   try {
     const formData = new FormData();
-    if (typeof fileOrPresetKey === 'object') {
-      formData.append('file', fileOrPresetKey);
+    if (typeof fileOrPresetKey === 'object' && fileOrPresetKey !== null) {
+      formData.append('file', fileOrPresetKey, fileOrPresetKey.name || 'crop_leaf.jpg');
     }
-    formData.append('crop_type', cropType);
+    if (cropType && cropType !== 'auto') {
+      formData.append('crop', cropType);
+    }
 
-    const response = await fetch(`${API_BASE_URL}/detect`, {
+    const response = await fetch(`${API_BASE_URL}/predict`, {
       method: 'POST',
       body: formData,
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
+      let errorDetail = '';
+      try {
+        const errData = await response.json();
+        errorDetail = errData.detail || errData.message || JSON.stringify(errData);
+      } catch {
+        errorDetail = await response.text();
+      }
+      throw new Error(errorDetail || `HTTP Error: ${response.status}`);
     }
 
     const data = await response.json();
     return { success: true, source: 'live', data };
   } catch (error) {
-    console.warn('FastAPI backend unreachable, falling back to mock data:', error.message);
+    console.warn('FastAPI backend error or unreachable:', error.message);
     return {
       success: true,
       source: 'mock_fallback',
@@ -98,6 +107,9 @@ export const fetchWeatherRisk = async (location = 'Punjab') => {
 
   try {
     const response = await fetch(`${API_BASE_URL}/weather-risk?location=${encodeURIComponent(location)}`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
     const data = await response.json();
     return { success: true, source: 'live', data };
   } catch (error) {
@@ -107,7 +119,7 @@ export const fetchWeatherRisk = async (location = 'Punjab') => {
 
 /**
  * Fetch Risk Map District Hotspots
- * FastAPI equivalent: GET /api/v1/risk-map
+ * FastAPI equivalent: GET /risk-map
  */
 export const fetchRiskMapData = async (cropFilter = 'all', riskFilter = 'all') => {
   if (useMockData) {
@@ -124,8 +136,11 @@ export const fetchRiskMapData = async (cropFilter = 'all', riskFilter = 'all') =
 
   try {
     const response = await fetch(`${API_BASE_URL}/risk-map?crop=${cropFilter}&risk=${riskFilter}`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
     const data = await response.json();
-    return { success: true, source: 'live', data };
+    return { success: true, source: 'live', data: Array.isArray(data) ? data : mockRiskMapDistricts };
   } catch (error) {
     return { success: true, source: 'mock_fallback', data: mockRiskMapDistricts };
   }
@@ -133,7 +148,7 @@ export const fetchRiskMapData = async (cropFilter = 'all', riskFilter = 'all') =
 
 /**
  * Fetch Expert Review Queue
- * FastAPI equivalent: GET /api/v1/expert/queue
+ * FastAPI equivalent: GET /expert/queue
  */
 export const fetchExpertQueue = async () => {
   if (useMockData) {
@@ -143,8 +158,11 @@ export const fetchExpertQueue = async () => {
 
   try {
     const response = await fetch(`${API_BASE_URL}/expert/queue`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
     const data = await response.json();
-    return { success: true, source: 'live', data };
+    return { success: true, source: 'live', data: Array.isArray(data) ? data : mockExpertQueue };
   } catch (error) {
     return { success: true, source: 'mock_fallback', data: mockExpertQueue };
   }
@@ -152,7 +170,7 @@ export const fetchExpertQueue = async () => {
 
 /**
  * Submit Expert Review Validation
- * FastAPI equivalent: POST /api/v1/expert/validate
+ * FastAPI equivalent: POST /expert/validate
  */
 export const submitExpertValidation = async (scanId, validationData) => {
   if (useMockData) {
@@ -172,6 +190,9 @@ export const submitExpertValidation = async (scanId, validationData) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ scanId, ...validationData }),
     });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
     const data = await response.json();
     return { success: true, source: 'live', data };
   } catch (error) {
@@ -181,7 +202,7 @@ export const submitExpertValidation = async (scanId, validationData) => {
 
 /**
  * Broadcast Admin Outbreak Advisory
- * FastAPI equivalent: POST /api/v1/admin/broadcast
+ * FastAPI equivalent: POST /admin/broadcast
  */
 export const sendAdminBroadcast = async (district, alertType, messageText) => {
   if (useMockData) {
@@ -202,6 +223,9 @@ export const sendAdminBroadcast = async (district, alertType, messageText) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ district, alertType, message: messageText }),
     });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
     const data = await response.json();
     return { success: true, source: 'live', data };
   } catch (error) {

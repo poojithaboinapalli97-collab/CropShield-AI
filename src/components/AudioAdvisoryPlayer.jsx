@@ -63,7 +63,7 @@ export default function AudioAdvisoryPlayer({
     let text = `${currentAdvisory.greeting} ${currentAdvisory.diagnosisText} ${currentAdvisory.practicalSummary} `;
     if (currentAdvisory.spokenSteps && currentAdvisory.spokenSteps.length > 0) {
       currentAdvisory.spokenSteps.forEach((step, idx) => {
-        text += `${idx + 1}: ${step} `;
+        text += `Action ${idx + 1}: ${step}. `;
       });
     }
     text += currentAdvisory.conclusion;
@@ -265,7 +265,7 @@ export default function AudioAdvisoryPlayer({
             {currentAdvisory.spokenSteps.map((step, idx) => (
               <div key={idx} className="transcript-step-item">
                 <span className="step-badge-num">{idx + 1}</span>
-                <span>{step}</span>
+                <span className="step-text-content">{step}</span>
               </div>
             ))}
           </div>

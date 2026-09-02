@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWeatherRisk } from '../services/api';
-import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
 import {
   CloudSun,
   Thermometer,
@@ -26,7 +25,9 @@ export default function WeatherRisk() {
 
   useEffect(() => {
     fetchWeatherRisk(selectedDistrict).then((res) => {
-      if (res.success) setWeatherData(res.data);
+      if (res && res.success && res.data && res.data.current) {
+        setWeatherData(res.data);
+      }
     });
   }, [selectedDistrict]);
 
@@ -68,19 +69,6 @@ export default function WeatherRisk() {
             <option value="Hooghly, West Bengal">Hooghly, West Bengal</option>
           </select>
         </div>
-      </div>
-
-      {/* AUDIO VOICE ADVISORY PLAYER FOR WEATHER RISK */}
-      <div className="mb-20">
-        <AudioAdvisoryPlayer
-          title={`Weather & Microclimate Outbreak Forecast for ${selectedDistrict}`}
-          summaryText={`Current temperature is ${current.temp}°C with high relative humidity at ${current.humidity}%. Fungal spore dispersal risk index is ${vulnerabilityIndices.fungalSpore}%.`}
-          advisorySteps={[
-            'Foliage wetness exceeds 7 hours; high risk for Puccinia yellow rust and Alternaria blight',
-            'Safe spray window is tomorrow morning 06:00 AM to 09:30 AM before wind picks up',
-            'Avoid heavy nitrogen application during cloudy high-humidity periods',
-          ]}
-        />
       </div>
 
       {/* CURRENT WEATHER CARDS GRID */}

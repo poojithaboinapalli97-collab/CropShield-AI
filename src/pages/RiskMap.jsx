@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { fetchRiskMapData, sendAdminBroadcast } from '../services/api';
-import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
 import '../styles/RiskMap.css';
 import {
   MapPin,
@@ -46,7 +45,7 @@ export default function RiskMap() {
 
   useEffect(() => {
     fetchRiskMapData(cropFilter, riskFilter).then((res) => {
-      if (res.success) {
+      if (res && res.success && Array.isArray(res.data)) {
         setDistricts(res.data);
 
         if (res.data.length > 0) {
@@ -502,14 +501,6 @@ export default function RiskMap() {
                   {getRiskIcon(selectedDistrict.riskLevel)}
                   {selectedDistrict.riskLevel}
                 </span>
-              </div>
-
-              {/* SPOKEN VOICE ADVISORY PLAYER FOR DISTRICT */}
-              <div className="mb-14">
-                <AudioAdvisoryPlayer
-                  title={`Outbreak Advisory: ${selectedDistrict.district}`}
-                  summaryText={`Active threat: ${selectedDistrict.activeDisease}. Epidemic risk score is ${selectedDistrict.riskScore} out of 100. ${selectedDistrict.advisory}`}
-                />
               </div>
 
               {/* EPIDEMIC VULNERABILITY DIAL */}
