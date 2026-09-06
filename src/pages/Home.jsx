@@ -196,7 +196,7 @@ export default function Home() {
         <div className="section-header">
           <span className="section-tag">COMPREHENSIVE CROP PROTECTION SUITE</span>
           <h2>Unified Defense from Soil to Harvest</h2>
-          <p>Full spectrum solution answering all 11 core capabilities under SIH 2026 Problem Statement SIH26131</p>
+          <p>Full spectrum AI-powered solution delivering state-of-the-art precision agriculture and crop health capabilities</p>
         </div>
 
         <div className="features-grid">

@@ -17,7 +17,9 @@ import {
   Phone,
   MapPin,
   Tag,
+  Home,
 } from 'lucide-react';
+import { indianStates, stateDistrictMap } from '../data/indiaLocations';
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -32,8 +34,10 @@ export default function AuthPage() {
   // Farmer specific login fields (empty by default so user enters their own data)
   const [farmerName, setFarmerName] = useState('');
   const [farmerMobile, setFarmerMobile] = useState('');
-  const [farmerCrop, setFarmerCrop] = useState('Wheat');
-  const [farmerLocation, setFarmerLocation] = useState('Ludhiana, Punjab');
+  const [farmerCrop, setFarmerCrop] = useState('Tomato');
+  const [farmerState, setFarmerState] = useState('Andhra Pradesh');
+  const [farmerDistrict, setFarmerDistrict] = useState('Guntur');
+  const [farmerVillage, setFarmerVillage] = useState('');
   const [farmerSize, setFarmerSize] = useState('');
   const [farmerPassword, setFarmerPassword] = useState('');
 
@@ -61,32 +65,37 @@ export default function AuthPage() {
   const [regPassword, setRegPassword] = useState('');
   const [regConfirmPassword, setRegConfirmPassword] = useState('');
   const [regRole, setRegRole] = useState('Farmer');
-  const [regCrop, setRegCrop] = useState('Wheat');
-  const [regLocation, setRegLocation] = useState('Ludhiana, Punjab');
+  const [regCrop, setRegCrop] = useState('Tomato');
+  const [regState, setRegState] = useState('Andhra Pradesh');
+  const [regDistrict, setRegDistrict] = useState('Guntur');
+  const [regVillage, setRegVillage] = useState('');
+  const [regFarmSize, setRegFarmSize] = useState('5 Acres');
   const [regError, setRegError] = useState('');
 
   // Quick Fill Demo Credentials based on active role
   const handleQuickFill = () => {
     setLoginError('');
     if (loginRole === 'Farmer') {
-      setFarmerName('Sardar Rameshwar Singh');
-      setFarmerMobile('+91 98765 43210');
-      setFarmerCrop('Wheat');
-      setFarmerLocation('Ludhiana, Punjab');
-      setFarmerSize('12.5 Acres');
+      setFarmerName('K. Venkateswara Rao');
+      setFarmerMobile('+91 98480 12345');
+      setFarmerCrop('Tomato');
+      setFarmerState('Andhra Pradesh');
+      setFarmerDistrict('Guntur');
+      setFarmerVillage('Tadikonda');
+      setFarmerSize('6.5 Acres');
       setFarmerPassword('demo123');
     } else if (loginRole === 'Agronomist') {
       setAgronomistName('Dr. A. K. Sharma');
-      setAgronomistKvk('PAU Extension & KVK Pathology Lab');
+      setAgronomistKvk('ANGRAU Regional Agricultural Research Station (Guntur)');
       setAgronomistPassword('demo123');
     } else if (loginRole === 'Admin') {
       setAdminName('Dr. Rajeshwar Rao, IAS');
       setAdminBadge('DIR-AGRI-0428');
       setAdminDesignation('Joint Director of Agriculture (Plant Protection)');
-      setAdminDepartment('Directorate of Plant Protection, Quarantine & Storage');
+      setAdminDepartment('Directorate of Agriculture, Andhra Pradesh & Telangana');
       setAdminEmail('rajeshwar.rao@agri.gov.in');
       setAdminPhone('+91 98480 23456');
-      setAdminZones('7 Agricultural State Surveillance Zones');
+      setAdminZones('AP & Telangana Agricultural Surveillance Zones');
       setAdminPhotoUrl('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80');
       setAdminPassword('demo123');
     }
@@ -107,19 +116,25 @@ export default function AuthPage() {
         return;
       }
 
-      const [district, state] = farmerLocation.split(',').map((s) => s.trim());
+      const cleanFarmSize = farmerSize.trim() 
+        ? (farmerSize.toLowerCase().includes('acre') ? farmerSize.trim() : `${farmerSize.trim()} Acres`)
+        : (localStorage.getItem('farmerFarmSize') || '5 Acres');
+
       login(farmerName, 'Farmer', {
         mobile: farmerMobile,
         crop: farmerCrop,
-        district: district || 'Ludhiana',
-        state: state || 'Punjab',
-        farmSize: farmerSize,
+        village: farmerVillage.trim() || 'Not specified',
+        district: farmerDistrict || 'Guntur',
+        state: farmerState || 'Andhra Pradesh',
+        farmSize: cleanFarmSize,
       });
 
       // Save to localStorage for Farmer Dashboard fallback
       localStorage.setItem('farmerName', farmerName);
-      localStorage.setItem('selectedDistrict', district || 'Ludhiana');
-      localStorage.setItem('selectedState', state || 'Punjab');
+      localStorage.setItem('selectedVillage', farmerVillage.trim());
+      localStorage.setItem('selectedDistrict', farmerDistrict || 'Guntur');
+      localStorage.setItem('selectedState', farmerState || 'Andhra Pradesh');
+      localStorage.setItem('farmerFarmSize', cleanFarmSize);
 
       navigate('/');
       return;
@@ -152,22 +167,15 @@ export default function AuthPage() {
         return;
       }
 
-      const adminProfilePayload = {
-        name: adminName,
-        badgeId: adminBadge,
-        adminId: adminBadge,
+      login(adminName, 'Admin', {
+        badgeNumber: adminBadge,
         designation: adminDesignation,
         department: adminDepartment,
         email: adminEmail,
         phone: adminPhone,
-        jurisdiction: adminZones,
-        authorizedZones: adminZones,
+        supervisedZones: adminZones,
         photoUrl: adminPhotoUrl,
-        officeLocation: 'Krishi Bhawan, New Delhi',
-      };
-
-      login(adminName, 'Admin', adminProfilePayload);
-      localStorage.setItem('cropshield_admin_profile', JSON.stringify(adminProfilePayload));
+      });
       navigate('/');
       return;
     }
@@ -192,16 +200,22 @@ export default function AuthPage() {
     }
 
     if (regRole === 'Farmer') {
-      const [district, state] = regLocation.split(',').map((s) => s.trim());
+      const cleanFarmSize = regFarmSize.trim()
+        ? (regFarmSize.toLowerCase().includes('acre') ? regFarmSize.trim() : `${regFarmSize.trim()} Acres`)
+        : '5 Acres';
+
       login(regName, 'Farmer', {
         crop: regCrop,
-        district: district || 'Ludhiana',
-        state: state || 'Punjab',
-        farmSize: '10 Acres',
+        village: regVillage.trim() || 'Not specified',
+        district: regDistrict || 'Guntur',
+        state: regState || 'Andhra Pradesh',
+        farmSize: cleanFarmSize,
       });
       localStorage.setItem('farmerName', regName);
-      localStorage.setItem('selectedDistrict', district || 'Ludhiana');
-      localStorage.setItem('selectedState', state || 'Punjab');
+      localStorage.setItem('selectedVillage', regVillage.trim());
+      localStorage.setItem('selectedDistrict', regDistrict || 'Guntur');
+      localStorage.setItem('selectedState', regState || 'Andhra Pradesh');
+      localStorage.setItem('farmerFarmSize', cleanFarmSize);
       navigate('/');
     } else if (regRole === 'Agronomist') {
       login(regName, 'Agronomist');
@@ -218,7 +232,7 @@ export default function AuthPage() {
       {/* WHITE BOX 1: BRAND HEADER CARD */}
       <div className="auth-white-card auth-brand-header-card">
         <div className="auth-brand-badge-row">
-          <span className="brand-sih-tag-pill">SIH 2026 • Problem Statement SIH26131</span>
+          <span className="brand-sih-tag-pill">PRECISION AGRI-VISION • SMART CROP HEALTH</span>
         </div>
         <div className="auth-logo-center">
           <div className="brand-icon-wrapper-large">
@@ -240,7 +254,7 @@ export default function AuthPage() {
         <div className="info-banner-content">
           <Info size={18} className="icon-emerald-spin" />
           <span>
-            <strong>SIH Prototype Mode:</strong> Multi-role authentication enabled. Switch role below to preview Farmer, Agronomist, or Directorate Admin workflows.
+            <strong>Multi-Role Access Mode:</strong> Select your role below to preview Farmer, Agronomist, or Directorate Admin workflows.
           </span>
         </div>
       </div>
@@ -415,22 +429,51 @@ export default function AuthPage() {
                         <option value="Tomato">Tomato (Hybrid Abhinav)</option>
                         <option value="Potato">Potato (Kufri Jyoti)</option>
                         <option value="Maize">Maize / Corn (HQPM 1)</option>
+                        <option value="Chilli">Chilli / Pepper (G4 / Teja)</option>
                       </select>
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Farm Location / District</label>
+                      <label className="form-label">Village / Gram Panchayat</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="e.g. Rampur, Kothapalli, Manjri"
+                        value={farmerVillage}
+                        onChange={(e) => setFarmerVillage(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label className="form-label">Farm State / UT (All India)</label>
                       <select
                         className="form-input"
-                        value={farmerLocation}
-                        onChange={(e) => setFarmerLocation(e.target.value)}
+                        value={farmerState}
+                        onChange={(e) => {
+                          const newState = e.target.value;
+                          setFarmerState(newState);
+                          const dists = stateDistrictMap[newState] || [];
+                          setFarmerDistrict(dists[0] || '');
+                        }}
                       >
-                        <option value="Ludhiana, Punjab">Ludhiana, Punjab</option>
-                        <option value="Sangli, Maharashtra">Sangli, Maharashtra</option>
-                        <option value="Karnal, Haryana">Karnal, Haryana</option>
-                        <option value="Guntur, Andhra Pradesh">Guntur, Andhra Pradesh</option>
-                        <option value="Nashik, Maharashtra">Nashik, Maharashtra</option>
-                        <option value="Hooghly, West Bengal">Hooghly, West Bengal</option>
+                        {indianStates.map((st) => (
+                          <option key={st} value={st}>{st}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Farm District</label>
+                      <select
+                        className="form-input"
+                        value={farmerDistrict}
+                        onChange={(e) => setFarmerDistrict(e.target.value)}
+                      >
+                        {(stateDistrictMap[farmerState] || []).map((dist) => (
+                          <option key={dist} value={dist}>{dist}</option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -800,37 +843,81 @@ export default function AuthPage() {
               </div>
 
               {regRole === 'Farmer' && (
-                <div className="form-row-2">
-                  <div className="form-group">
-                    <label className="form-label">Primary Crop</label>
-                    <select
-                      className="form-input"
-                      value={regCrop}
-                      onChange={(e) => setRegCrop(e.target.value)}
-                    >
-                      <option value="Wheat">Wheat</option>
-                      <option value="Rice">Rice</option>
-                      <option value="Cotton">Cotton</option>
-                      <option value="Tomato">Tomato</option>
-                      <option value="Potato">Potato</option>
-                      <option value="Maize">Maize</option>
-                    </select>
+                <>
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label className="form-label">Primary Crop</label>
+                      <select
+                        className="form-input"
+                        value={regCrop}
+                        onChange={(e) => setRegCrop(e.target.value)}
+                      >
+                        <option value="Wheat">Wheat</option>
+                        <option value="Rice">Rice</option>
+                        <option value="Cotton">Cotton</option>
+                        <option value="Tomato">Tomato</option>
+                        <option value="Potato">Potato</option>
+                        <option value="Maize">Maize</option>
+                        <option value="Chilli">Chilli / Pepper</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Village / Gram Panchayat</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="e.g. Rampur, Kothapalli"
+                        value={regVillage}
+                        onChange={(e) => setRegVillage(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label className="form-label">Farm State / UT (All India)</label>
+                      <select
+                        className="form-input"
+                        value={regState}
+                        onChange={(e) => {
+                          const newState = e.target.value;
+                          setRegState(newState);
+                          const dists = stateDistrictMap[newState] || [];
+                          setRegDistrict(dists[0] || '');
+                        }}
+                      >
+                        {indianStates.map((st) => (
+                          <option key={st} value={st}>{st}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Farm District</label>
+                      <select
+                        className="form-input"
+                        value={regDistrict}
+                        onChange={(e) => setRegDistrict(e.target.value)}
+                      >
+                        {(stateDistrictMap[regState] || []).map((dist) => (
+                          <option key={dist} value={dist}>{dist}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Farm District</label>
-                    <select
+                    <label className="form-label">Farm Land Size (Acres)</label>
+                    <input
+                      type="text"
                       className="form-input"
-                      value={regLocation}
-                      onChange={(e) => setRegLocation(e.target.value)}
-                    >
-                      <option value="Ludhiana, Punjab">Ludhiana, Punjab</option>
-                      <option value="Sangli, Maharashtra">Sangli, Maharashtra</option>
-                      <option value="Karnal, Haryana">Karnal, Haryana</option>
-                      <option value="Guntur, Andhra Pradesh">Guntur, Andhra Pradesh</option>
-                    </select>
+                      placeholder="e.g. 12.5 Acres, 5 Acres"
+                      value={regFarmSize}
+                      onChange={(e) => setRegFarmSize(e.target.value)}
+                    />
                   </div>
-                </div>
+                </>
               )}
 
               <div className="form-row-2">

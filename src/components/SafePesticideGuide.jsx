@@ -18,11 +18,11 @@ import {
 } from 'lucide-react';
 import { mockSafePesticidesRegistry } from '../data/mockData';
 
-export default function SafePesticideGuide({ cropName, defaultPesticideId, onClose }) {
+export default function SafePesticideGuide({ cropName, defaultPesticideId, initialAcreage, onClose }) {
   const [selectedPesticideId, setSelectedPesticideId] = useState(
     defaultPesticideId || mockSafePesticidesRegistry[0].id
   );
-  const [acreage, setAcreage] = useState(2.0);
+  const [acreage, setAcreage] = useState(initialAcreage ? parseFloat(initialAcreage) || 2.0 : 2.0);
   const [sprayerType, setSprayerType] = useState('16L Knapsack Manual Sprayer');
   const [ppeChecked, setPpeChecked] = useState({});
 

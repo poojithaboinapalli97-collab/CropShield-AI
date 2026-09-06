@@ -161,7 +161,7 @@ export default function ExpertValidation() {
         <div className="expert-header-content">
           <div className="expert-badge-row">
             <span className="sih-pill-badge">
-              <Sparkles size={13} /> SIH26131 • HUMAN-IN-THE-LOOP QUALITY ASSURANCE
+              <Sparkles size={13} /> HUMAN-IN-THE-LOOP QUALITY ASSURANCE
             </span>
             <span className="kvk-station-badge">
               <Award size={13} /> KVK Accredited Ag-Station • ICAR Network

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { mockAdminStats, mockRiskMapDistricts, mockOfficialSurveillance } from '../data/mockData';
+import { allIndiaDistrictOptions, stateDistrictMap, indianStates } from '../data/indiaLocations';
 import { sendAdminBroadcast } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { getScanMetrics } from '../utils/scanHistory';
@@ -160,12 +161,13 @@ export default function AdminDashboard() {
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
 
   // Emergency Broadcast Form State
-  const [broadcastDistrict, setBroadcastDistrict] = useState('Ludhiana');
+  const [broadcastDistrict, setBroadcastDistrict] = useState(() => localStorage.getItem('selectedDistrict') || 'Guntur');
   const [alertType, setAlertType] = useState('Critical Emergency');
   const [broadcastChannel, setBroadcastChannel] = useState('SMS + Automated IVR Voice Call');
-  const [broadcastMsg, setBroadcastMsg] = useState(
-    'URGENT ADVISORY: High humidity in Ludhiana district is causing rapid Puccinia spore dispersal. Spray Propiconazole @ 1.0ml/L before sunset.'
-  );
+  const [broadcastMsg, setBroadcastMsg] = useState(() => {
+    const d = localStorage.getItem('selectedDistrict') || 'Guntur';
+    return `URGENT ADVISORY: High humidity detected across ${d} district. Inspect tomato and chilli crops for bacterial leaf spots and black thrips. Apply recommended bio-spray before evening.`;
+  });
   const [broadcastResult, setBroadcastResult] = useState(null);
   const [isSending, setIsSending] = useState(false);
 
@@ -255,7 +257,7 @@ export default function AdminDashboard() {
         <div className="admin-header-left">
           <div className="admin-badge-strip">
             <span className="sih-badge-pill">
-              <Sparkles size={13} /> SIH26131 • DIRECTORATE SURVEILLANCE & COMMAND
+              <Sparkles size={13} /> DIRECTORATE SURVEILLANCE & COMMAND
             </span>
             <span className="command-live-indicator">
               <span className="command-pulse-dot"></span>
@@ -440,18 +442,18 @@ export default function AdminDashboard() {
           <div className="admin-card-header">
             <div className="title-with-icon">
               <Package size={20} className="icon-green" />
-              <h3>Regional Bio-Input & Chemical Buffer Stocks</h3>
+              <h3>Essential Crop Medicines & Bio-Inputs in Depots</h3>
             </div>
-            <span className="badge-pill badge-green">State Depots</span>
+            <span className="badge-pill badge-green">Regional Depots</span>
           </div>
 
           <div className="buffer-stock-table-wrap">
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>Input Name</th>
+                  <th>Medicine / Input Name</th>
                   <th>Depot Location</th>
-                  <th>Buffer Stock</th>
+                  <th>Available Stock</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -481,9 +483,9 @@ export default function AdminDashboard() {
           <div className="admin-card-header">
             <div className="title-with-icon">
               <BarChart3 size={20} className="icon-amber" />
-              <h3>District Outbreak Velocity Index</h3>
+              <h3>Disease Spread Speed in Monitored Districts</h3>
             </div>
-            <span className="badge-pill badge-amber">7-Day Spread Rate</span>
+            <span className="badge-pill badge-amber">Weekly Spread Trend</span>
           </div>
 
           <div className="velocity-list">
@@ -494,7 +496,7 @@ export default function AdminDashboard() {
                   <span className="v-crop-dis">{v.crop} — {v.disease}</span>
                 </div>
                 <div className="v-metric-group">
-                  <span className={`v-badge ${v.velocity.includes('+18%') || v.velocity.includes('+12%') ? 'text-danger' : 'text-amber'}`}>
+                  <span className={`v-badge ${v.velocity.includes('+18%') || v.velocity.includes('+16%') || v.velocity.includes('+11%') ? 'text-danger' : 'text-amber'}`}>
                     📈 {v.velocity}
                   </span>
                   <span className="v-action">{v.actionStatus}</span>
@@ -514,10 +516,10 @@ export default function AdminDashboard() {
           <div className="admin-card-header">
             <div className="title-with-icon">
               <Radio size={20} className="icon-red" />
-              <h3>Emergency Multi-Channel Outbreak Broadcast</h3>
+              <h3>Send Direct Alert Message to Farmers</h3>
             </div>
             <span className="badge-pill badge-red">
-              <Bell size={12} /> SMS • IVR • Push
+              <Bell size={12} /> SMS • Phone Call • WhatsApp
             </span>
           </div>
 
@@ -531,50 +533,54 @@ export default function AdminDashboard() {
 
             <div className="form-row-2">
               <div className="form-group">
-                <label>Target Outbreak District</label>
+                <label>Select Target District (AP & Telangana)</label>
                 <select
                   value={broadcastDistrict}
                   onChange={(e) => setBroadcastDistrict(e.target.value)}
                   className="form-input"
                 >
-                  <option value="Ludhiana">Ludhiana, Punjab</option>
-                  <option value="Guntur">Guntur, Andhra Pradesh</option>
-                  <option value="Nashik">Nashik, Maharashtra</option>
-                  <option value="Hooghly">Hooghly, West Bengal</option>
-                  <option value="Varanasi">Varanasi, Uttar Pradesh</option>
-                  <option value="Karnal">Karnal, Haryana</option>
+                  <optgroup label="Andhra Pradesh">
+                    {(stateDistrictMap['Andhra Pradesh'] || []).map((dist) => (
+                      <option key={dist} value={dist}>{dist}, Andhra Pradesh</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Telangana">
+                    {(stateDistrictMap['Telangana'] || []).map((dist) => (
+                      <option key={dist} value={dist}>{dist}, Telangana</option>
+                    ))}
+                  </optgroup>
                 </select>
               </div>
 
               <div className="form-group">
-                <label>Alert Severity Category</label>
+                <label>Urgency Level</label>
                 <select
                   value={alertType}
                   onChange={(e) => setAlertType(e.target.value)}
                   className="form-input"
                 >
-                  <option value="Critical Emergency">🔴 Level 1: Critical Emergency Containment</option>
-                  <option value="High Warning">🟡 Level 2: High Warning Spore Dispersal</option>
-                  <option value="Informational Advisory">🟢 Level 3: General Agronomic Advisory</option>
+                  <option value="Critical Emergency">🔴 Urgent Emergency Alert (Immediate Crop Threat)</option>
+                  <option value="High Warning">🟡 High Warning (Spore Spread / Pest Risk)</option>
+                  <option value="Informational Advisory">🟢 Helpful Advisory (General Farm Guidance)</option>
                 </select>
               </div>
             </div>
 
             <div className="form-group">
-              <label>Dispatch Channels</label>
+              <label>How to Send Alert</label>
               <select
                 value={broadcastChannel}
                 onChange={(e) => setBroadcastChannel(e.target.value)}
                 className="form-input"
               >
-                <option value="SMS + Automated IVR Voice Call">SMS + Automated IVR Vernacular Voice Call (Illiterate Farmers)</option>
-                <option value="SMS Text Dispatch Only">SMS Text Dispatch Only</option>
-                <option value="WhatsApp Community Broadcast">WhatsApp Kisan Group Broadcast</option>
+                <option value="SMS + Automated IVR Voice Call">SMS Text + Automated Voice Call in Local Language (Telugu & Hindi)</option>
+                <option value="SMS Text Dispatch Only">SMS Text Message Only</option>
+                <option value="WhatsApp Community Broadcast">WhatsApp Kisan Group Community Alert</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>Broadcast Message Body (Auto-translated to Regional Vernacular)</label>
+              <label>Alert Message for Farmers (Sent in Simple Telugu & English)</label>
               <textarea
                 rows={3}
                 value={broadcastMsg}
@@ -586,19 +592,19 @@ export default function AdminDashboard() {
 
             <button type="submit" className="btn-broadcast" disabled={isSending}>
               <Send size={16} />
-              <span>{isSending ? 'Dispatching Multi-Channel Alert...' : 'Broadcast Emergency Advisory'}</span>
+              <span>{isSending ? 'Dispatching Message to Farmers...' : 'Send Alert Message to Farmers'}</span>
             </button>
 
             {broadcastResult && (
               <div className="broadcast-success-alert">
                 <CheckCircle2 size={18} className="alert-icon-green" />
                 <div>
-                  <strong>Official Emergency Broadcast Dispatched</strong>
+                  <strong>Alert Message Sent Successfully!</strong>
                   <p>
-                    Transmitted to <strong>{broadcastResult.sentToCount.toLocaleString()} farmers</strong> across {broadcastResult.district} via {broadcastChannel} at {broadcastResult.timestamp}.
+                    Transmitted to <strong>{broadcastResult.sentToCount.toLocaleString()} farmers</strong> in {broadcastResult.district} via {broadcastChannel} at {broadcastResult.timestamp}.
                   </p>
                   <small style={{ display: 'block', marginTop: '4px', opacity: 0.85 }}>
-                    Signed by {adminProfile.name} • Badge {adminProfile.badgeId} • {adminProfile.department}
+                    Dispatched by {adminProfile.name} • Badge {adminProfile.badgeId} • {adminProfile.department}
                   </small>
                 </div>
               </div>
@@ -611,9 +617,9 @@ export default function AdminDashboard() {
           <div className="admin-card-header">
             <div className="title-with-icon">
               <Flame size={20} className="icon-amber" />
-              <h3>Active Regional Surveillance Zones</h3>
+              <h3>Monitored Farming Districts & Threat Status</h3>
             </div>
-            <span className="badge-pill badge-amber">6 Monitored Districts</span>
+            <span className="badge-pill badge-amber">AP & Telangana Zones</span>
           </div>
 
           <div className="outbreak-list">

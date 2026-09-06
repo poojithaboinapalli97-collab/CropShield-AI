@@ -49,9 +49,16 @@ export default function RiskMap() {
         setDistricts(res.data);
 
         if (res.data.length > 0) {
+          const userDist = (localStorage.getItem('selectedDistrict') || 'Guntur').toLowerCase();
           setSelectedDistrict((current) => {
-            const stillExists = res.data.find((item) => item.id === current?.id);
-            return stillExists || res.data[0];
+            if (current) {
+              const stillExists = res.data.find((item) => item.id === current.id);
+              if (stillExists) return stillExists;
+            }
+            const matchingUserDist = res.data.find(
+              (item) => item.district.toLowerCase().includes(userDist) || userDist.includes(item.district.toLowerCase())
+            );
+            return matchingUserDist || res.data[0];
           });
         } else {
           setSelectedDistrict(null);
@@ -118,7 +125,7 @@ export default function RiskMap() {
       <div className="riskmap-header-box">
         <div className="riskmap-title-area">
           <span className="sih-badge-inline">
-            <Sparkles size={13} /> SIH26131 • GEOSPATIAL SURVEILLANCE & HOTSPOT RADAR
+            <Sparkles size={13} /> GEOSPATIAL SURVEILLANCE & HOTSPOT RADAR
           </span>
           <h1 className="page-title">Regional Outbreak & Epidemic Surveillance Map</h1>
           <p className="page-subtitle">
@@ -377,12 +384,12 @@ export default function RiskMap() {
             {showPestTrapLayer && (
               <div
                 className="map-telemetry-badge badge-trap"
-                style={{ left: '42%', top: '24%' }}
+                style={{ left: '50%', top: '60%' }}
                 onClick={() =>
                   setSelectedPinInfo({
                     type: 'Pest Trap',
-                    title: 'Solar Smart Trap Alpha (Ludhiana)',
-                    details: 'Pink Bollworm & Fall Armyworm counts: 142/day (ETL Breached).',
+                    title: 'Smart Optical Trap #1 (Khammam)',
+                    details: 'Pink Bollworm & Black Thrips counts: 142/day (ETL Threshold Breached).',
                   })
                 }
                 title="Click to view Trap Telemetry"
@@ -396,18 +403,18 @@ export default function RiskMap() {
             {showSensorLayer && (
               <div
                 className="map-telemetry-badge badge-sensor"
-                style={{ left: '32%', top: '56%' }}
+                style={{ left: '46%', top: '56%' }}
                 onClick={() =>
                   setSelectedPinInfo({
                     type: 'IoT Node',
-                    title: 'IoT Microclimate Station #3 (Nashik)',
-                    details: 'Canopy RH: 88%, Leaf Wetness: 6.8h, Soil Moisture: 36%.',
+                    title: 'IoT Microclimate Node #3 (Warangal)',
+                    details: 'Canopy RH: 86%, Leaf Wetness: 6.8h, Soil Moisture: 42%.',
                   })
                 }
                 title="Click to view Microclimate Sensor"
               >
                 <span>📡</span>
-                <span>Node #3: RH 88%</span>
+                <span>Node #3: RH 86%</span>
               </div>
             )}
 
@@ -415,7 +422,7 @@ export default function RiskMap() {
             {showLabLayer && (
               <div
                 className="map-telemetry-badge badge-lab"
-                style={{ left: '56%', top: '69%' }}
+                style={{ left: '54%', top: '68%' }}
                 onClick={() =>
                   setSelectedPinInfo({
                     type: 'Diagnostic Lab',

@@ -80,7 +80,7 @@ export default function ApiModal({ isOpen, onClose }) {
             </div>
             <div>
               <h3>FastAPI + YOLOv8 Intelligence Engine</h3>
-              <p>SIH 2026 Problem SIH26131 • High-Precision Agriculture AI</p>
+              <p>Precision Agri-Vision • High-Precision Agriculture AI</p>
             </div>
           </div>
           <button className="api-modal-close-btn" onClick={onClose} title="Close Modal">

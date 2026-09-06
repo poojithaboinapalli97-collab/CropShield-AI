@@ -1,6 +1,6 @@
 /**
  * CropShield AI - API Service Layer
- * SIH 2026 (Problem Statement: SIH26131)
+ * Precision Agri-Vision (Smart Agriculture & Crop Health)
  * 
  * Modular API client designed to seamlessly interface with a FastAPI backend
  * running YOLOv8 crop disease detection and weather risk prediction algorithms.

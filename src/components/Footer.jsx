@@ -18,7 +18,7 @@ export default function Footer() {
   return (
     <footer className="crop-main-footer">
       <div className="footer-container">
-        {/* COLUMN 1: BRAND & SIH 2026 INFO */}
+        {/* COLUMN 1: BRAND & PLATFORM INFO */}
         <div className="footer-brand-column">
           <div className="footer-brand-logo">
             <div className="footer-brand-icon">
@@ -28,7 +28,7 @@ export default function Footer() {
               <span className="footer-brand-name">
                 CropShield <span className="brand-ai-text">AI</span>
               </span>
-              <span className="footer-sih-tag">SIH 2026 • SIH26131</span>
+              <span className="footer-sih-tag">PRECISION AGRI-VISION</span>
             </div>
           </div>
 
@@ -36,7 +36,7 @@ export default function Footer() {
             Early Detection. Smarter Decisions. Healthier Crops.
           </p>
           <p className="footer-sub-desc">
-            AI-powered crop health diagnostic & microclimate risk forecasting platform engineered for Smart India Hackathon 2026.
+            AI-powered crop health diagnostic & microclimate risk forecasting platform engineered for Indian Agriculture.
           </p>
 
           <div className="footer-helpline-box">
@@ -123,7 +123,7 @@ export default function Footer() {
       <div className="footer-bottom-bar">
         <div className="footer-bottom-container">
           <p className="copyright-txt">
-            © 2026 <strong>CropShield AI</strong> • SIH 2026 (Problem Statement <strong>SIH26131</strong>) • Built for Indian Farmers & Agriculture
+            © 2026 <strong>CropShield AI</strong> • Built for Indian Farmers & Agriculture
           </p>
 
           <div className="footer-bottom-badges">

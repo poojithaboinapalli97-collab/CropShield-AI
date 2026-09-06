@@ -11,11 +11,13 @@ import {
   CheckCircle,
   Loader2,
   Languages,
+  RefreshCw,
 } from 'lucide-react';
 import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
 import { saveScanRecord } from '../utils/scanHistory';
+import { indianStates, stateDistrictMap } from '../data/indiaLocations';
 
-const API_URL = import.meta.env?.VITE_AI_API_URL || 'http://127.0.0.1:8001';
+const API_URL = import.meta.env?.VITE_AI_API_URL || import.meta.env?.VITE_API_BASE_URL || 'http://127.0.0.1:8001';
 
 const reportTranslations = {
   en: {
@@ -220,6 +222,19 @@ const languageNames = {
   kn: 'ಕನ್ನಡ',
 };
 
+const sampleTomatoLeaves = [
+  { id: 'bacterial_spot', label: 'Bacterial Spot', file: '/sample_leaves/Tomato___Bacterial_spot.jpg', crop: 'Tomato' },
+  { id: 'early_blight', label: 'Early Blight', file: '/sample_leaves/Tomato___Early_blight.jpg', crop: 'Tomato' },
+  { id: 'late_blight', label: 'Late Blight', file: '/sample_leaves/Tomato___Late_blight.jpg', crop: 'Tomato' },
+  { id: 'leaf_mold', label: 'Leaf Mold', file: '/sample_leaves/Tomato___Leaf_Mold.jpg', crop: 'Tomato' },
+  { id: 'septoria', label: 'Septoria Leaf Spot', file: '/sample_leaves/Tomato___Septoria_leaf_spot.jpg', crop: 'Tomato' },
+  { id: 'spider_mites', label: 'Spider Mites', file: '/sample_leaves/Tomato___Spider_mites Two-spotted_spider_mite.jpg', crop: 'Tomato' },
+  { id: 'target_spot', label: 'Target Spot', file: '/sample_leaves/Tomato___Target_Spot.jpg', crop: 'Tomato' },
+  { id: 'yellow_leaf_curl', label: 'Yellow Leaf Curl', file: '/sample_leaves/Tomato___Tomato_Yellow_Leaf_Curl_Virus.jpg', crop: 'Tomato' },
+  { id: 'mosaic_virus', label: 'Mosaic Virus', file: '/sample_leaves/Tomato___Tomato_mosaic_virus.jpg', crop: 'Tomato' },
+  { id: 'healthy', label: 'Healthy Leaf', file: '/sample_leaves/Tomato___healthy.jpg', crop: 'Tomato' },
+];
+
 export default function DiseaseDetection() {
   const { lang } = useLanguage();
 
@@ -240,11 +255,17 @@ export default function DiseaseDetection() {
   const [growthStage, setGrowthStage] =
     useState('Fruiting');
 
-  const [village, setVillage] =
-    useState('');
+  const [state, setState] =
+    useState(() => localStorage.getItem('selectedState') || 'Andhra Pradesh');
 
   const [district, setDistrict] =
-    useState('');
+    useState(() => localStorage.getItem('selectedDistrict') || 'Guntur');
+
+  const [village, setVillage] =
+    useState(() => localStorage.getItem('selectedVillage') || '');
+
+  const [selectedSampleId, setSelectedSampleId] =
+    useState(null);
 
   // -----------------------------
   // IMAGE STATE
@@ -664,6 +685,26 @@ export default function DiseaseDetection() {
   };
 
   // -----------------------------
+  // SAMPLE LEAF SELECTION (QUICK TESTING)
+  // -----------------------------
+  const handleSelectSample = async (sample) => {
+    try {
+      setSelectedSampleId(sample.id);
+      setErrorMessage('');
+      setResult(null);
+      setSelectedCrop(sample.crop);
+
+      const response = await fetch(sample.file);
+      const blob = await response.blob();
+      const file = new File([blob], `${sample.id}.jpg`, { type: 'image/jpeg' });
+      processFile(file);
+    } catch (err) {
+      console.error('Failed to load sample leaf image:', err);
+      setErrorMessage('Could not load sample leaf image.');
+    }
+  };
+
+  // -----------------------------
   // REMOVE IMAGE
   // -----------------------------
   const handleRemoveImage = () => {
@@ -674,6 +715,7 @@ export default function DiseaseDetection() {
     setResult(null);
     setErrorMessage('');
     setDetectedBadge('');
+    setSelectedSampleId(null);
   };
 
   // -----------------------------
@@ -797,11 +839,13 @@ export default function DiseaseDetection() {
         crop: effectiveCrop,
         growthStage: growthStage,
         village: village || 'Not provided',
-        district: district || 'Not provided',
+        district: district ? `${district}, ${state}` : 'Not provided',
+        state: state,
         scientificName: getScientificName(effectiveCrop),
         image: imagePreview,
         modelType: data.type || 'classification',
         boxes: data.boxes || [],
+        allProbabilities: data.all_probabilities || [],
         mismatchNote: mismatchNote,
       };
 
@@ -817,7 +861,7 @@ export default function DiseaseDetection() {
         errorMsg.toLowerCase().includes('networkerror')
       ) {
         setErrorMessage(
-          'Unable to connect to CropShield AI backend at http://127.0.0.1:8001/predict. Please make sure the FastAPI server is running.'
+          `Unable to connect to CropShield AI backend at ${API_URL}/predict. Please make sure the FastAPI server is running.`
         );
       } else {
         setErrorMessage(
@@ -856,7 +900,7 @@ export default function DiseaseDetection() {
         <div className="title-area">
 
           <span className="sih-badge-inline">
-            SIH26131 • PRECISION AGRI-VISION
+            AI CROP HEALTH DIAGNOSTICS
           </span>
 
           <h1 className="page-title">
@@ -991,6 +1035,26 @@ export default function DiseaseDetection() {
 
         )}
 
+        {/* QUICK TEST SAMPLES */}
+        <div className="sample-leaves-section mt-16">
+          <div className="sample-header">
+            <span className="sample-tag">TEST SAMPLES</span>
+            <p className="sample-desc">Click any sample leaf below to test different disease conditions:</p>
+          </div>
+          <div className="sample-leaves-grid">
+            {sampleTomatoLeaves.map((sample) => (
+              <button
+                key={sample.id}
+                type="button"
+                className={`sample-leaf-chip ${selectedSampleId === sample.id ? 'active' : ''}`}
+                onClick={() => handleSelectSample(sample)}
+              >
+                🍃 {sample.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* FORM */}
         <div className="form-grid mt-16">
 
@@ -1062,23 +1126,28 @@ export default function DiseaseDetection() {
 
           </div>
 
-          {/* VILLAGE */}
+          {/* STATE / UT */}
           <div className="form-group">
 
             <label>
-              Village Name
+              Farm State (AP / Telangana)
             </label>
 
-            <input
-              type="text"
-              placeholder="Enter village name"
-              value={village}
-              onChange={(event) =>
-                setVillage(
-                  event.target.value
-                )
-              }
-            />
+            <select
+              value={state}
+              onChange={(event) => {
+                const newState = event.target.value;
+                setState(newState);
+                const dists = stateDistrictMap[newState] || [];
+                setDistrict(dists[0] || '');
+              }}
+            >
+              {indianStates.map((st) => (
+                <option key={st} value={st}>
+                  {st}
+                </option>
+              ))}
+            </select>
 
           </div>
 
@@ -1086,15 +1155,35 @@ export default function DiseaseDetection() {
           <div className="form-group">
 
             <label>
-              District
+              Farm District
+            </label>
+
+            <select
+              value={district}
+              onChange={(event) => setDistrict(event.target.value)}
+            >
+              {(stateDistrictMap[state] || []).map((dist) => (
+                <option key={dist} value={dist}>
+                  {dist}
+                </option>
+              ))}
+            </select>
+
+          </div>
+
+          {/* VILLAGE */}
+          <div className="form-group">
+
+            <label>
+              Village / Gram Panchayat
             </label>
 
             <input
               type="text"
-              placeholder="Enter district"
-              value={district}
+              placeholder="Enter village name (e.g. Rampur, Kothapalli, Manjri)"
+              value={village}
               onChange={(event) =>
-                setDistrict(
+                setVillage(
                   event.target.value
                 )
               }
@@ -1395,6 +1484,29 @@ export default function DiseaseDetection() {
 
           </div>
 
+          {/* DIFFERENTIAL DIAGNOSIS / TOP PROBABILITIES */}
+          {result.allProbabilities && result.allProbabilities.length > 0 && (
+            <div className="diagnosis-distribution-box mt-20 mb-16">
+              <h4>Model Probability Distribution (Top Diagnoses)</h4>
+              <div className="probability-bars-list">
+                {result.allProbabilities.slice(0, 4).map((probItem, idx) => (
+                  <div key={idx} className="prob-bar-row">
+                    <div className="prob-bar-labels">
+                      <span className="prob-disease-name">{probItem.disease}</span>
+                      <span className="prob-pct-val">{probItem.confidence.toFixed(2)}%</span>
+                    </div>
+                    <div className="prob-track">
+                      <div
+                        className={`prob-fill ${idx === 0 ? 'prob-fill-primary' : 'prob-fill-sub'}`}
+                        style={{ width: `${Math.max(probItem.confidence, 1)}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* VERNACULAR VOICE ADVISORY (KISAN AUDIO) */}
           <div className="audio-voice-advisory-container mt-20 mb-16">
             <AudioAdvisoryPlayer
@@ -1464,7 +1576,7 @@ export default function DiseaseDetection() {
             </h3>
 
             <p className="sub-title-text">
-              SIH 2026 • Problem Statement SIH26131
+              Precision Agriculture Crop Protection
             </p>
 
           </div>

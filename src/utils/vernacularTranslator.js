@@ -1,6 +1,6 @@
 /**
  * CropShield AI - Vernacular Spoken Translation Engine
- * SIH 2026 (Problem Statement SIH26131)
+ * Precision Agri-Vision (Smart Agriculture & Crop Health)
  * 
  * Provides authentic, natural, crop-specific agricultural voice narration and text translations
  * across major Indian languages (Hindi, Telugu, Tamil, Marathi, Punjabi, Bengali, Gujarati, Kannada, English).

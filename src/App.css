@@ -1,6 +1,6 @@
 /* ==========================================================================
    CropShield AI - Modern Responsive CSS System
-   SIH 2026 (Problem Statement SIH26131)
+   Precision Agri-Vision
    ========================================================================== */
 
 .app-layout {
@@ -6306,3 +6306,120 @@
   border-top: 1px solid #e2e8f0;
   gap: 12px;
 }
+
+/* ================= SAMPLE LEAVES & PROBABILITY DISTRIBUTION ================= */
+.sample-leaves-section {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-top: 14px;
+}
+
+.sample-leaves-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.sample-leaves-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sample-leaf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sample-leaf-chip:hover {
+  background: #f0fdf4;
+  border-color: #22c55e;
+  color: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.15);
+}
+
+.sample-leaf-chip.active {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.diagnosis-distribution-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+
+.diagnosis-distribution-box h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.probability-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prob-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.prob-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.prob-disease-name {
+  color: #334155;
+}
+
+.prob-pct-val {
+  color: #0f172a;
+}
+
+.prob-track {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.prob-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.5s ease-out;
+}
+
+.prob-fill-primary {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+
+.prob-fill-sub {
+  background: #94a3b8;
+}
+

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -40,8 +40,9 @@ import {
   mockPestMonitoring,
   mockAdvisories,
   mockKvkAndLabs,
-  statesAndDistricts,
 } from '../data/mockData';
+
+import { indianStates, stateDistrictMap } from '../data/indiaLocations';
 
 import PestAndSensorHub from '../components/PestAndSensorHub';
 import SafePesticideGuide from '../components/SafePesticideGuide';
@@ -52,18 +53,34 @@ import { detectCropDisease } from '../services/api';
 
 export default function FarmerDashboard() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [selectedCrop, setSelectedCrop] = useState(
-    user?.crop || 'Wheat'
+    user?.crop || 'Tomato'
   );
   const [growthStage, setGrowthStage] = useState('Flowering & Booting');
-  const [locationInput, setLocationInput] = useState(
-    user?.district && user?.state ? `${user.district} District, ${user.state}` : 'Ludhiana District, Sector 4, Punjab'
+
+  const [selectedState, setSelectedState] = useState(
+    user?.state || localStorage.getItem('selectedState') || 'Andhra Pradesh'
   );
+
+  const [selectedDistrict, setSelectedDistrict] = useState(
+    user?.district || localStorage.getItem('selectedDistrict') || 'Guntur'
+  );
+
+  const [selectedVillage, setSelectedVillage] = useState(
+    user?.village || localStorage.getItem('selectedVillage') || ''
+  );
+
+  const [locationInput, setLocationInput] = useState(() => {
+    const st = user?.state || localStorage.getItem('selectedState') || 'Andhra Pradesh';
+    const dist = user?.district || localStorage.getItem('selectedDistrict') || 'Guntur';
+    const vil = user?.village || localStorage.getItem('selectedVillage') || '';
+    return vil ? `${vil}, ${dist} District, ${st}` : `${dist} District, ${st}`;
+  });
 
   const [uploadedImage, setUploadedImage] = useState(null);
   const [uploadedImagePreview, setUploadedImagePreview] = useState(null);
@@ -74,24 +91,22 @@ export default function FarmerDashboard() {
     user?.name || localStorage.getItem('farmerName') || 'Farmer'
   );
 
+  const [farmSize, setFarmSize] = useState(() => {
+    return user?.farmSize || localStorage.getItem('farmerFarmSize') || '5 Acres';
+  });
+
+  useEffect(() => {
+    if (user?.farmSize) {
+      setFarmSize(user.farmSize);
+    }
+  }, [user?.farmSize]);
+
   const [preferredLang, setPreferredLang] = useState(
     localStorage.getItem('preferredLang') || 'en'
   );
 
   const [smsAlerts, setSmsAlerts] = useState(
     localStorage.getItem('smsAlerts') !== 'false'
-  );
-
-  const [selectedState, setSelectedState] = useState(
-    user?.state || localStorage.getItem('selectedState') || 'Punjab'
-  );
-
-  const [selectedDistrict, setSelectedDistrict] = useState(
-    user?.district || localStorage.getItem('selectedDistrict') || 'Ludhiana'
-  );
-
-  const [selectedVillage, setSelectedVillage] = useState(
-    localStorage.getItem('selectedVillage') || 'Sector 4'
   );
 
   const [settingsNotice, setSettingsNotice] = useState('');
@@ -151,12 +166,28 @@ export default function FarmerDashboard() {
   const handleSaveSettings = (e) => {
     e.preventDefault();
 
+    const cleanFarmSize = farmSize.trim()
+      ? (farmSize.toLowerCase().includes('acre') ? farmSize.trim() : `${farmSize.trim()} Acres`)
+      : '5 Acres';
+
+    setFarmSize(cleanFarmSize);
     localStorage.setItem('farmerName', farmerName);
+    localStorage.setItem('farmerFarmSize', cleanFarmSize);
     localStorage.setItem('preferredLang', preferredLang);
     localStorage.setItem('smsAlerts', JSON.stringify(smsAlerts));
     localStorage.setItem('selectedState', selectedState);
     localStorage.setItem('selectedDistrict', selectedDistrict);
     localStorage.setItem('selectedVillage', selectedVillage);
+
+    if (updateUser) {
+      updateUser({
+        name: farmerName,
+        farmSize: cleanFarmSize,
+        state: selectedState,
+        district: selectedDistrict,
+        village: selectedVillage,
+      });
+    }
 
     setSettingsNotice('Settings saved successfully!');
 
@@ -170,18 +201,18 @@ export default function FarmerDashboard() {
   const sidebarItems = [
     {
       id: 'dashboard',
-      label: 'Dashboard',
+      label: 'Farm Overview',
       icon: LayoutDashboard,
     },
     {
       id: 'detect',
-      label: 'Disease Detection',
+      label: 'AI Disease Check',
       icon: Scan,
     },
     {
-      id: 'pest',
-      label: 'Pest & Sensor Hub',
-      icon: Bug,
+      id: 'weather',
+      label: 'Weather & Risk Alerts',
+      icon: CloudSun,
     },
     {
       id: 'pesticide',
@@ -189,39 +220,9 @@ export default function FarmerDashboard() {
       icon: FlaskConical,
     },
     {
-      id: 'recovery',
-      label: 'Recovery Tracker',
-      icon: Clock,
-    },
-    {
       id: 'lab',
-      label: 'KVK & Lab Referrals',
+      label: 'KVK & Lab Helpline',
       icon: Building2,
-    },
-    {
-      id: 'weather',
-      label: 'Weather Risk',
-      icon: CloudSun,
-    },
-    {
-      id: 'map',
-      label: 'Risk Map',
-      icon: MapPin,
-    },
-    {
-      id: 'advisories',
-      label: 'Advisories',
-      icon: Bell,
-    },
-    {
-      id: 'reports',
-      label: 'My Reports',
-      icon: FileText,
-    },
-    {
-      id: 'settings',
-      label: 'Settings',
-      icon: Settings,
     },
   ];
 
@@ -303,45 +304,9 @@ export default function FarmerDashboard() {
               </span>
 
               <div className="profile-farm-badge">
-                🌾 12.5 Acres Farm
+                🌾 {farmSize.toLowerCase().includes('acre') ? farmSize : `${farmSize} Acres`} Farm
               </div>
 
-            </div>
-
-          </div>
-
-          {/* FARM STATUS */}
-
-          <div className="sidebar-farm-widget">
-
-            <div className="widget-row">
-              <span className="widget-lbl">
-                Active Crop
-              </span>
-
-              <strong className="widget-val text-emerald">
-                Wheat
-              </strong>
-            </div>
-
-            <div className="widget-row">
-              <span className="widget-lbl">
-                Crop Health
-              </span>
-
-              <strong className="widget-val text-gold">
-                94% Healthy
-              </strong>
-            </div>
-
-            <div className="widget-row">
-              <span className="widget-lbl">
-                Soil Moisture
-              </span>
-
-              <strong className="widget-val text-sky">
-                65% Optimal
-              </strong>
             </div>
 
           </div>
@@ -394,19 +359,6 @@ export default function FarmerDashboard() {
             </button>
 
           </nav>
-
-          <div className="sidebar-footer-box">
-
-            <div className="sih-mini-badge">
-              <Sparkles size={12} />
-              <span>SIH 2026 Prototype</span>
-            </div>
-
-            <p className="sih-ps-text">
-              Problem Statement: SIH26131
-            </p>
-
-          </div>
 
         </aside>
 
@@ -881,7 +833,7 @@ export default function FarmerDashboard() {
                         </h3>
 
                         <p className="sub-title-text">
-                          {mockWeather.current.district}
+                          {selectedVillage ? `${selectedVillage}, ` : ''}{selectedDistrict} District, {selectedState}
                         </p>
 
                       </div>
@@ -1202,6 +1154,7 @@ export default function FarmerDashboard() {
             <div className="subview-container">
               <SafePesticideGuide
                 cropName={selectedCrop}
+                initialAcreage={farmSize}
               />
             </div>
           )}
@@ -1325,30 +1278,31 @@ export default function FarmerDashboard() {
               <div className="page-header">
 
                 <h1 className="page-title">
-                  My Crop Health Reports
+                  Crop Diagnostic & Soil Health Reports
                 </h1>
 
                 <p className="page-subtitle">
-                  Complete history of your crop diagnostic reports.
+                  Historical telemetry and clinical diagnostic history.
                 </p>
 
               </div>
 
-              <div className="table-responsive-card">
+              <div className="dash-card">
 
-                <table className="custom-table">
+                <table className="dash-table">
 
                   <thead>
 
                     <tr>
+
                       <th>Report ID</th>
-                      <th>Crop</th>
-                      <th>Stage</th>
-                      <th>Location</th>
-                      <th>Diagnosis</th>
-                      <th>Confidence</th>
                       <th>Date</th>
-                      <th>Download</th>
+                      <th>Crop</th>
+                      <th>Primary Diagnosis</th>
+                      <th>Confidence</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+
                     </tr>
 
                   </thead>
@@ -1360,7 +1314,13 @@ export default function FarmerDashboard() {
                       <tr key={report.reportId}>
 
                         <td>
-                          #{report.reportId}
+                          <strong>
+                            #{report.reportId}
+                          </strong>
+                        </td>
+
+                        <td>
+                          {report.date}
                         </td>
 
                         <td>
@@ -1368,23 +1328,19 @@ export default function FarmerDashboard() {
                         </td>
 
                         <td>
-                          {report.growthStage}
-                        </td>
-
-                        <td>
-                          {report.location}
-                        </td>
-
-                        <td>
                           {report.diagnosis}
                         </td>
 
                         <td>
-                          {report.confidence}
+
+                          <span className={`status-pill ${report.riskLevel === 'High' || report.riskLevel === 'Critical' ? 'pill-red' : 'pill-green'}`}>
+                            {report.confidence}
+                          </span>
+
                         </td>
 
                         <td>
-                          {report.date}
+                          {report.status}
                         </td>
 
                         <td>
@@ -1467,41 +1423,42 @@ export default function FarmerDashboard() {
                   <div className="form-group">
 
                     <label>
+                      Farm Land Size (Acres)
+                    </label>
+
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. 12.5 Acres, 5 Acres"
+                      value={farmSize}
+                      onChange={(e) =>
+                        setFarmSize(e.target.value)
+                      }
+                    />
+
+                  </div>
+
+                  <div className="form-group">
+
+                    <label>
                       State
                     </label>
 
                     <select
                       value={selectedState}
                       onChange={(e) => {
-
-                        const newState =
-                          e.target.value;
-
+                        const newState = e.target.value;
                         setSelectedState(newState);
-
-                        const districts =
-                          statesAndDistricts[newState] || [];
-
-                        setSelectedDistrict(
-                          districts[0] || ''
-                        );
+                        const districts = stateDistrictMap[newState] || [];
+                        setSelectedDistrict(districts[0] || '');
                       }}
                       className="form-input"
                     >
-
-                      {Object.keys(statesAndDistricts).map(
-                        (state) => (
-
-                          <option
-                            key={state}
-                            value={state}
-                          >
-                            {state}
-                          </option>
-
-                        )
-                      )}
-
+                      {indianStates.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
                     </select>
 
                   </div>
@@ -1521,19 +1478,11 @@ export default function FarmerDashboard() {
                       }
                       className="form-input"
                     >
-
-                      {(statesAndDistricts[selectedState] ||
-                        []).map((district) => (
-
-                        <option
-                          key={district}
-                          value={district}
-                        >
+                      {(stateDistrictMap[selectedState] || []).map((district) => (
+                        <option key={district} value={district}>
                           {district}
                         </option>
-
                       ))}
-
                     </select>
 
                   </div>
