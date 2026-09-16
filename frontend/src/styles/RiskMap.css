@@ -1,0 +1,771 @@
+/* ==========================================================================
+   CROPSHIELD AI - GEOSPATIAL RISK MAP & SURVEILLANCE RADAR STYLES
+   ========================================================================== */
+
+.riskmap-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+/* 1. TOP HEADER & METRIC KPI BOXES */
+.riskmap-header-box {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.riskmap-title-area {
+  max-width: 780px;
+}
+
+.riskmap-page .page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 8px 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.riskmap-page .page-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.riskmap-kpi-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.risk-kpi-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.risk-kpi-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.kpi-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpi-icon-red { background: #fee2e2; color: #dc2626; }
+.kpi-icon-amber { background: #fef3c7; color: #d97706; }
+.kpi-icon-green { background: #dcfce7; color: #15803d; }
+.kpi-icon-purple { background: #f3e8ff; color: #9333ea; }
+
+.kpi-text-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.kpi-num-val {
+  font-size: 20px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.kpi-num-lbl {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  margin-top: 2px;
+}
+
+.kpi-num-sub {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* 2. FILTER & LAYER CONTROLS CARD */
+.riskmap-controls-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.controls-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.filter-left-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-header-text strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  display: block;
+}
+
+.filter-header-text span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.filter-dropdowns-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+
+.filter-input-wrap label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.filter-native-select {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  cursor: pointer;
+}
+
+.layer-toggles-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.layer-title-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.layer-chips-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.map-layer-chip {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-layer-chip:hover {
+  background: #e2e8f0;
+}
+
+.map-layer-chip-active {
+  background: #15803d;
+  color: #ffffff;
+  border-color: #15803d;
+  box-shadow: 0 2px 8px rgba(21, 128, 61, 0.25);
+}
+
+/* 3. MAIN SPLIT GRID (MAP ON LEFT, DETAILS ON RIGHT) */
+.riskmap-main-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+/* MAP VIEW CARD */
+.map-presentation-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.map-card-topbar {
+  padding: 16px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.map-card-topbar h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.map-card-topbar p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+.map-canvas-viewport {
+  position: relative;
+  width: 100%;
+  height: 560px;
+  background: radial-gradient(circle at 50% 45%, #0e2e21 0%, #071710 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Vector India Map Graphic */
+.india-map-vector {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.15));
+}
+
+.india-boundary-path {
+  fill: rgba(34, 197, 94, 0.06);
+  stroke: #22c55e;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.india-state-line {
+  stroke: rgba(74, 222, 128, 0.2);
+  stroke-width: 0.7;
+  stroke-dasharray: 2 2;
+  fill: none;
+}
+
+.geo-graticule-line {
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 0.5;
+}
+
+.region-label-text {
+  font-size: 3.5px;
+  font-weight: 800;
+  fill: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* Map Hotspot Pins */
+.geo-pin-hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 0;
+}
+
+.geo-pin-hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.18);
+  z-index: 20;
+}
+
+.geo-pin-active {
+  transform: translate(-50%, -50%) scale(1.22);
+  z-index: 30;
+}
+
+.pin-core-beacon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.pin-pulse-ring {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 50%;
+  animation: radar-pulse 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes radar-pulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.pin-critical .pin-core-beacon { background: #ef4444; border: 2px solid #ffffff; color: #ffffff; }
+.pin-critical .pin-pulse-ring { border: 2px solid #ef4444; background: rgba(239, 68, 68, 0.2); }
+
+.pin-high .pin-core-beacon { background: #f97316; border: 2px solid #ffffff; color: #ffffff; }
+.pin-high .pin-pulse-ring { border: 2px solid #f97316; background: rgba(249, 115, 22, 0.2); }
+
+.pin-medium .pin-core-beacon { background: #eab308; border: 2px solid #ffffff; color: #ffffff; }
+.pin-medium .pin-pulse-ring { border: 2px solid #eab308; background: rgba(234, 179, 8, 0.2); }
+
+.pin-low .pin-core-beacon { background: #22c55e; border: 2px solid #ffffff; color: #ffffff; }
+.pin-low .pin-pulse-ring { border: 2px solid #22c55e; background: rgba(34, 197, 94, 0.2); }
+
+.pin-badge-tag {
+  background: rgba(15, 23, 42, 0.88);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-top: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pin-score-sub {
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.score-badge-red { background: #dc2626; color: #ffffff; }
+.score-badge-amber { background: #d97706; color: #ffffff; }
+.score-badge-green { background: #16a34a; color: #ffffff; }
+
+/* Interactive Node Badges (Traps, Sensors, Labs) */
+.map-telemetry-badge {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+  border-radius: 8px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 12;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.badge-trap { border-color: #f59e0b; color: #fef08a; }
+.badge-sensor { border-color: #0284c7; color: #bae6fd; }
+.badge-lab { border-color: #a855f7; color: #f3e8ff; }
+
+/* Map Legend Box */
+.map-canvas-legend {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.legend-head {
+  font-size: 11px;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.legend-pill-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.leg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-critical { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+.dot-high { background: #f97316; box-shadow: 0 0 6px #f97316; }
+.dot-medium { background: #eab308; box-shadow: 0 0 6px #eab308; }
+.dot-low { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
+/* 4. DISTRICT INTELLIGENCE CARD (RIGHT COLUMN) */
+.district-intelligence-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.district-intel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.intel-title-group h2 {
+  font-size: 24px;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 2px 0 4px;
+}
+
+.intel-loc-sub {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.risk-severity-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.badge-critical { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+.badge-high { background: #ffedd5; color: #c2410c; border: 1px solid #fdba74; }
+.badge-medium { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.badge-low { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+
+/* Epidemic Score Dial */
+.epidemic-dial-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dial-score-num {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  color: #0f172a;
+}
+
+.dial-score-max {
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.dial-meta-info h4 {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.dial-meta-info p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* Metric Tiles Grid */
+.intel-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.intel-tile {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.intel-tile-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intel-tile-lbl {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 700;
+  display: block;
+}
+
+.intel-tile-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* Action Directive Box */
+.official-directive-box {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.directive-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #92400e;
+  margin-bottom: 6px;
+}
+
+.directive-text {
+  font-size: 12px;
+  color: #78350f;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.btn-broadcast-alert {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.btn-broadcast-alert:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
+}
+
+/* 5. REGIONAL SURVEILLANCE TABLE CARD (BOTTOM BOX) */
+.surveillance-matrix-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.matrix-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.matrix-header-row h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.matrix-table-wrap {
+  overflow-x: auto;
+}
+
+.matrix-table-wrap table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.matrix-table-wrap th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: left;
+}
+
+.matrix-table-wrap td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+  color: #1e293b;
+  vertical-align: middle;
+}
+
+.matrix-table-wrap tr:hover td {
+  background: #f8fafc;
+}
+
+.btn-locate-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-locate-pin:hover {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 1100px) {
+  .riskmap-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .riskmap-kpi-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .riskmap-kpi-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-canvas-viewport {
+    height: 420px;
+  }
+
+  .controls-row-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.row-selected td {
+  background: #f0fdf4 !important;
+  border-bottom-color: #86efac;
+}
+
+.text-danger { color: #dc2626; }
+.text-amber { color: #d97706; }
+.text-success { color: #16a34a; }
+.text-muted { color: #64748b; }
+.text-xs { font-size: 11px; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.text-base { font-size: 15px; }
+
