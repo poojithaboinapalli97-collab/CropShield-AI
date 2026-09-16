@@ -1,0 +1,14 @@
+{
+  "name": "cropshield-ai",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "backend": "start_backend.bat"
+  },
+  "dependencies": {
+    "lucide-react": "^1.37.0",
+    "react-router-dom": "^7.18.3"
+  }
+}
