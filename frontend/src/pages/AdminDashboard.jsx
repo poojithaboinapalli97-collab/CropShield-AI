@@ -525,12 +525,11 @@ export default function AdminDashboard() {
       {/* =========================================================================
           2. ADMIN PRIMARY DATA MANAGEMENT TABS NAVIGATION
          ========================================================================= */}
-      <div className="admin-nav-tabs-bar" style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div className="admin-nav-tabs-bar">
         <button
           type="button"
-          className={`admin-nav-tab-btn ${activeTab === 'mandi' ? 'tab-active' : ''}`}
+          className={`admin-nav-tab-btn ${activeTab === 'mandi' ? 'tab-active tab-active-mandi' : ''}`}
           onClick={() => setActiveTab('mandi')}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', borderRadius: '12px', border: activeTab === 'mandi' ? '2px solid #16a34a' : '1px solid #cbd5e1', background: activeTab === 'mandi' ? '#f0fdf4' : '#ffffff', color: activeTab === 'mandi' ? '#15803d' : '#475569', fontWeight: 800, fontSize: '13.5px', cursor: 'pointer' }}
         >
           <DollarSign size={17} />
           <span>📊 APMC Mandi Rates Live Management</span>
@@ -538,9 +537,8 @@ export default function AdminDashboard() {
 
         <button
           type="button"
-          className={`admin-nav-tab-btn ${activeTab === 'outbreaks' ? 'tab-active' : ''}`}
+          className={`admin-nav-tab-btn ${activeTab === 'outbreaks' ? 'tab-active tab-active-outbreaks' : ''}`}
           onClick={() => setActiveTab('outbreaks')}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', borderRadius: '12px', border: activeTab === 'outbreaks' ? '2px solid #ea580c' : '1px solid #cbd5e1', background: activeTab === 'outbreaks' ? '#fff7ed' : '#ffffff', color: activeTab === 'outbreaks' ? '#9a3412' : '#475569', fontWeight: 800, fontSize: '13.5px', cursor: 'pointer' }}
         >
           <Flame size={17} />
           <span>🚨 State Outbreak Alerts & Quarantine Orders</span>
@@ -548,9 +546,8 @@ export default function AdminDashboard() {
 
         <button
           type="button"
-          className={`admin-nav-tab-btn ${activeTab === 'broadcast' ? 'tab-active' : ''}`}
+          className={`admin-nav-tab-btn ${activeTab === 'broadcast' ? 'tab-active tab-active-broadcast' : ''}`}
           onClick={() => setActiveTab('broadcast')}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', borderRadius: '12px', border: activeTab === 'broadcast' ? '2px solid #2563eb' : '1px solid #cbd5e1', background: activeTab === 'broadcast' ? '#eff6ff' : '#ffffff', color: activeTab === 'broadcast' ? '#1d4ed8' : '#475569', fontWeight: 800, fontSize: '13.5px', cursor: 'pointer' }}
         >
           <Radio size={17} />
           <span>📢 Emergency Kisan Broadcast Tool</span>
@@ -558,9 +555,8 @@ export default function AdminDashboard() {
 
         <button
           type="button"
-          className={`admin-nav-tab-btn ${activeTab === 'surveillance' ? 'tab-active' : ''}`}
+          className={`admin-nav-tab-btn ${activeTab === 'surveillance' ? 'tab-active tab-active-surveillance' : ''}`}
           onClick={() => setActiveTab('surveillance')}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px', borderRadius: '12px', border: activeTab === 'surveillance' ? '2px solid #7c3aed' : '1px solid #cbd5e1', background: activeTab === 'surveillance' ? '#f5f3ff' : '#ffffff', color: activeTab === 'surveillance' ? '#6d28d9' : '#475569', fontWeight: 800, fontSize: '13.5px', cursor: 'pointer' }}
         >
           <Activity size={17} />
           <span>📡 Radar & Surveillance Overview</span>
@@ -571,33 +567,31 @@ export default function AdminDashboard() {
           TAB 1: APMC MANDI RATES LIVE MANAGEMENT (ADMIN UPDATE FEATURE)
          ========================================================================= */}
       {activeTab === 'mandi' && (
-        <section className="admin-card mb-24" style={{ background: '#ffffff', borderRadius: '16px', padding: '24px', border: '1px solid #e2e8f0' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+        <section className="admin-mandi-control-card mb-24">
+          <div className="admin-section-header-flex">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <DollarSign size={22} color="#16a34a" />
-                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>
+              <div className="title-with-icon">
+                <DollarSign size={22} className="icon-green" />
+                <h3 className="admin-block-title">
                   Live APMC Mandi Commodity Rates Control
                 </h3>
               </div>
-              <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#64748b' }}>
+              <p className="admin-block-sub">
                 Edit market rates, price trends, and modal ranges per quintal. Saved values instantly update across all active farmer dashboards.
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className="admin-action-btn-group">
               <button
                 type="button"
-                className="btn-pill-action"
-                style={{ padding: '8px 14px', fontSize: '13px', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}
+                className="btn-pill-action admin-add-crop-btn"
                 onClick={handleAddNewMandiCrop}
               >
                 <Plus size={15} /> Add Crop Rate
               </button>
               <button
                 type="button"
-                className="scan-cta-large-btn"
-                style={{ padding: '8px 18px', fontSize: '13px', width: 'auto', background: '#16a34a', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}
+                className="scan-cta-large-btn admin-save-broadcast-btn"
                 onClick={handleSaveAllMandiRates}
               >
                 <Check size={16} /> Save & Broadcast Rates
@@ -606,92 +600,92 @@ export default function AdminDashboard() {
           </div>
 
           {mandiToast && (
-            <div style={{ padding: '10px 14px', background: '#dcfce7', border: '1px solid #86efac', color: '#15803d', borderRadius: '8px', fontSize: '13px', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="admin-toast-success">
               <CheckCircle2 size={16} /> {mandiToast}
             </div>
           )}
 
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13.5px', textAlign: 'left' }}>
+          <div className="admin-table-scroll-wrap">
+            <table className="admin-mandi-live-table">
               <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569' }}>
-                  <th style={{ padding: '12px 14px' }}>Crop Name</th>
-                  <th style={{ padding: '12px 14px' }}>Mandi / Yard</th>
-                  <th style={{ padding: '12px 14px' }}>Price (₹ / Quintal)</th>
-                  <th style={{ padding: '12px 14px' }}>Min Modal (₹)</th>
-                  <th style={{ padding: '12px 14px' }}>Max Modal (₹)</th>
-                  <th style={{ padding: '12px 14px' }}>Today's Trend (₹)</th>
-                  <th style={{ padding: '12px 14px' }}>Arrival Qty</th>
-                  <th style={{ padding: '12px 14px', textAlign: 'center' }}>Action</th>
+                <tr>
+                  <th>Crop Name</th>
+                  <th>Mandi / Yard</th>
+                  <th>Price (₹ / Q)</th>
+                  <th>Min Modal (₹)</th>
+                  <th>Max Modal (₹)</th>
+                  <th>Today's Trend (₹)</th>
+                  <th>Arrival Qty</th>
+                  <th style={{ textAlign: 'center' }}>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {mandiRates.map((item) => (
-                  <tr key={item.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td style={{ padding: '10px 14px', fontWeight: 700, color: '#0f172a' }}>
+                  <tr key={item.id}>
+                    <td>
                       <input
                         type="text"
                         value={item.crop}
                         onChange={(e) => handleMandiFieldChange(item.id, 'crop', e.target.value)}
-                        style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', width: '130px', fontWeight: 700 }}
+                        className="admin-table-input crop-input"
                       />
                     </td>
-                    <td style={{ padding: '10px 14px' }}>
+                    <td>
                       <input
                         type="text"
                         value={item.district}
                         onChange={(e) => handleMandiFieldChange(item.id, 'district', e.target.value)}
-                        style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', width: '150px' }}
+                        className="admin-table-input district-input"
                       />
                     </td>
-                    <td style={{ padding: '10px 14px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <td>
+                      <div className="currency-input-wrap">
                         <span>₹</span>
                         <input
                           type="number"
                           value={item.price}
                           onChange={(e) => handleMandiFieldChange(item.id, 'price', e.target.value)}
-                          style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', width: '90px', fontWeight: 800, color: '#15803d' }}
+                          className="admin-table-input price-input text-emerald font-bold"
                         />
                       </div>
                     </td>
-                    <td style={{ padding: '10px 14px' }}>
+                    <td>
                       <input
                         type="number"
                         value={item.minPrice}
                         onChange={(e) => handleMandiFieldChange(item.id, 'minPrice', e.target.value)}
-                        style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', width: '80px' }}
+                        className="admin-table-input num-input"
                       />
                     </td>
-                    <td style={{ padding: '10px 14px' }}>
+                    <td>
                       <input
                         type="number"
                         value={item.maxPrice}
                         onChange={(e) => handleMandiFieldChange(item.id, 'maxPrice', e.target.value)}
-                        style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', width: '80px' }}
+                        className="admin-table-input num-input"
                       />
                     </td>
-                    <td style={{ padding: '10px 14px' }}>
+                    <td>
                       <input
                         type="text"
                         value={item.trend}
                         onChange={(e) => handleMandiFieldChange(item.id, 'trend', e.target.value)}
-                        style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', width: '80px', fontWeight: 700, color: item.trend?.startsWith('-') ? '#dc2626' : '#16a34a' }}
+                        className={`admin-table-input num-input ${item.trend?.startsWith('-') ? 'text-danger' : 'text-emerald'}`}
                       />
                     </td>
-                    <td style={{ padding: '10px 14px' }}>
+                    <td>
                       <input
                         type="text"
                         value={item.arrivalQty}
                         onChange={(e) => handleMandiFieldChange(item.id, 'arrivalQty', e.target.value)}
-                        style={{ padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', width: '90px' }}
+                        className="admin-table-input num-input"
                       />
                     </td>
-                    <td style={{ padding: '10px 14px', textAlign: 'center' }}>
+                    <td style={{ textAlign: 'center' }}>
                       <button
                         type="button"
                         onClick={() => handleDeleteMandiCrop(item.id)}
-                        style={{ background: 'transparent', border: 'none', color: '#dc2626', cursor: 'pointer' }}
+                        className="admin-delete-row-btn"
                         title="Delete Commodity"
                       >
                         <Trash2 size={16} />
@@ -709,34 +703,36 @@ export default function AdminDashboard() {
           TAB 2: STATE OUTBREAK ALERTS & QUARANTINE ORDERS (ADMIN UPDATE FEATURE)
          ========================================================================= */}
       {activeTab === 'outbreaks' && (
-        <section className="admin-card mb-24" style={{ background: '#ffffff', borderRadius: '16px', padding: '24px', border: '1px solid #e2e8f0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-            <Flame size={22} color="#ea580c" />
-            <div>
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>
-                State Outbreak Surveillance & Quarantine Orders
-              </h3>
-              <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#64748b' }}>
-                Publish regional phytosanitary emergency notices, high-risk quarantine zones, and mandatory chemical spray orders.
-              </p>
+        <section className="admin-outbreaks-control-card mb-24">
+          <div className="admin-section-header-flex">
+            <div className="title-with-icon">
+              <Flame size={22} className="icon-amber" />
+              <div>
+                <h3 className="admin-block-title">
+                  State Outbreak Surveillance & Quarantine Orders
+                </h3>
+                <p className="admin-block-sub">
+                  Publish regional phytosanitary emergency notices, high-risk quarantine zones, and mandatory chemical spray orders.
+                </p>
+              </div>
             </div>
           </div>
 
           {outbreakToast && (
-            <div style={{ padding: '10px 14px', background: '#ffedd5', border: '1px solid #fed7aa', color: '#c2410c', borderRadius: '8px', fontSize: '13px', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="admin-toast-warning">
               <AlertTriangle size={16} /> {outbreakToast}
             </div>
           )}
 
           {/* ADD NEW OUTBREAK FORM */}
-          <form onSubmit={handleCreateOutbreakAlert} style={{ background: '#f8fafc', padding: '18px', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
-            <h4 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 800, color: '#1e293b' }}>
+          <form onSubmit={handleCreateOutbreakAlert} className="admin-new-outbreak-form">
+            <h4 className="admin-form-heading">
               ➕ Issue New Regional Phytosanitary Threat Alert
             </h4>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '12px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '4px', color: '#475569' }}>State</label>
+            <div className="admin-form-grid-4">
+              <div className="form-group">
+                <label className="admin-form-lbl">State</label>
                 <select
                   value={newOutbreakState}
                   onChange={(e) => {
@@ -745,7 +741,7 @@ export default function AdminDashboard() {
                     const dists = stateDistrictMap[st] || [];
                     setNewOutbreakDistrict(dists[0] || '');
                   }}
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  className="admin-form-select"
                 >
                   {indianStates.map((st) => (
                     <option key={st} value={st}>{st}</option>
@@ -753,12 +749,12 @@ export default function AdminDashboard() {
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '4px', color: '#475569' }}>District</label>
+              <div className="form-group">
+                <label className="admin-form-lbl">District</label>
                 <select
                   value={newOutbreakDistrict}
                   onChange={(e) => setNewOutbreakDistrict(e.target.value)}
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  className="admin-form-select"
                 >
                   {(stateDistrictMap[newOutbreakState] || []).map((dist) => (
                     <option key={dist} value={dist}>{dist}</option>
@@ -766,24 +762,24 @@ export default function AdminDashboard() {
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '4px', color: '#475569' }}>Affected Crop</label>
+              <div className="form-group">
+                <label className="admin-form-lbl">Affected Crop</label>
                 <input
                   type="text"
                   value={newOutbreakCrop}
                   onChange={(e) => setNewOutbreakCrop(e.target.value)}
                   placeholder="e.g. Tomato, Chilli, Cotton"
                   required
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  className="admin-form-input"
                 />
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '4px', color: '#475569' }}>Severity Level</label>
+              <div className="form-group">
+                <label className="admin-form-lbl">Severity Level</label>
                 <select
                   value={newOutbreakSeverity}
                   onChange={(e) => setNewOutbreakSeverity(e.target.value)}
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  className="admin-form-select"
                 >
                   <option value="Critical Red">🔴 Critical Red (Immediate Lockdown/Spray)</option>
                   <option value="High Warning">🟡 High Warning (Spore Dispersal Threat)</option>
@@ -792,115 +788,95 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px', marginBottom: '12px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '4px', color: '#475569' }}>Pathogen / Pest Name & Symptom</label>
+            <div className="admin-form-grid-2">
+              <div className="form-group">
+                <label className="admin-form-lbl">Pathogen / Pest Name & Symptom</label>
                 <input
                   type="text"
                   value={newOutbreakDisease}
                   onChange={(e) => setNewOutbreakDisease(e.target.value)}
                   placeholder="e.g. Late Blight (Phytophthora infestans)"
                   required
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  className="admin-form-input"
                 />
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '4px', color: '#475569' }}>Estimated Area Impacted</label>
+              <div className="form-group">
+                <label className="admin-form-lbl">Estimated Area Impacted</label>
                 <input
                   type="text"
                   value={newOutbreakArea}
                   onChange={(e) => setNewOutbreakArea(e.target.value)}
                   placeholder="e.g. 350 Hectares"
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  className="admin-form-input"
                 />
               </div>
             </div>
 
-            <div style={{ marginBottom: '14px' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '4px', color: '#475569' }}>Mandatory Agronomic Directive / Spray Prescription</label>
+            <div className="form-group mb-12">
+              <label className="admin-form-lbl">Mandatory Agronomic Directive / Spray Prescription</label>
               <textarea
                 rows={2}
                 value={newOutbreakAction}
                 onChange={(e) => setNewOutbreakAction(e.target.value)}
                 placeholder="e.g. Apply Cymoxanil + Mancozeb @ 2.0 g/L. Cease overhead irrigation."
                 required
-                style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', resize: 'vertical' }}
+                className="admin-form-textarea"
               />
             </div>
 
             <button
               type="submit"
-              className="scan-cta-large-btn"
-              style={{ padding: '9px 20px', width: 'auto', background: '#ea580c', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 800, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
+              className="scan-cta-large-btn admin-publish-outbreak-btn"
             >
               <Send size={15} /> Publish Outbreak Directive to Farmers
             </button>
           </form>
 
           {/* ACTIVE OUTBREAKS LIST */}
-          <h4 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 800, color: '#1e293b' }}>
+          <h4 className="admin-subheading-title">
             📋 Active Directorate Threat Directives ({outbreakAlerts.length})
           </h4>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div className="admin-threat-directives-list">
             {outbreakAlerts.map((ob) => (
               <div
                 key={ob.id}
-                style={{
-                  padding: '14px 18px',
-                  borderRadius: '10px',
-                  border: ob.status === 'Active Alert' ? '1.5px solid #fed7aa' : '1px solid #e2e8f0',
-                  background: ob.status === 'Active Alert' ? '#fffbeb' : '#f8fafc',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: '12px',
-                }}
+                className={`admin-threat-directive-item ${ob.status === 'Active Alert' ? 'item-active-alert' : ''}`}
               >
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                    <span style={{ fontWeight: 800, fontSize: '14.5px', color: '#0f172a' }}>
+                <div className="directive-item-left">
+                  <div className="directive-header-row">
+                    <span className="directive-loc-title">
                       📍 {ob.district}, {ob.state}
                     </span>
-                    <span style={{ fontSize: '12px', fontWeight: 700, padding: '2px 8px', borderRadius: '20px', background: ob.severity.includes('Red') ? '#fee2e2' : '#fef3c7', color: ob.severity.includes('Red') ? '#b91c1c' : '#b45309' }}>
+                    <span className={`risk-severity-pill-badge ${ob.severity.includes('Red') ? 'badge-critical' : 'badge-medium'}`}>
                       {ob.severity}
                     </span>
-                    <span style={{ fontSize: '11.5px', color: '#64748b' }}>
+                    <span className="directive-crop-meta">
                       Crop: <strong>{ob.crop}</strong> ({ob.affectedArea})
                     </span>
                   </div>
 
-                  <p style={{ margin: '0 0 4px', fontSize: '13px', color: '#b45309', fontWeight: 700 }}>
+                  <p className="directive-pathogen-title">
                     ⚠️ {ob.pathogen}
                   </p>
-                  <p style={{ margin: 0, fontSize: '12.5px', color: '#475569' }}>
+                  <p className="directive-action-desc">
                     💊 Directive: {ob.action}
                   </p>
                 </div>
 
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <div className="directive-item-actions">
                   <button
                     type="button"
                     onClick={() => handleToggleOutbreakStatus(ob.id)}
-                    style={{
-                      padding: '6px 12px',
-                      borderRadius: '6px',
-                      border: '1px solid #cbd5e1',
-                      background: ob.status === 'Active Alert' ? '#dcfce7' : '#f1f5f9',
-                      color: ob.status === 'Active Alert' ? '#15803d' : '#475569',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                    }}
+                    className={`btn-directive-status ${ob.status === 'Active Alert' ? 'status-active' : 'status-resolved'}`}
                   >
                     {ob.status}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDeleteOutbreak(ob.id)}
-                    style={{ background: 'transparent', border: 'none', color: '#dc2626', cursor: 'pointer', padding: '4px' }}
+                    className="admin-delete-row-btn"
                     title="Delete Alert"
                   >
                     <Trash2 size={16} />

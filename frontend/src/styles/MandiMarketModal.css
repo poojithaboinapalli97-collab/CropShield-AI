@@ -1,0 +1,670 @@
+/* =========================================================================
+   CropShield AI - APMC Mandi & Market Intelligence Stylesheet
+   ========================================================================= */
+
+.mandi-modal-wrapper {
+  max-width: 820px !important;
+  width: 95% !important;
+  padding: 0 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+}
+
+.mandi-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #ffffff;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mandi-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mandi-header-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+}
+
+.mandi-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mandi-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.mandi-live-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mandi-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 0.84rem;
+  color: #64748b;
+}
+
+.mandi-close-btn {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mandi-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.mandi-modal-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+/* COMMODITY PILLS */
+.mandi-crop-pills-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.mandi-crop-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.mandi-crop-chip:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.mandi-crop-chip.mandi-chip-active {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.12);
+}
+
+.chip-price {
+  font-weight: 800;
+  color: #059669;
+}
+
+/* PRIMARY GRID */
+.mandi-primary-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .mandi-primary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* HERO PRICE CARD */
+.mandi-hero-price-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.mhc-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.mhc-variety-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.mhc-crop-name {
+  margin: 2px 0 2px 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.mhc-location-text {
+  font-size: 0.8rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mhc-trend-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.trend-badge-up {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.trend-badge-down {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.mhc-price-display-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 14px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mhc-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.mhc-big-price {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.mhc-unit {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.mhc-range-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.range-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.range-lbl {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.range-val {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.text-emerald {
+  color: #059669;
+}
+
+.range-divider {
+  width: 1px;
+  height: 20px;
+  background: #e2e8f0;
+}
+
+/* CALCULATOR */
+.mandi-calculator-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calc-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #166534;
+}
+
+.calc-inputs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calc-input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.calc-input-wrap label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.calc-num-input {
+  width: 100px;
+  padding: 5px 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #ffffff;
+  border: 1px solid #86efac;
+  border-radius: 6px;
+  outline: none;
+}
+
+.calc-output-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.calc-output-wrap label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.calc-total-val {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #15803d;
+}
+
+/* 7-DAY TREND CARD */
+.mandi-trend-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.mtc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mtc-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mtc-title-row h5 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.mtc-updated-text {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.mandi-trend-bars-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 120px;
+  padding: 8px 0;
+  gap: 6px;
+}
+
+.trend-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.tb-price-val {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.tb-track {
+  width: 100%;
+  max-width: 28px;
+  height: 75px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.tb-fill {
+  width: 100%;
+  background: #94a3b8;
+  border-radius: 6px 6px 0 0;
+  transition: height 0.3s ease;
+}
+
+.tb-fill-today {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+}
+
+.tb-day-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.tb-day-today {
+  color: #059669;
+  font-weight: 800;
+}
+
+.mtc-footer-advisory {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #334155;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+/* NEARBY MARKETS SECTION */
+.mandi-nearby-markets-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.str-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-heading {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.str-info {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.nearby-markets-table-wrap {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.nearby-markets-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.84rem;
+}
+
+.nearby-markets-table th {
+  background: #f8fafc;
+  padding: 10px 14px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.nearby-markets-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+.nearby-markets-table tr:last-child td {
+  border-bottom: none;
+}
+
+.row-best-price {
+  background: #f0fdf4;
+}
+
+.market-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tag-nearest {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #dcfce7;
+  color: #15803d;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.distance-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.table-price-val {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.arrivals-val {
+  font-weight: 600;
+  color: #475569;
+}
+
+.trading-hours-val {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.phone-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #059669;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.phone-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   MANDI MARKET INTELLIGENCE DARK MODE OVERRIDES
+   ========================================================================== */
+[data-theme="dark"] .mandi-modal-wrapper,
+body.dark-mode .mandi-modal-wrapper {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85) !important;
+}
+
+[data-theme="dark"] .mandi-modal-header,
+body.dark-mode .mandi-modal-header {
+  background: #111827 !important;
+  border-bottom-color: #1f2d48 !important;
+}
+
+[data-theme="dark"] .mandi-title,
+body.dark-mode .mandi-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .mandi-subtitle,
+body.dark-mode .mandi-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .mandi-close-btn,
+body.dark-mode .mandi-close-btn {
+  background: #1a233a !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .mandi-search-input,
+body.dark-mode .mandi-search-input {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .mandi-kpi-summary-box,
+body.dark-mode .mandi-kpi-summary-box {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .mandi-table-container,
+body.dark-mode .mandi-table-container {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .mandi-table th,
+body.dark-mode .mandi-table th {
+  background: #162035 !important;
+  color: #94a3b8 !important;
+  border-bottom-color: #283756 !important;
+}
+
+[data-theme="dark"] .mandi-table td,
+body.dark-mode .mandi-table td {
+  border-bottom-color: #1c273e !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .mandi-table tbody tr:hover td,
+body.dark-mode .mandi-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark"] .table-price-val,
+body.dark-mode .table-price-val {
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .distance-badge,
+[data-theme="dark"] .arrivals-val,
+body.dark-mode .distance-badge,
+body.dark-mode .arrivals-val {
+  color: #94a3b8 !important;
+}
+

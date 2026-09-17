@@ -765,7 +765,456 @@
 .text-success { color: #16a34a; }
 .text-muted { color: #64748b; }
 .text-xs { font-size: 11px; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
 .text-base { font-size: 15px; }
+
+/* 5-Step District Outbreak Risk Aggregation Pipeline */
+.district-pipeline-flow-card {
+  margin-top: 18px;
+  margin-bottom: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.pipeline-flow-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.pipeline-flow-header h4 {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.pipeline-steps-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pipeline-step-node {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.pipeline-step-node:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.pipeline-step-node.psn-overall {
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+  border: 1.5px solid #fca5a5;
+}
+
+.psn-indicator {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.psn-indicator-overall {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.psn-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.psn-lbl {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.03em;
+}
+
+.psn-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.psn-sub {
+  font-size: 11.5px;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.psn-containment {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #b91c1c;
+  margin-top: 2px;
+}
+
+.text-risk-high, .text-risk-critical { color: #dc2626; }
+.text-risk-medium { color: #d97706; }
+.text-risk-low { color: #16a34a; }
+.text-overall-risk { color: #b91c1c; font-size: 14px; }
+
+/* ==========================================================================
+   GEOSPATIAL RISK MAP & OUTBREAK SURVEILLANCE DARK MODE OVERRIDES
+   ========================================================================== */
+[data-theme="dark"] .riskmap-page,
+body.dark-mode .riskmap-page {
+  background: #0a0e1a !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .riskmap-header-box h1,
+[data-theme="dark"] .riskmap-page .page-title,
+body.dark-mode .riskmap-page .page-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .riskmap-page .page-subtitle,
+body.dark-mode .riskmap-page .page-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .risk-kpi-box,
+body.dark-mode .risk-kpi-box {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .kpi-num-val,
+body.dark-mode .kpi-num-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .kpi-num-lbl,
+body.dark-mode .kpi-num-lbl {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .riskmap-main-grid,
+[data-theme="dark"] .map-container-card,
+[data-theme="dark"] .map-sidebar-card,
+body.dark-mode .map-container-card,
+body.dark-mode .map-sidebar-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .map-controls-bar,
+body.dark-mode .map-controls-bar {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .surveillance-matrix-card,
+body.dark-mode .surveillance-matrix-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .matrix-header-row h3,
+body.dark-mode .matrix-header-row h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .matrix-table-wrap table,
+body.dark-mode .matrix-table-wrap table {
+  background: #111827 !important;
+}
+
+[data-theme="dark"] .matrix-table-wrap th,
+body.dark-mode .matrix-table-wrap th {
+  background: #162035 !important;
+  color: #94a3b8 !important;
+  border-bottom: 2px solid #283756 !important;
+}
+
+[data-theme="dark"] .matrix-table-wrap td,
+body.dark-mode .matrix-table-wrap td {
+  background: #111827 !important;
+  border-bottom: 1px solid #1c273e !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .matrix-table-wrap tr:hover td,
+body.dark-mode .matrix-table-wrap tr:hover td {
+  background: #1a233a !important;
+}
+
+[data-theme="dark"] .matrix-table-wrap strong,
+body.dark-mode .matrix-table-wrap strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .official-directive-box,
+body.dark-mode .official-directive-box {
+  background: #1e293b !important;
+  border-color: #3b4d73 !important;
+}
+
+[data-theme="dark"] .directive-header,
+body.dark-mode .directive-header {
+  color: #fbbf24 !important;
+}
+
+[data-theme="dark"] .directive-text,
+body.dark-mode .directive-text {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .district-pipeline-flow-card,
+body.dark-mode .district-pipeline-flow-card {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .pipeline-flow-header h4,
+body.dark-mode .pipeline-flow-header h4 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pipeline-step-node,
+body.dark-mode .pipeline-step-node {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .pipeline-step-node.psn-overall,
+body.dark-mode .pipeline-step-node.psn-overall {
+  background: #2a151b !important;
+  border-color: #7f1d1d !important;
+}
+
+[data-theme="dark"] .psn-val,
+body.dark-mode .psn-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .psn-sub,
+body.dark-mode .psn-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .btn-locate-pin,
+body.dark-mode .btn-locate-pin {
+  background: rgba(34, 197, 94, 0.15) !important;
+  border-color: rgba(74, 222, 128, 0.3) !important;
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .btn-locate-pin:hover,
+body.dark-mode .btn-locate-pin:hover {
+  background: #16a34a !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   RISK MAP CONTROLS, INTELLIGENCE, AND DETAIL CARDS IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .riskmap-controls-card,
+body.dark-mode .riskmap-controls-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .filter-header-text strong,
+body.dark-mode .filter-header-text strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .filter-header-text span,
+body.dark-mode .filter-header-text span {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .filter-input-wrap,
+body.dark-mode .filter-input-wrap {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .filter-input-wrap label,
+body.dark-mode .filter-input-wrap label {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .filter-native-select,
+body.dark-mode .filter-native-select {
+  color: #f8fafc !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .filter-native-select option,
+body.dark-mode .filter-native-select option {
+  background: #1a233a !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .layer-title-badge,
+body.dark-mode .layer-title-badge {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .map-layer-chip,
+body.dark-mode .map-layer-chip {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .map-layer-chip:hover,
+body.dark-mode .map-layer-chip:hover {
+  background: #222f4c !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .map-layer-chip-active,
+body.dark-mode .map-layer-chip-active {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  border-color: #16a34a !important;
+}
+
+[data-theme="dark"] .map-presentation-card,
+body.dark-mode .map-presentation-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .map-card-topbar,
+body.dark-mode .map-card-topbar {
+  background: #111827 !important;
+  border-bottom-color: #1f2d48 !important;
+}
+
+[data-theme="dark"] .map-card-topbar h3,
+body.dark-mode .map-card-topbar h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .district-intelligence-card,
+body.dark-mode .district-intelligence-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .district-intel-header,
+body.dark-mode .district-intel-header {
+  border-bottom-color: #1f2d48 !important;
+}
+
+[data-theme="dark"] .intel-title-group h2,
+body.dark-mode .intel-title-group h2 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .intel-loc-sub,
+body.dark-mode .intel-loc-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .epidemic-dial-box,
+body.dark-mode .epidemic-dial-box {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .dial-score-num,
+body.dark-mode .dial-score-num {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .dial-meta-info h4,
+body.dark-mode .dial-meta-info h4 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .intel-tile,
+body.dark-mode .intel-tile {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .intel-tile-val,
+body.dark-mode .intel-tile-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .no-district-selected,
+body.dark-mode .no-district-selected {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .no-district-selected h3,
+body.dark-mode .no-district-selected h3 {
+  color: #f8fafc !important;
+}
+
+/* Severity Pills & Legends in Dark Mode */
+[data-theme="dark"] .badge-critical,
+body.dark-mode .badge-critical {
+  background: #2a151b !important;
+  color: #f87171 !important;
+  border-color: #7f1d1d !important;
+}
+
+[data-theme="dark"] .badge-high,
+body.dark-mode .badge-high {
+  background: #2b1d16 !important;
+  color: #fb923c !important;
+  border-color: #9a3412 !important;
+}
+
+[data-theme="dark"] .badge-medium,
+body.dark-mode .badge-medium {
+  background: #2b2214 !important;
+  color: #fbbf24 !important;
+  border-color: #78350f !important;
+}
+
+[data-theme="dark"] .badge-low,
+body.dark-mode .badge-low {
+  background: #14281e !important;
+  color: #4ade80 !important;
+  border-color: #166534 !important;
+}
+
+[data-theme="dark"] .map-canvas-legend,
+body.dark-mode .map-canvas-legend {
+  background: rgba(17, 24, 39, 0.9) !important;
+  border-color: #283756 !important;
+  color: #cbd5e1 !important;
+}
+
+
+
+
 

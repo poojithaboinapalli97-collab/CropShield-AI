@@ -26,6 +26,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { mockPestTrapData, mockSensorNodes, mockKvkAndLabs } from '../data/mockData';
+import { calculateDistrictRisk } from '../services/districtRiskService';
 
 export default function RiskMap() {
   const [districts, setDistricts] = useState([]);
@@ -550,6 +551,83 @@ export default function RiskMap() {
                   </div>
                 </div>
               </div>
+
+              {/* 5-STEP DISTRICT OUTBREAK RISK PIPELINE */}
+              {(() => {
+                const pipelineRisk = calculateDistrictRisk({
+                  district: selectedDistrict.district,
+                  state: selectedDistrict.state,
+                });
+
+                return (
+                  <div className="district-pipeline-flow-card">
+                    <div className="pipeline-flow-header">
+                      <Sparkles size={16} className="text-emerald-600" />
+                      <h4>District Outbreak Risk Pipeline</h4>
+                    </div>
+
+                    <div className="pipeline-steps-vertical">
+                      {/* Step 1: District */}
+                      <div className="pipeline-step-node">
+                        <div className="psn-indicator">1</div>
+                        <div className="psn-body">
+                          <span className="psn-lbl">District</span>
+                          <strong className="psn-val">{pipelineRisk.district}, {pipelineRisk.state}</strong>
+                          <span className="psn-sub">Belt: {pipelineRisk.primaryCrop}</span>
+                        </div>
+                      </div>
+
+                      {/* Step 2: Crop Reports */}
+                      <div className="pipeline-step-node">
+                        <div className="psn-indicator">2</div>
+                        <div className="psn-body">
+                          <span className="psn-lbl">Crop Reports</span>
+                          <strong className="psn-val">{pipelineRisk.cropReports.totalReports} Field Scans</strong>
+                          <span className="psn-sub">Pathogen: {pipelineRisk.cropReports.activePathogen}</span>
+                        </div>
+                      </div>
+
+                      {/* Step 3: Disease Risk */}
+                      <div className="pipeline-step-node">
+                        <div className="psn-indicator">3</div>
+                        <div className="psn-body">
+                          <span className="psn-lbl">Disease Risk</span>
+                          <strong className={`psn-val text-risk-${pipelineRisk.diseaseRisk.level.toLowerCase()}`}>
+                            {pipelineRisk.diseaseRisk.level.toUpperCase()} ({pipelineRisk.diseaseRisk.score}/100)
+                          </strong>
+                          <span className="psn-sub">{pipelineRisk.diseaseRisk.reasons[0]}</span>
+                        </div>
+                      </div>
+
+                      {/* Step 4: Weather Risk */}
+                      <div className="pipeline-step-node">
+                        <div className="psn-indicator">4</div>
+                        <div className="psn-body">
+                          <span className="psn-lbl">Weather Risk</span>
+                          <strong className={`psn-val text-risk-${pipelineRisk.weatherRisk.level.toLowerCase()}`}>
+                            {pipelineRisk.weatherRisk.level.toUpperCase()} ({pipelineRisk.weatherRisk.score}/100)
+                          </strong>
+                          <span className="psn-sub">RH {pipelineRisk.weatherRisk.telemetry.humidity}%, Temp {pipelineRisk.weatherRisk.telemetry.temp}°C</span>
+                        </div>
+                      </div>
+
+                      {/* Step 5: Overall Risk */}
+                      <div className="pipeline-step-node psn-overall">
+                        <div className="psn-indicator psn-indicator-overall">5</div>
+                        <div className="psn-body">
+                          <span className="psn-lbl">Overall District Outbreak Risk</span>
+                          <strong className="psn-val text-overall-risk">
+                            {pipelineRisk.overallRisk.level.toUpperCase()} ({pipelineRisk.overallRisk.score}/100)
+                          </strong>
+                          <span className="psn-containment">
+                            ⭕ Buffer: {pipelineRisk.overallRisk.containmentRadiusKm}km Active Quarantine
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* OFFICIAL EXTENSION DIRECTIVE */}
               <div className="official-directive-box">

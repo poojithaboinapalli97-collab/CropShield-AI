@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import {
   Sprout,
   LayoutDashboard,
@@ -16,11 +17,14 @@ import {
   LogOut,
   LogIn,
   User,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 export default function Navbar() {
   const { lang, setLang, t } = useLanguage();
   const { user, isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme, isDark } = useTheme();
   const navigate = useNavigate();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -108,6 +112,22 @@ export default function Navbar() {
         </nav>
 
         <div className="nav-actions">
+          {/* THEME TOGGLE: DARK / LIGHT MODE */}
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label="Toggle Dark and Light Mode"
+          >
+            {isDark ? (
+              <Sun size={17} className="theme-icon theme-sun" />
+            ) : (
+              <Moon size={17} className="theme-icon theme-moon" />
+            )}
+            <span className="theme-toggle-label">{isDark ? 'Light' : 'Dark'}</span>
+          </button>
+
           <div className="lang-select-wrapper">
             <Globe size={16} className="lang-icon" />
             <select

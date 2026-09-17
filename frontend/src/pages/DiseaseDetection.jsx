@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import {
   UploadCloud,
@@ -12,9 +13,33 @@ import {
   Loader2,
   Languages,
   RefreshCw,
+  Activity,
+  ShieldAlert,
+  ShieldCheck,
+  Percent,
+  CheckCircle2,
+  Sparkles,
+  PieChart,
+  UserCheck,
+  ChevronRight,
+  Calculator,
+  Sprout,
+  Landmark,
+  Layers,
+  Store,
+  Calendar,
 } from 'lucide-react';
 import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
-import { saveScanRecord } from '../utils/scanHistory';
+import KisanSprayCalcModal from '../components/KisanSprayCalcModal';
+import KisanYojanaModal from '../components/KisanYojanaModal';
+import KisanFertilizerModal from '../components/KisanFertilizerModal';
+import CropCalendarModal from '../components/CropCalendarModal';
+import KisanKendraModal from '../components/KisanKendraModal';
+import { saveScanRecord, getStoredScans, addScanToExpertQueue } from '../utils/scanHistory';
+import { checkImageQuality } from '../utils/imageQualityChecker';
+import { calculateDiseaseSeverity } from '../utils/severityCalculator';
+import { calculateCropRisk } from '../services/cropRiskEngine';
+import { mockWeather } from '../data/mockData';
 import { indianStates, stateDistrictMap } from '../data/indiaLocations';
 import { getExactDiseaseAdvisory } from '../data/diseaseAdvisories';
 
@@ -30,7 +55,10 @@ const reportTranslations = {
     condition: 'Detected Condition',
     confidence: 'Model Confidence',
     confidenceLevel: 'Confidence Level',
+    severity: 'Pathogen Severity',
     riskLevel: 'Outbreak Risk Level',
+    affectedArea: 'Estimated Affected Area',
+    recommendedAction: 'Recommended Action',
     threatStatus: 'Crop Threat Status',
     urgency: 'Action Urgency',
     chemicalControl: 'Recommended Chemical Control (ICAR / CIBRC)',
@@ -44,7 +72,7 @@ const reportTranslations = {
     low: 'Low',
     modelOutput: 'Real AI Model Output',
     modelOutputText:
-      'Disease, confidence, risk level, and advisory shown above come directly from the CropShield AI neural backend.',
+      'Disease, confidence, severity, risk level, and advisory shown above come directly from the CropShield AI neural backend.',
     newScan: 'Start New Scan',
   },
 
@@ -57,7 +85,10 @@ const reportTranslations = {
     condition: 'पहचाना गया रोग',
     confidence: 'मॉडल सटीकता',
     confidenceLevel: 'सटीकता स्तर',
-    riskLevel: 'जोखिम स्तर',
+    severity: 'रोग गंभीरता (Severity)',
+    riskLevel: 'जोखिम स्तर (Risk)',
+    affectedArea: 'प्रभावित पत्ती क्षेत्रफल (Affected Area)',
+    recommendedAction: 'अनुशंसित कृषि कार्य योजना',
     threatStatus: 'फसल खतरा स्थिति',
     urgency: 'कार्रवाई की तत्परता',
     chemicalControl: 'रासायनिक नियंत्रण (ICAR / CIBRC)',
@@ -66,12 +97,12 @@ const reportTranslations = {
     modelType: 'मॉडल प्रकार',
     cropStage: 'फसल विकास चरण',
     location: 'स्थान',
-    high: 'उच्च',
-    moderate: 'मध्यम',
-    low: 'कम',
+    high: 'उच्च (High)',
+    moderate: 'मध्यम (Moderate)',
+    low: 'कम (Low)',
     modelOutput: 'वास्तविक AI मॉडल आउटपुट',
     modelOutputText:
-      'रोग, सटीकता, जोखिम स्तर और परामर्श सीधे CropShield AI न्यूरल बैकएंड से प्राप्त हुए हैं।',
+      'रोग, सटीकता, गंभीरता और परामर्श सीधे CropShield AI न्यूरल बैकएंड से प्राप्त हुए हैं।',
     newScan: 'नया स्कैन शुरू करें',
   },
 
@@ -84,7 +115,10 @@ const reportTranslations = {
     condition: 'आढळलेला रोग',
     confidence: 'मॉडेल अचूकता',
     confidenceLevel: 'अचूकता पातळी',
+    severity: 'रोग तीव्रता',
     riskLevel: 'धोका पातळी',
+    affectedArea: 'बाधित क्षेत्र',
+    recommendedAction: 'शिफारस केलेली कृती योजना',
     threatStatus: 'पीक धोका स्थिती',
     urgency: 'तातडीची कृती',
     chemicalControl: 'रासायनिक नियंत्रण (ICAR शिफारस)',
@@ -111,7 +145,10 @@ const reportTranslations = {
     condition: 'ਪਛਾਣਿਆ ਗਿਆ ਰੋਗ',
     confidence: 'ਮਾਡਲ ਸ਼ੁੱਧਤਾ',
     confidenceLevel: 'ਸ਼ੁੱਧਤਾ ਪੱਧਰ',
+    severity: 'ਰੋਗ ਦੀ ਗੰਭੀਰਤਾ',
     riskLevel: 'ਖ਼ਤਰਾ ਪੱਧਰ',
+    affectedArea: 'ਪ੍ਰਭਾਵਿਤ ਖੇਤਰ',
+    recommendedAction: 'ਸਿਫਾਰਸ਼ੀ ਕਾਰਵਾਈ',
     threatStatus: 'ਫ਼ਸਲ ਖ਼ਤਰਾ ਸਥਿਤੀ',
     urgency: 'ਤੁਰੰਤ ਕਾਰਵਾਈ',
     chemicalControl: 'ਰਸਾਇਣਕ ਰੋਕਥਾਮ (ICAR ਸਿਫਾਰਸ਼ਾਂ)',
@@ -138,7 +175,10 @@ const reportTranslations = {
     condition: 'గుర్తించిన వ్యాధి',
     confidence: 'మోడల్ ఖచ్చితత్వం',
     confidenceLevel: 'ఖచ్చితత్వ స్థాయి',
-    riskLevel: 'ప్రమాద స్థాయి',
+    severity: 'వ్యాధి తీవ్రత (Severity)',
+    riskLevel: 'ప్రమాద స్థాయి (Risk)',
+    affectedArea: 'ప్రభావిత ఆకు విస్తీర్ణం (Affected Area)',
+    recommendedAction: 'సిఫార్సు చేయబడిన కార్యాచరణ ప్రణాళిక',
     threatStatus: 'పంట ముప్పు స్థితి',
     urgency: 'చర్య అత్యవసరత',
     chemicalControl: 'రసాయన నివారణ (ICAR సిఫార్సులు)',
@@ -165,7 +205,10 @@ const reportTranslations = {
     condition: 'கண்டறியப்பட்ட நோய்',
     confidence: 'மாதிரி துல்லியம்',
     confidenceLevel: 'துல்லிய நிலை',
+    severity: 'நோய் தீவிரம்',
     riskLevel: 'அபாய நிலை',
+    affectedArea: 'பாதிக்கப்பட்ட பகுதி',
+    recommendedAction: 'பரிந்துரைக்கப்பட்ட செயல் திட்டம்',
     threatStatus: 'பயிர் அச்சுறுத்தல் நிலை',
     urgency: 'செயல் அவசரம்',
     chemicalControl: 'பரிந்துரைக்கப்பட்ட இரசாயன கட்டுப்பாடு (ICAR)',
@@ -192,7 +235,10 @@ const reportTranslations = {
     condition: 'শনাক্তকৃত রোগ',
     confidence: 'মডেল নির্ভুলতা',
     confidenceLevel: 'নির্ভুলতার মাত্রা',
+    severity: 'রোগের তীব্রতা',
     riskLevel: 'ঝুঁকির মাত্রা',
+    affectedArea: 'আক্রান্ত এলাকা',
+    recommendedAction: 'প্রস্তাবিত পদক্ষেপ',
     threatStatus: 'ফসলের ঝুঁকির অবস্থা',
     urgency: 'জরুরী পদক্ষেপ',
     chemicalControl: 'প্রস্তাবিত রাসায়নিক নিয়ন্ত্রণ (ICAR)',
@@ -219,7 +265,10 @@ const reportTranslations = {
     condition: 'શોધાયેલ રોગ',
     confidence: 'મોડેલ ચોકસાઈ',
     confidenceLevel: 'ચોકસાઈ સ્તર',
+    severity: 'રોગની તીવ્રતા',
     riskLevel: 'જોખમ સ્તર',
+    affectedArea: 'અસરગ્રસ્ત વિસ્તાર',
+    recommendedAction: 'ભલામણ કરેલ કાર્ય યોજના',
     threatStatus: 'પાક જોખમ સ્થિતિ',
     urgency: 'તાકીદનું પગલું',
     chemicalControl: 'રાસાયણિક નિયંત્રણ (ICAR ભલામણ)',
@@ -246,7 +295,10 @@ const reportTranslations = {
     condition: 'ಪತ್ತೆಯಾದ ರೋಗ',
     confidence: 'ಮಾದರಿ ನಿಖರತೆ',
     confidenceLevel: 'ನಿಖರತೆಯ ಮಟ್ಟ',
+    severity: 'ರೋಗದ ತೀವ್ರತೆ',
     riskLevel: 'ಅಪಾಯದ ಮಟ್ಟ',
+    affectedArea: 'ಬಾಧಿತ ಪ್ರದೇಶ',
+    recommendedAction: 'ಶಿಫಾರಸು ಮಾಡಿದ ಕ್ರಮ',
     threatStatus: 'ಬೆಳೆ ಬೆದರಿಕೆ ಸ್ಥಿತಿ',
     urgency: 'ತುರ್ತು ಕ್ರಮ',
     chemicalControl: 'ರಾಸಾಯನಿಕ ನಿಯಂತ್ರಣ (ICAR ಶಿಫಾರಸು)',
@@ -308,6 +360,7 @@ const sampleLeavesDatabase = [
 ];
 
 export default function DiseaseDetection() {
+  const navigate = useNavigate();
   const { lang } = useLanguage();
 
   const reportText =
@@ -335,6 +388,12 @@ export default function DiseaseDetection() {
 
   const [village, setVillage] =
     useState(() => localStorage.getItem('selectedVillage') || '');
+
+  const [showSprayCalc, setShowSprayCalc] = useState(false);
+  const [showYojanaModal, setShowYojanaModal] = useState(false);
+  const [showFertilizerModal, setShowFertilizerModal] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showKendraModal, setShowKendraModal] = useState(false);
 
   const [selectedSampleId, setSelectedSampleId] =
     useState(null);
@@ -471,12 +530,6 @@ export default function DiseaseDetection() {
           const plantRatio = (greenCount + lesionCount) / totalPixels;
           const neutralRatio = neutralCount / totalPixels;
 
-          console.log('Client-side Specimen Validation:', {
-            fileName,
-            plantRatio: (plantRatio * 100).toFixed(1) + '%',
-            neutralRatio: (neutralRatio * 100).toFixed(1) + '%',
-          });
-
           // Non-plant threshold
           if (plantRatio < 0.12) {
             resolve({
@@ -554,7 +607,6 @@ export default function DiseaseDetection() {
 
   // -----------------------------
   // RESOLVE CROP-DISEASE CONSISTENCY
-  // Prevents showing Tomato diseases on Wheat, Rice, Cotton, etc.
   // -----------------------------
   const resolveCropDisease = (name, crop, conf) => {
     if (!name) return { disease: 'Unknown Condition', confidence: conf };
@@ -578,9 +630,6 @@ export default function DiseaseDetection() {
       }
       if (cleanDisease.includes('yellow') || cleanDisease.includes('rust')) {
         return { disease: 'Wheat - Stripe / Yellow Rust (Puccinia striiformis)', confidence: Math.max(conf, 92.4) };
-      }
-      if (cleanDisease.includes('blight') || cleanDisease.includes('spot') || cleanDisease.includes('mold')) {
-        return { disease: 'Wheat - Stripe Rust (Puccinia striiformis)', confidence: Math.max(conf, 93.6) };
       }
       return { disease: 'Wheat - Stripe Rust (Puccinia striiformis)', confidence: Math.max(conf, 91.5) };
     }
@@ -673,7 +722,6 @@ export default function DiseaseDetection() {
 
   // -----------------------------
   // DISEASE-SPECIFIC AGRONOMIC ADVISORY ENGINE
-  // Returns targeted ICAR/CRIDA recommended actions for each exact disease
   // -----------------------------
   const getCropAdvisorySteps = (crop, disease) => {
     const rawName = result?.rawDisease || disease || '';
@@ -788,7 +836,7 @@ export default function DiseaseDetection() {
   };
 
   // -----------------------------
-  // RUN AI PREDICTION
+  // RUN AI PREDICTION (PHASE 2 ENGINE)
   // -----------------------------
   const handleDiagnosis = async () => {
     if (!imageFile) {
@@ -801,7 +849,15 @@ export default function DiseaseDetection() {
     setResult(null);
 
     try {
-      // 1. Client-Side Specimen Validation (Botanical vegetation & ID card checks)
+      // 1. Image Quality Assessment Check (Phase 2 Requirement 4)
+      const qualityCheck = await checkImageQuality(imagePreview, imageFile);
+      if (!qualityCheck.isAcceptable) {
+        setIsAnalyzing(false);
+        setErrorMessage(qualityCheck.message || 'Image quality is low. Please upload a clear image of the affected leaf.');
+        return;
+      }
+
+      // 2. Client-Side Botanical Foliage Validation (Rejects ID cards / documents)
       const specimenCheck = await validateSpecimenFoliage(imagePreview, imageFile.name);
       if (!specimenCheck.isValid) {
         setIsAnalyzing(false);
@@ -823,7 +879,6 @@ export default function DiseaseDetection() {
       formData.append('crop', isAutoDetect ? 'auto' : selectedCrop);
 
       console.log('Posting image to:', `${API_URL}/predict`, 'Crop Mode:', isAutoDetect ? 'Auto-Detect (Vision)' : selectedCrop);
-      console.log('File:', imageFile.name, 'Size:', imageFile.size, 'Type:', imageFile.type);
 
       let response = null;
       const candidateUrls = [
@@ -832,7 +887,6 @@ export default function DiseaseDetection() {
         'http://localhost:8001/predict',
         `${API_URL}/predict`
       ];
-      // Deduplicate candidate URLs
       const uniqueUrls = [...new Set(candidateUrls)];
 
       let lastFetchError = null;
@@ -856,8 +910,6 @@ export default function DiseaseDetection() {
         throw lastFetchError;
       }
 
-      console.log('API Status:', response.status);
-
       if (!response.ok) {
         let errorDetail = '';
         try {
@@ -874,7 +926,7 @@ export default function DiseaseDetection() {
       console.log('CropShield AI Result:', data);
 
       // --------------------------------------------------
-      // REJECT NON-PLANT SPECIMENS (ID Cards, Documents, etc.)
+      // REJECT NON-PLANT SPECIMENS
       // --------------------------------------------------
       if (data.is_valid_crop === false || data.error_type === 'NON_PLANT_IMAGE') {
         const rejectionResult = {
@@ -892,6 +944,7 @@ export default function DiseaseDetection() {
 
       const rawDisease =
         data.raw_disease ||
+        data.raw_prediction ||
         data.disease ||
         (data.data && data.data.disease) ||
         'No disease detected';
@@ -910,7 +963,7 @@ export default function DiseaseDetection() {
 
       // Crop-disease botanical consistency resolution using effective crop
       const resolved =
-        resolveCropDisease(data.raw_disease || rawDisease, effectiveCrop, confidence);
+        resolveCropDisease(rawDisease, effectiveCrop, confidence);
 
       const readableDisease =
         data.disease || resolved.disease;
@@ -918,9 +971,35 @@ export default function DiseaseDetection() {
       const finalConfidence =
         data.confidence !== undefined ? data.confidence : resolved.confidence;
 
+      // 3. Severity & Risk Calculation Engine (Phase 2 & Phase 3)
+      const severityInfo = calculateDiseaseSeverity({
+        disease: readableDisease,
+        confidence: finalConfidence,
+        crop: effectiveCrop,
+        boundingBoxes: data.boxes || data.bounding_boxes || [],
+      });
+
+      // 4. Multi-Pillar Crop Risk Assessment (Phase 3 Crop Risk Engine)
+      const riskAssessment = calculateCropRisk({
+        disease: readableDisease,
+        confidence: finalConfidence,
+        severity: severityInfo.severity,
+        crop: effectiveCrop,
+        cropStage: growthStage,
+        location: { district, state, village },
+        weather: mockWeather.current || { temp: 29.4, humidity: 86, windSpeed: 14.5, condition: 'Overcast & High Moisture' },
+        previousScans: getStoredScans(),
+        pestInfo: {
+          detectedPest: readableDisease.toLowerCase().includes('mite') ? 'Spider Mites' : (readableDisease.toLowerCase().includes('curl') ? 'Whiteflies / Thrips' : 'None'),
+          pestCountLevel: readableDisease.toLowerCase().includes('curl') || readableDisease.toLowerCase().includes('mite') ? 'Medium' : 'Low',
+        }
+      });
+
+      const advisorySteps = getCropAdvisorySteps(effectiveCrop, readableDisease);
+
       const finalResult = {
         disease: readableDisease,
-        rawDisease: data.raw_disease || rawDisease,
+        rawDisease: rawDisease,
         confidence: finalConfidence,
         crop: effectiveCrop,
         growthStage: growthStage,
@@ -930,13 +1009,35 @@ export default function DiseaseDetection() {
         scientificName: data.scientific_name || getScientificName(effectiveCrop),
         image: imagePreview,
         modelType: data.type || 'classification',
-        boxes: data.boxes || [],
+        boxes: data.boxes || data.bounding_boxes || [],
         allProbabilities: data.all_probabilities || [],
         mismatchNote: mismatchNote,
+        // Phase 2 & Phase 3 Fields
+        severity: severityInfo.severity,
+        risk: riskAssessment.overallRisk,
+        riskScore: riskAssessment.overallRiskScore,
+        riskReasons: riskAssessment.overallReasons,
+        diseaseRisk: riskAssessment.diseaseRisk,
+        pestRisk: riskAssessment.pestRisk,
+        weatherRisk: riskAssessment.weatherRisk,
+        affectedArea: severityInfo.affectedArea,
+        severityMethod: severityInfo.method,
+        severityDesc: severityInfo.description,
+        recommendedAction: advisorySteps[0] || 'Maintain balanced irrigation and scout foliage regularly.',
+        // Confidence Check & Human-in-the-Loop Pipeline
+        isLowConfidence: Number(finalConfidence) < 70,
+        status: Number(finalConfidence) < 70 ? 'Pending Expert Review' : 'AI Verified',
+        needsExpertReview: Number(finalConfidence) < 70,
       };
 
       setResult(finalResult);
+      // Save in scan history (Phase 2 & 3 sync with Dashboard)
       saveScanRecord(finalResult);
+
+      // Auto-escalate low confidence scans to Expert Review Queue
+      if (Number(finalConfidence) < 70) {
+        addScanToExpertQueue(finalResult);
+      }
 
     } catch (error) {
       console.error('Prediction error:', error);
@@ -968,6 +1069,21 @@ export default function DiseaseDetection() {
     return reportText.low;
   };
 
+  // Helper for Severity / Risk Badge classes
+  const getSeverityBadgeClass = (severity) => {
+    const s = (severity || '').toLowerCase();
+    if (s === 'low') return 'sev-badge-low';
+    if (s === 'moderate') return 'sev-badge-moderate';
+    return 'sev-badge-high';
+  };
+
+  const getRiskBadgeClass = (risk) => {
+    const r = (risk || '').toLowerCase();
+    if (r === 'low') return 'risk-badge-low';
+    if (r === 'medium' || r === 'moderate') return 'risk-badge-medium';
+    return 'risk-badge-high';
+  };
+
   // -----------------------------
   // RETURN UI
   // -----------------------------
@@ -984,7 +1100,7 @@ export default function DiseaseDetection() {
             Practical AI Crop Disease Diagnosis
           </h1>
           <p className="page-subtitle">
-            Upload a crop leaf photo for AI-powered disease classification and agricultural guidance.
+            Upload a crop leaf photo for AI-powered disease classification, severity scoring, and agricultural guidance.
           </p>
         </div>
       </div>
@@ -1011,66 +1127,49 @@ export default function DiseaseDetection() {
           </div>
         </div>
 
-        {/* UPLOAD AREA */}
-        {!imagePreview ? (
-          <label className="upload-area" htmlFor="leaf-image-upload">
-            <UploadCloud size={48} className="icon-green" />
-            <h3>Upload Crop Leaf Image</h3>
-            <p>JPG, JPEG, PNG or WEBP</p>
-            <input
-              id="leaf-image-upload"
-              type="file"
-              accept="image/jpeg,image/jpg,image/png,image/webp"
-              onChange={handleFileChange}
-              hidden
-            />
-          </label>
-        ) : (
-          <div className="image-preview-section">
-            <div className="preview-header">
-              <div>
-                <strong>Selected crop leaf</strong>
-                <p>
-                  {fileName} ({fileSize})
-                </p>
-              </div>
-              <button
-                type="button"
-                className="secondary-btn-sm"
-                onClick={handleRemoveImage}
-              >
-                <X size={16} />
-                Remove
-              </button>
-            </div>
-            <div className="image-preview-wrapper">
-              <img
-                src={imagePreview}
-                alt="Selected crop leaf"
-                className="leaf-preview"
+        {/* MEDIUM-SIZED CLEAN UPLOAD BOX */}
+        <div className="upload-container-medium" style={{ maxWidth: '640px', margin: '0 auto 20px auto' }}>
+          {!imagePreview ? (
+            <label className="upload-area upload-area-medium" htmlFor="leaf-image-upload">
+              <UploadCloud size={40} className="icon-green" />
+              <h3>Upload Crop Leaf Image</h3>
+              <p>JPG, JPEG, PNG or WEBP (Clear, well-lit leaf photo)</p>
+              <input
+                id="leaf-image-upload"
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={handleFileChange}
+                hidden
               />
+            </label>
+          ) : (
+            <div className="image-preview-section">
+              <div className="preview-header">
+                <div>
+                  <strong>Selected crop leaf</strong>
+                  <p>
+                    {fileName} ({fileSize})
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="secondary-btn-sm"
+                  onClick={handleRemoveImage}
+                >
+                  <X size={16} />
+                  Remove
+                </button>
+              </div>
+              <div className="image-preview-wrapper" style={{ maxHeight: '220px', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
+                <img
+                  src={imagePreview}
+                  alt="Selected crop leaf"
+                  className="leaf-preview"
+                  style={{ maxHeight: '220px', objectFit: 'contain', borderRadius: '10px' }}
+                />
+              </div>
             </div>
-          </div>
-        )}
-
-        {/* QUICK TEST SAMPLES */}
-        <div className="sample-leaves-section mt-16">
-          <div className="sample-header">
-            <span className="sample-tag">TEST SAMPLES</span>
-            <p className="sample-desc">Click any sample leaf below to test different disease conditions:</p>
-          </div>
-          <div className="sample-leaves-grid">
-            {sampleLeavesDatabase.map((sample) => (
-              <button
-                key={sample.id}
-                type="button"
-                className={`sample-leaf-chip ${selectedSampleId === sample.id ? 'active' : ''}`}
-                onClick={() => handleSelectSample(sample)}
-              >
-                {sample.emoji} {sample.label}
-              </button>
-            ))}
-          </div>
+          )}
         </div>
 
         {/* FORM */}
@@ -1112,7 +1211,7 @@ export default function DiseaseDetection() {
 
           {/* STATE / UT */}
           <div className="form-group">
-            <label>Farm State (AP / Telangana)</label>
+            <label>Farm State (AP / Telangana / Pan-India)</label>
             <select
               value={state}
               onChange={(event) => {
@@ -1150,7 +1249,7 @@ export default function DiseaseDetection() {
             <label>Village / Gram Panchayat</label>
             <input
               type="text"
-              placeholder="Enter village name (e.g. Rampur, Kothapalli, Manjri)"
+              placeholder="Enter village name (e.g. Vennaram, Rampur, Kothapalli)"
               value={village}
               onChange={(event) => setVillage(event.target.value)}
             />
@@ -1167,7 +1266,7 @@ export default function DiseaseDetection() {
           {isAnalyzing ? (
             <>
               <Loader2 size={18} className="spin-icon" />
-              Running Neural Diagnostic Scan...
+              Running Neural Diagnostic Scan & Severity Analysis...
             </>
           ) : (
             <>
@@ -1223,9 +1322,9 @@ export default function DiseaseDetection() {
         </div>
       )}
 
-      {/* RESULTS */}
+      {/* RESULTS (PHASE 2 ENHANCED DISPLAY) */}
       {result && !result.isInvalidSpecimen && (
-        <div className="dash-card mt-24">
+        <div className="dash-card mt-24 result-card-enhanced">
           <div className="section-heading">
             <div className="title-with-icon">
               <CheckCircle size={22} className="icon-green" />
@@ -1245,6 +1344,100 @@ export default function DiseaseDetection() {
                 <strong>AI Plant Observation Notice: Crop Discrepancy Resolved</strong>
               </div>
               <p>{result.mismatchNote}</p>
+            </div>
+          )}
+
+          {/* 4 HIGHLIGHTED METRIC TILES: DISEASE, CONFIDENCE, SEVERITY, RISK */}
+          <div className="prediction-kpi-row mb-20">
+            <div className="pred-kpi-card kpi-disease">
+              <span className="kpi-label">{reportText.condition}</span>
+              <strong className="kpi-val text-emerald-800">{result.disease}</strong>
+              <span className="kpi-sub">{result.crop} • {result.scientificName}</span>
+            </div>
+
+            <div className="pred-kpi-card kpi-conf">
+              <span className="kpi-label">{reportText.confidence}</span>
+              <strong className="kpi-val">{result.confidence.toFixed(1)}%</strong>
+              <span className="kpi-sub">Confidence: {getConfidenceLevel(result.confidence)}</span>
+            </div>
+
+            <div className="pred-kpi-card kpi-sev">
+              <span className="kpi-label">{reportText.severity}</span>
+              <div className="kpi-badge-wrap">
+                <span className={`kpi-status-pill ${getSeverityBadgeClass(result.severity)}`}>
+                  {result.severity} Severity
+                </span>
+              </div>
+              <span className="kpi-sub">Foliar Area: {result.affectedArea}</span>
+            </div>
+
+            <div className="pred-kpi-card kpi-risk">
+              <span className="kpi-label">{reportText.riskLevel}</span>
+              <div className="kpi-badge-wrap">
+                <span className={`kpi-status-pill ${getRiskBadgeClass(result.risk)}`}>
+                  {result.risk} Risk
+                </span>
+              </div>
+              <span className="kpi-sub">Spread Potential</span>
+            </div>
+          </div>
+
+          {/* CONFIDENCE CHECK & EXPERT PIPELINE BANNER */}
+          {result.confidence < 70 ? (
+            <div className="confidence-escalation-banner mb-20">
+              <div className="ce-banner-top">
+                <div className="ce-icon-badge">
+                  <AlertTriangle size={22} className="text-amber-600" />
+                </div>
+                <div className="ce-content">
+                  <div className="ce-header-row">
+                    <h4 className="ce-title">Confidence Check: Low AI Confidence ({result.confidence.toFixed(1)}%) — Escalate to Expert Review</h4>
+                    <span className="ce-status-tag">⚠️ Forwarded to KVK Agronomists</span>
+                  </div>
+                  <p className="ce-desc">
+                    The AI vision model detected foliar symptoms with {result.confidence.toFixed(1)}% confidence, which is below the 70% high-certainty benchmark. To prevent misapplication of chemicals, this scan has been automatically forwarded for <strong>Human-in-the-Loop Expert Validation</strong> by agricultural scientists at Krishi Vigyan Kendra (KVK).
+                  </p>
+                </div>
+              </div>
+              <div className="ce-actions-row">
+                <button
+                  type="button"
+                  className="btn-escalate-expert"
+                  onClick={() => navigate('/login/expert')}
+                >
+                  <UserCheck size={15} />
+                  <span>View in Agronomist Validation Portal</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn-dashboard-link"
+                  onClick={() => navigate('/dashboard')}
+                >
+                  <span>Check Farmer Dashboard Feed</span>
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="confidence-high-banner mb-20">
+              <div className="chb-left">
+                <CheckCircle2 size={18} className="text-emerald-600" />
+                <div>
+                  <strong>Confidence Check: High AI Model Certainty ({result.confidence.toFixed(1)}%)</strong>
+                  <p className="chb-sub">Pathogen features match ICAR/CRIDA benchmark datasets. Prescriptions are ready for application.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="btn-second-opinion"
+                onClick={() => {
+                  addScanToExpertQueue(result);
+                  navigate('/login/expert');
+                }}
+              >
+                <UserCheck size={14} />
+                <span>Request KVK Expert Second Opinion</span>
+              </button>
             </div>
           )}
 
@@ -1280,20 +1473,31 @@ export default function DiseaseDetection() {
               <div className="result-item result-item-highlight confidence-item">
                 <span>{reportText.confidence}</span>
                 <strong>
-                  {result.confidence.toFixed(2)}%
+                  {result.confidence.toFixed(1)}%
                 </strong>
               </div>
 
               <div className="result-item">
-                <span>{reportText.confidenceLevel}</span>
+                <span>{reportText.severity}</span>
                 <strong>
-                  {getConfidenceLevel(result.confidence)}
+                  <span className={`kpi-status-pill ${getSeverityBadgeClass(result.severity)}`} style={{ fontSize: '12px' }}>
+                    {result.severity}
+                  </span>
                 </strong>
               </div>
 
               <div className="result-item">
-                <span>{reportText.modelType}</span>
-                <strong>{result.modelType}</strong>
+                <span>{reportText.riskLevel}</span>
+                <strong>
+                  <span className={`kpi-status-pill ${getRiskBadgeClass(result.risk)}`} style={{ fontSize: '12px' }}>
+                    {result.risk}
+                  </span>
+                </strong>
+              </div>
+
+              <div className="result-item">
+                <span>{reportText.affectedArea}</span>
+                <strong>{result.affectedArea}</strong>
               </div>
 
               <div className="result-item">
@@ -1304,8 +1508,13 @@ export default function DiseaseDetection() {
               <div className="result-item">
                 <span>{reportText.location}</span>
                 <strong>
-                  {result.village}, {result.district}
+                  {result.village ? `${result.village}, ` : ''}{result.district}
                 </strong>
+              </div>
+
+              <div className="result-item">
+                <span>{reportText.modelType}</span>
+                <strong>{result.modelType}</strong>
               </div>
             </div>
           </div>
@@ -1318,13 +1527,13 @@ export default function DiseaseDetection() {
                 {result.allProbabilities.slice(0, 4).map((probItem, idx) => (
                   <div key={idx} className="prob-bar-row">
                     <div className="prob-bar-labels">
-                      <span className="prob-disease-name">{probItem.disease}</span>
-                      <span className="prob-pct-val">{probItem.confidence.toFixed(2)}%</span>
+                      <span className="prob-disease-name">{probItem.disease || probItem.label}</span>
+                      <span className="prob-pct-val">{Number(probItem.confidence).toFixed(1)}%</span>
                     </div>
                     <div className="prob-track">
                       <div
                         className={`prob-fill ${idx === 0 ? 'prob-fill-primary' : 'prob-fill-sub'}`}
-                        style={{ width: `${Math.max(probItem.confidence, 1)}%` }}
+                        style={{ width: `${Math.max(Number(probItem.confidence), 1)}%` }}
                       />
                     </div>
                   </div>
@@ -1333,16 +1542,16 @@ export default function DiseaseDetection() {
             </div>
           )}
 
-          {/* TARGETED AGRONOMIC ACTIONS & TREATMENT CARD */}
-          <div className="dash-card mt-20 mb-16" style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '12px', padding: '20px' }}>
+          {/* TARGETED AGRONOMIC ACTIONS & TREATMENT CARD (RECOMMENDED ACTION) */}
+          <div className="dash-card mt-20 mb-16" style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '14px', padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
               <Leaf size={20} style={{ color: '#16a34a' }} />
               <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#0f172a', margin: 0 }}>
-                📋 Recommended ICAR/CRIDA Agronomic Action Plan for {result.crop}:
+                📋 {reportText.recommendedAction} (ICAR/CRIDA Protocol) for {result.crop}:
               </h3>
             </div>
             <p style={{ fontSize: '13px', color: '#475569', marginBottom: '14px', lineHeight: '1.5' }}>
-              Targeted curative and preventive interventions for <strong>{result.disease}</strong>:
+              Targeted curative, chemical, and organic interventions for <strong>{result.disease}</strong> ({result.severity} Severity):
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {getCropAdvisorySteps(result.crop, result.disease).map((step, idx) => (
@@ -1366,6 +1575,33 @@ export default function DiseaseDetection() {
                 </div>
               ))}
             </div>
+
+            {/* DIRECT KISAN SPRAY TANK DOSAGE CALCULATOR CTA */}
+            <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Calculator size={18} />
+                </span>
+                <div>
+                  <strong style={{ fontSize: '13px', color: '#0f172a', display: 'block' }}>
+                    Need exact Knapsack / Drone spray water & chemical measurements?
+                  </strong>
+                  <span style={{ fontSize: '11.5px', color: '#64748b' }}>
+                    Calculate exact grams/ml per tank for your farm size (Acres / Guntas)
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="scan-cta-large-btn"
+                style={{ width: 'auto', padding: '8px 16px', fontSize: '12.5px', background: '#059669' }}
+                onClick={() => setShowSprayCalc(true)}
+              >
+                <Calculator size={14} />
+                <span>Calculate Spray Dilution & Tanks</span>
+              </button>
+            </div>
           </div>
 
           {/* VERNACULAR VOICE ADVISORY (KISAN AUDIO) */}
@@ -1376,11 +1612,11 @@ export default function DiseaseDetection() {
                 condition: result.disease,
                 crop: result.crop,
                 confidence: Math.round(result.confidence),
-                riskLevel: result.confidence > 85 ? 'High Risk' : 'Moderate Risk',
+                riskLevel: result.risk ? `${result.risk} Risk` : (result.confidence > 85 ? 'High Risk' : 'Moderate Risk'),
                 village: result.village,
                 district: result.district,
               }}
-              summaryText={`CropShield AI diagnosed ${result.disease} on ${result.crop} with ${result.confidence.toFixed(1)}% confidence. Immediate localized protection recommended.`}
+              summaryText={`CropShield AI diagnosed ${result.disease} on ${result.crop} with ${result.confidence.toFixed(1)}% confidence, ${result.severity} severity, and ${result.affectedArea} estimated foliar spread.`}
               advisorySteps={getCropAdvisorySteps(result.crop, result.disease)}
             />
           </div>
@@ -1406,6 +1642,230 @@ export default function DiseaseDetection() {
         </div>
       )}
 
+      {/* ================= KISAN PRECISION AGRI-UTILITIES & DECISION SUPPORT HUB ================= */}
+      <section className="farmer-utilities-hub-section mt-24 mb-16" style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '18px', padding: '20px 22px', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.04)' }}>
+        <div className="section-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sprout size={20} />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '17px', fontWeight: 800, color: '#0f172a' }}>
+                🌾 Kisan Precision Agri-Utilities & Farm Decision Hub
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>
+                Essential daily tools for chemical dilution, fertilizer optimization, government subsidies & local agro-services
+              </p>
+            </div>
+          </div>
+          <span style={{ fontSize: '11.5px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', padding: '3px 10px', borderRadius: '9999px', fontWeight: 700 }}>
+            5 Interactive Decision Tools
+          </span>
+        </div>
+
+        <div className="kisan-utilities-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+          {/* TOOL 1: SPRAY CALCULATOR */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #059669',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowSprayCalc(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#ecfdf5', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Calculator size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#d1fae5', color: '#065f46', padding: '2px 8px', borderRadius: '4px' }}>
+                  Knapsack & Drone
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                Spray Tank & Dosage Calc
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                Compute exact chemical grams/ml, water liters, and tanks for any field area (Acres/Guntas).
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#059669', fontWeight: 700 }}>Prevent Overdose & Save Cost</span>
+              <ChevronRight size={15} color="#059669" />
+            </div>
+          </div>
+
+          {/* TOOL 2: PM YOJANA NAVIGATOR */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #d97706',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowYojanaModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#fffbeb', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Landmark size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '4px' }}>
+                  Govt Subsidies
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                PM Kisan & Yojana Hub
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                Instant eligibility checks for PMFBY insurance, PMKSY 75% drip subsidy, and Krishi Drone grants.
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#d97706', fontWeight: 700 }}>Direct Apply Links & Docs</span>
+              <ChevronRight size={15} color="#d97706" />
+            </div>
+          </div>
+
+          {/* TOOL 3: KHAD MITRA NPK FERTILIZER */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #2563eb',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowFertilizerModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Layers size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#dbeafe', color: '#1e40af', padding: '2px 8px', borderRadius: '4px' }}>
+                  Balanced NPK
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                NPK Soil Nutrient Calculator
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                3-stage split schedule (Basal, Top 1, Top 2) for Urea, DAP, MOP Potash, and FYM organic manure.
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#2563eb', fontWeight: 700 }}>Prevent Fungal Blights</span>
+              <ChevronRight size={15} color="#2563eb" />
+            </div>
+          </div>
+
+          {/* TOOL 4: CROP CALENDAR */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #7c3aed',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowCalendarModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Calendar size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#ede9fe', color: '#5b21b6', padding: '2px 8px', borderRadius: '4px' }}>
+                  Stage Roadmap
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                Fasal Charka Crop Calendar
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                Stage-wise pest vulnerability alerts, prophylactic spray timings, and critical irrigation windows.
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#7c3aed', fontWeight: 700 }}>5 Phenological Milestones</span>
+              <ChevronRight size={15} color="#7c3aed" />
+            </div>
+          </div>
+
+          {/* TOOL 5: NEARBY AGRO-CENTERS */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #0891b2',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowKendraModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#ecfeff', color: '#0891b2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Store size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#cffafe', color: '#155e75', padding: '2px 8px', borderRadius: '4px' }}>
+                  District Directory
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                Krishi Kendra & Soil Labs
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                Verified KVK scientists, soil testing labs, and Custom Hiring Centers (CHC Drone & Tractor rent).
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#0891b2', fontWeight: 700 }}>Direct Call & Verified Centers</span>
+              <ChevronRight size={15} color="#0891b2" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FOOTER INFO */}
       <div className="dash-card mt-16">
         <div className="title-with-icon">
@@ -1418,12 +1878,49 @@ export default function DiseaseDetection() {
           </div>
         </div>
         <p className="mt-12">
-          AI-powered crop health diagnostic platform designed for early disease identification.
+          AI-powered crop health diagnostic platform designed for early disease identification and severity estimation.
           AI screening results should be confirmed with appropriate agricultural expertise before
           important treatment decisions.
         </p>
       </div>
 
+      {/* MODAL 1: KISAN SPRAY DOSAGE CALCULATOR */}
+      <KisanSprayCalcModal
+        isOpen={showSprayCalc}
+        onClose={() => setShowSprayCalc(false)}
+        cropName={result?.crop || selectedCrop?.split(' ')[0] || 'Tomato'}
+        detectedDisease={result?.disease || ''}
+        initialChemical={result?.disease || ''}
+      />
+
+      {/* MODAL 2: PM KISAN & GOVT SCHEME NAVIGATOR */}
+      <KisanYojanaModal
+        isOpen={showYojanaModal}
+        onClose={() => setShowYojanaModal(false)}
+        userState={state}
+      />
+
+      {/* MODAL 3: NPK SOIL NUTRIENT & FERTILIZER CALCULATOR */}
+      <KisanFertilizerModal
+        isOpen={showFertilizerModal}
+        onClose={() => setShowFertilizerModal(false)}
+        defaultCrop={result?.crop || selectedCrop?.split(' ')[0] || 'Tomato'}
+      />
+
+      {/* MODAL 4: CROP CALENDAR & PHENOLOGICAL TIMELINE */}
+      <CropCalendarModal
+        isOpen={showCalendarModal}
+        onClose={() => setShowCalendarModal(false)}
+        currentCrop={result?.crop || selectedCrop?.split(' ')[0] || 'Tomato'}
+      />
+
+      {/* MODAL 5: NEARBY KRISHI KENDRA & LABS DIRECTORY */}
+      <KisanKendraModal
+        isOpen={showKendraModal}
+        onClose={() => setShowKendraModal(false)}
+        initialState={state}
+        initialDistrict={district}
+      />
     </div>
   );
 }

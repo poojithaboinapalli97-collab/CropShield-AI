@@ -333,6 +333,18 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
             )}
 
             <form onSubmit={handleLoginSubmit} className="auth-form">
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+                <button
+                  type="button"
+                  onClick={handleQuickFill}
+                  className="btn-pill-action btn-green-pill"
+                  style={{ padding: '4px 10px', fontSize: '11.5px' }}
+                >
+                  <Sparkles size={12} />
+                  <span>⚡ Quick Fill Demo</span>
+                </button>
+              </div>
+
               {/* -------------------------------------------------------------
                   A. ROLE: FARMER LOGIN FIELDS
                   ------------------------------------------------------------- */}

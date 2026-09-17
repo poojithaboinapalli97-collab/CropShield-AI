@@ -1930,21 +1930,22 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 44px 24px;
+  padding: 26px 20px;
+  min-height: 140px;
   border: 2px dashed #86efac;
-  background: #f0fdf4;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
   border-radius: var(--radius-md, 16px);
   cursor: pointer;
   transition: all 0.25s ease;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   width: 100%;
   box-sizing: border-box;
 }
 
 .disease-detection-page .upload-area:hover {
-  background: #dcfce7;
-  border-color: #22c55e;
-  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.15);
+  background: #ecfdf5;
+  border-color: #16a34a;
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.12);
   transform: translateY(-2px);
 }
 
@@ -2287,6 +2288,137 @@
   color: #0284c7;
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   PHASE 2: PREDICTION KPI SUMMARY ROW & SEVERITY / RISK BADGES
+   -------------------------------------------------------------------------- */
+.disease-detection-page .prediction-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.disease-detection-page .pred-kpi-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.disease-detection-page .pred-kpi-card:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.disease-detection-page .kpi-disease {
+  border-left: 4px solid #16a34a;
+  background: #f0fdf4;
+}
+
+.disease-detection-page .kpi-conf {
+  border-left: 4px solid #0284c7;
+  background: #f0f9ff;
+}
+
+.disease-detection-page .kpi-sev {
+  border-left: 4px solid #f59e0b;
+}
+
+.disease-detection-page .kpi-risk {
+  border-left: 4px solid #e11d48;
+}
+
+.disease-detection-page .kpi-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.disease-detection-page .kpi-val {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 19px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.disease-detection-page .kpi-sub {
+  font-size: 11.5px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.disease-detection-page .kpi-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0;
+}
+
+.disease-detection-page .kpi-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.disease-detection-page .sev-badge-low {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.disease-detection-page .sev-badge-moderate {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.disease-detection-page .sev-badge-high {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.disease-detection-page .risk-badge-low {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.disease-detection-page .risk-badge-medium {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.disease-detection-page .risk-badge-high {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+@media (max-width: 960px) {
+  .disease-detection-page .prediction-kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .disease-detection-page .prediction-kpi-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .disease-detection-page .result-notice strong {
@@ -3966,8 +4098,334 @@
   color: #64748b;
 }
 
-/* Loading */
+.data-source-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
 
+.pill-live {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.pill-fallback {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* Weather Risk Hero Banner */
+.weather-risk-hero-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.risk-tier-high {
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  border: 1.5px solid #fca5a5;
+  color: #991b1b;
+}
+
+.risk-tier-medium {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 1.5px solid #fcd34d;
+  color: #92400e;
+}
+
+.risk-tier-low {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 1.5px solid #86efac;
+  color: #166534;
+}
+
+.wr-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wr-hero-icon-badge {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.wr-hero-tag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  opacity: 0.85;
+}
+
+.wr-hero-title {
+  margin: 2px 0 4px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.wr-hero-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.wr-hero-right {
+  max-width: 320px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.wr-mitigation-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.wr-mitigation-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+/* "Why is this risky?" Section */
+.why-risky-card {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.why-risky-lead {
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  background: #f8fafc;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+}
+
+.why-risky-highlight {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #334155;
+}
+
+.why-risky-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.why-factor-card {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.why-factor-card.factor-danger {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+
+.why-factor-card.factor-warning {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.why-factor-card.factor-ok {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+.why-factor-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.why-factor-icon {
+  color: #d97706;
+}
+
+.why-factor-header h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.why-factor-text {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #475569;
+  flex-grow: 1;
+}
+
+.why-factor-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.8);
+  display: inline-block;
+  align-self: flex-start;
+}
+
+/* Early Warnings Section */
+.early-warnings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.ew-alert-card {
+  padding: 18px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ew-alert-card.ew-sev-high {
+  border-color: #fca5a5;
+  border-left-width: 5px;
+  border-left-color: #dc2626;
+}
+
+.ew-alert-card.ew-sev-medium {
+  border-color: #fde68a;
+  border-left-width: 5px;
+  border-left-color: #f59e0b;
+}
+
+.ew-alert-card.ew-sev-low {
+  border-color: #cbd5e1;
+  border-left-width: 5px;
+  border-left-color: #10b981;
+}
+
+.ew-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ew-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.ew-title-wrap {
+  flex: 1;
+}
+
+.ew-title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ew-severity-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.sev-high {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.sev-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.sev-low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.ew-message {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.ew-action-box {
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.ew-action-lbl {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.ew-action-text {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #475569;
+}
+
+.ew-meta-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* Loading */
 .loading-card {
   margin: 40px auto;
   max-width: 500px;
@@ -4023,6 +4481,155 @@
   .weather-page .page-title {
     font-size: 24px;
   }
+}
+
+/* Confidence Check & Expert Escalation Banners */
+.confidence-escalation-banner {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1.5px solid #fcd34d;
+  border-left: 5px solid #d97706;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+}
+
+.ce-banner-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.ce-icon-badge {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.ce-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.ce-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #92400e;
+}
+
+.ce-status-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  background: #ffffff;
+  border: 1px solid #fcd34d;
+  border-radius: 999px;
+  color: #b45309;
+}
+
+.ce-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #451a03;
+}
+
+.ce-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.btn-escalate-expert {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #d97706;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-escalate-expert:hover {
+  background: #b45309;
+  transform: translateY(-1px);
+}
+
+.btn-dashboard-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #ffffff;
+  color: #78350f;
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confidence-high-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-left: 5px solid #16a34a;
+  border-radius: 14px;
+  padding: 14px 18px;
+}
+
+.chb-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chb-left strong {
+  display: block;
+  font-size: 14px;
+  color: #166534;
+}
+
+.chb-sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #15803d;
+}
+
+.btn-second-opinion {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #ffffff;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  color: #166534;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* ==========================================================================
@@ -7010,4 +7617,1368 @@
 .prob-fill-sub {
   background: #94a3b8;
 }
+
+/* ==========================================================================
+   THEME TOGGLE BUTTON STYLES
+   ========================================================================== */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f1f5f9;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.theme-toggle-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-dark);
+  transform: translateY(-1px);
+}
+
+.theme-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.theme-icon {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.theme-sun {
+  color: #f59e0b;
+}
+
+.theme-moon {
+  color: #6366f1;
+}
+
+.theme-toggle-btn:hover .theme-icon {
+  transform: rotate(20deg) scale(1.1);
+}
+
+/* ==========================================================================
+   COMPREHENSIVE DARK MODE SYSTEM OVERHAUL (FULL PLATFORM COVERAGE)
+   ========================================================================== */
+
+/* Universal Dark Page Containers */
+[data-theme="dark"] body,
+body.dark-mode {
+  background-color: #0a0e1a !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .farmer-dash-page,
+[data-theme="dark"] .weather-page,
+[data-theme="dark"] .riskmap-page,
+[data-theme="dark"] .admin-page,
+[data-theme="dark"] .expert-page,
+[data-theme="dark"] .detect-page-container,
+[data-theme="dark"] .disease-detection-page,
+[data-theme="dark"] .home-page-container,
+[data-theme="dark"] .auth-page-wrapper {
+  color: #f8fafc !important;
+}
+
+/* NAVBAR IN DARK MODE */
+[data-theme="dark"] .main-navbar {
+  background: rgba(13, 19, 34, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid #1f2d48 !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .brand-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .brand-ai {
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .nav-item {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .nav-item:hover {
+  color: #4ade80 !important;
+  background: rgba(34, 197, 94, 0.12) !important;
+}
+
+[data-theme="dark"] .nav-item-active {
+  color: #4ade80 !important;
+  background: rgba(34, 197, 94, 0.18) !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="dark"] .nav-item-highlight {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 12px rgba(22, 163, 74, 0.4) !important;
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+  background: #1a233a !important;
+  border: 1px solid #2b3b5c !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+  background: #243252 !important;
+  border-color: #3b4d73 !important;
+}
+
+[data-theme="dark"] .lang-select-wrapper {
+  background: #1a233a !important;
+  border-color: #2b3b5c !important;
+}
+
+[data-theme="dark"] .lang-select {
+  color: #f8fafc !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .lang-select option {
+  background: #1a233a !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .nav-user-badge {
+  background: #1a233a !important;
+  border-color: #2b3b5c !important;
+}
+
+[data-theme="dark"] .user-name-txt {
+  color: #4ade80 !important;
+}
+
+/* ==========================================================================
+   1. FARMER DASHBOARD IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .farmer-top-summary-bar {
+  background: linear-gradient(145deg, #111827 0%, #172238 100%) !important;
+  border: 1px solid #23304b !important;
+  border-top: 4px solid #22c55e !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .farmer-name-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .farmer-tag-pill {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(74, 222, 128, 0.3) !important;
+}
+
+[data-theme="dark"] .farmer-sub-details {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .crop-badge-highlight {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #fbbf24 !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+}
+
+[data-theme="dark"] .btn-settings-pill {
+  background: #1a233a !important;
+  border-color: #2e3e5f !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .btn-settings-pill:hover {
+  background: #253350 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-phone-pill {
+  background: rgba(37, 99, 235, 0.15) !important;
+  color: #60a5fa !important;
+  border-color: rgba(96, 165, 250, 0.3) !important;
+}
+
+[data-theme="dark"] .btn-green-pill {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #4ade80 !important;
+  border-color: rgba(74, 222, 128, 0.3) !important;
+}
+
+/* Today's Action Card */
+[data-theme="dark"] .today-action-card {
+  background: linear-gradient(135deg, #063d2e 0%, #0d272d 50%, #0f1a2e 100%) !important;
+  border: 1px solid #1b4d3e !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55) !important;
+}
+
+[data-theme="dark"] .today-task-chip {
+  background: rgba(17, 24, 39, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .today-task-chip:hover {
+  background: rgba(26, 35, 58, 0.85) !important;
+  border-color: #4ade80 !important;
+}
+
+/* 5-Step Lifecycle Card */
+[data-theme="dark"] .farmer-lifecycle-card {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .lifecycle-title-group {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .lifecycle-step-item {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .lifecycle-step-item:hover {
+  background: #202d4a !important;
+  border-color: #4ade80 !important;
+}
+
+[data-theme="dark"] .lifecycle-step-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .lifecycle-step-desc {
+  color: #94a3b8 !important;
+}
+
+/* APMC Mandi Strip */
+[data-theme="dark"] .farmer-mandi-strip {
+  background: linear-gradient(90deg, #111f2c 0%, #13242b 50%, #161e36 100%) !important;
+  border: 1px solid #224343 !important;
+}
+
+[data-theme="dark"] .mandi-price-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .scheme-status-badge {
+  background: rgba(37, 99, 235, 0.2) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Essential Cards (Scanner, Weather, Advisory) */
+[data-theme="dark"] .essential-card {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .scan-highlight-card {
+  border-top: 3px solid #22c55e !important;
+  background: linear-gradient(180deg, #111827 0%, #0d211a 100%) !important;
+}
+
+[data-theme="dark"] .weather-highlight-card {
+  border-top: 3px solid #38bdf8 !important;
+}
+
+[data-theme="dark"] .advice-highlight-card {
+  border-top: 3px solid #fbbf24 !important;
+}
+
+[data-theme="dark"] .card-heading-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .scan-prompt-text,
+[data-theme="dark"] .advice-bullet-item {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .scan-bullets {
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .big-temp-text {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .weather-chips-strip,
+[data-theme="dark"] .last-scan-status-strip {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .spray-verdict-box {
+  background: rgba(34, 197, 94, 0.12) !important;
+  border: 1px solid rgba(74, 222, 128, 0.3) !important;
+}
+
+[data-theme="dark"] .spray-verdict-text {
+  color: #4ade80 !important;
+}
+
+/* Kisan Precision Utilities Hub & Cards */
+[data-theme="dark"] .farmer-utilities-hub-section {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .farmer-quick-actions-bar {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+}
+
+[data-theme="dark"] .quick-action-card,
+[data-theme="dark"] .kisan-util-card {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .quick-action-card:hover,
+[data-theme="dark"] .kisan-util-card:hover {
+  background: #222f4c !important;
+  border-color: #4ade80 !important;
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .qa-label,
+[data-theme="dark"] .kisan-util-card h4 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .qa-desc,
+[data-theme="dark"] .kisan-util-card p {
+  color: #94a3b8 !important;
+}
+
+/* Crop Health & Risk Summary */
+[data-theme="dark"] .crop-health-card,
+[data-theme="dark"] .risk-summary-4cards-wrap,
+[data-theme="dark"] .action-tile-card,
+[data-theme="dark"] .dashboard-sub-card {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .ch-title,
+[data-theme="dark"] .rs-title,
+[data-theme="dark"] .ch-score-val,
+[data-theme="dark"] .ch-detail-val,
+[data-theme="dark"] .tss-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .ch-detail-item,
+[data-theme="dark"] .trend-summary-strip {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .risk-mini-card {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .risk-mini-card:hover {
+  background: #222f4c !important;
+  border-color: #3b4f77 !important;
+}
+
+[data-theme="dark"] .rmc-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .rmc-reason {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .rs-overall-reasons-strip {
+  background: #1a233a !important;
+  border: 1px dashed #334466 !important;
+}
+
+[data-theme="dark"] .rs-reasons-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .rs-reason-chip {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .health-trend-chart-container {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .irrigation-stat-row {
+  background: rgba(34, 197, 94, 0.1) !important;
+  border: 1px solid rgba(74, 222, 128, 0.25) !important;
+}
+
+[data-theme="dark"] .irrigation-metric strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .expert-cta-box {
+  background: rgba(37, 99, 235, 0.12) !important;
+  border: 1px solid rgba(96, 165, 250, 0.25) !important;
+}
+
+/* Scans Table */
+[data-theme="dark"] .scans-table-container {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+}
+
+[data-theme="dark"] .scans-custom-table th {
+  background: #162035 !important;
+  color: #94a3b8 !important;
+  border-bottom: 2px solid #283756 !important;
+}
+
+[data-theme="dark"] .scans-custom-table td {
+  border-bottom: 1px solid #1c273e !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .scans-custom-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark"] .crop-tag-pill {
+  background: #1e2a44 !important;
+  color: #cbd5e1 !important;
+  border-color: #2e3e5f !important;
+}
+
+[data-theme="dark"] .conf-pill {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #4ade80 !important;
+  border-color: rgba(74, 222, 128, 0.3) !important;
+}
+
+/* Alert Feeds & Expert Consultation */
+[data-theme="dark"] .alert-feed-item {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .alert-feed-item:hover {
+  background: #222f4c !important;
+  border-color: #3b4f77 !important;
+}
+
+[data-theme="dark"] .alert-item-unread {
+  background: #1d2b48 !important;
+  border-left: 4px solid #fbbf24 !important;
+}
+
+[data-theme="dark"] .alert-item-read {
+  background: #141c2e !important;
+  opacity: 0.8;
+}
+
+[data-theme="dark"] .alert-message-txt {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .expert-reply-card {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+  border-left: 4px solid #22c55e !important;
+}
+
+[data-theme="dark"] .expert-doctor-badge {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .farmer-question-quote {
+  background: #141c2e !important;
+  border: 1px dashed #2e3e5f !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .ch-score-meter-wrap,
+body.dark-mode .ch-score-meter-wrap {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .rs-badge-info,
+body.dark-mode .rs-badge-info {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .eval-pill,
+body.dark-mode .eval-pill {
+  background: #141c2e !important;
+  border: 1px solid #283756 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .ch-status-badge,
+body.dark-mode .ch-status-badge {
+  background: #14281e !important;
+  border: 1px solid #166534 !important;
+  color: #4ade80 !important;
+}
+
+
+/* ==========================================================================
+   2. AI DISEASE DETECTION PAGE IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .disease-detection-page .page-header-clean,
+body.dark-mode .disease-detection-page .page-header-clean {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  border-top: 4px solid #22c55e !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .disease-detection-page .page-title,
+body.dark-mode .disease-detection-page .page-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .disease-detection-page .page-subtitle,
+body.dark-mode .disease-detection-page .page-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .dash-card,
+[data-theme="dark"] .disease-detection-page .dash-card,
+body.dark-mode .dash-card,
+body.dark-mode .disease-detection-page .dash-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .section-heading h2,
+[data-theme="dark"] .dash-card-header h3,
+body.dark-mode .section-heading h2,
+body.dark-mode .dash-card-header h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .sub-title-text,
+body.dark-mode .sub-title-text {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .form-group label,
+body.dark-mode .form-group label {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .form-group select,
+[data-theme="dark"] .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group input {
+  background: #141c2e !important;
+  border-color: #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .upload-area,
+body.dark-mode .upload-area {
+  background: linear-gradient(145deg, #0b2219 0%, #111827 100%) !important;
+  border: 2px dashed #16a34a !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .upload-area:hover,
+body.dark-mode .upload-area:hover {
+  background: linear-gradient(145deg, #0e2e22 0%, #152236 100%) !important;
+  border-color: #22c55e !important;
+}
+
+[data-theme="dark"] .upload-area h3,
+body.dark-mode .upload-area h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .upload-area p,
+body.dark-mode .upload-area p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .pred-kpi-card,
+[data-theme="dark"] .result-details,
+[data-theme="dark"] .result-item,
+[data-theme="dark"] .diag-card-wrapper,
+[data-theme="dark"] .prediction-result-card,
+[data-theme="dark"] .advisory-card,
+[data-theme="dark"] .treatment-section,
+[data-theme="dark"] .med-step-card,
+[data-theme="dark"] .organic-rec-card,
+[data-theme="dark"] .specimen-rejection-card,
+[data-theme="dark"] .result-card-enhanced,
+body.dark-mode .pred-kpi-card,
+body.dark-mode .result-details,
+body.dark-mode .result-item,
+body.dark-mode .diag-card-wrapper,
+body.dark-mode .prediction-result-card,
+body.dark-mode .advisory-card,
+body.dark-mode .treatment-section,
+body.dark-mode .med-step-card,
+body.dark-mode .organic-rec-card,
+body.dark-mode .specimen-rejection-card,
+body.dark-mode .result-card-enhanced {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pred-pill-badge,
+body.dark-mode .pred-pill-badge {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(74, 222, 128, 0.3) !important;
+}
+
+[data-theme="dark"] .image-preview-section,
+body.dark-mode .image-preview-section {
+  background: #141c2e !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .preview-header strong,
+body.dark-mode .preview-header strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .preview-header p,
+body.dark-mode .preview-header p {
+  color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   3. WEATHER RISK PAGE IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .weather-page .page-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .weather-page .page-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .location-select-box {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .district-select {
+  background: #1a233a !important;
+  border: 1px solid #2e3e5f !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .weather-risk-hero-banner {
+  background: linear-gradient(135deg, #111827 0%, #1b263b 100%) !important;
+  border: 1px solid #2e3e5f !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .weather-risk-hero-banner.risk-tier-high {
+  border-left: 5px solid #ef4444 !important;
+  background: linear-gradient(135deg, #2a1215 0%, #111827 100%) !important;
+}
+
+[data-theme="dark"] .weather-risk-hero-banner.risk-tier-moderate {
+  border-left: 5px solid #f59e0b !important;
+  background: linear-gradient(135deg, #2a1f11 0%, #111827 100%) !important;
+}
+
+[data-theme="dark"] .weather-risk-hero-banner.risk-tier-low {
+  border-left: 5px solid #22c55e !important;
+  background: linear-gradient(135deg, #0e271c 0%, #111827 100%) !important;
+}
+
+[data-theme="dark"] .wr-hero-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .wr-hero-desc {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .wr-mitigation-text {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .w-metric-card {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .w-value {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .w-label,
+[data-theme="dark"] .w-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .why-risky-card,
+[data-theme="dark"] .ew-alert-card,
+[data-theme="dark"] .spray-win-card,
+[data-theme="dark"] .v-card,
+[data-theme="dark"] .forecast-card,
+body.dark-mode .why-risky-card,
+body.dark-mode .ew-alert-card,
+body.dark-mode .spray-win-card,
+body.dark-mode .v-card,
+body.dark-mode .forecast-card {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .weather-section h2,
+[data-theme="dark"] .section-title-row h2,
+[data-theme="dark"] .title-with-icon h2,
+body.dark-mode .weather-section h2,
+body.dark-mode .section-title-row h2,
+body.dark-mode .title-with-icon h2 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .sub-title-text,
+body.dark-mode .sub-title-text {
+  color: #94a3b8 !important;
+}
+
+/* Why Risky Factor Breakdown */
+[data-theme="dark"] .why-factor-card,
+body.dark-mode .why-factor-card {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .why-factor-header h4,
+body.dark-mode .why-factor-header h4 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .why-factor-text,
+body.dark-mode .why-factor-text {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .why-factor-status,
+body.dark-mode .why-factor-status {
+  background: #141c2e !important;
+  border: 1px solid #283756 !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .why-risky-highlight,
+body.dark-mode .why-risky-highlight {
+  background: #1a233a !important;
+  border: 1px dashed #334466 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Early Warnings Alert Cards */
+[data-theme="dark"] .ew-alert-card,
+body.dark-mode .ew-alert-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .ew-alert-card.ew-sev-high,
+body.dark-mode .ew-alert-card.ew-sev-high {
+  border-color: #7f1d1d !important;
+  border-left: 5px solid #ef4444 !important;
+}
+
+[data-theme="dark"] .ew-alert-card.ew-sev-medium,
+body.dark-mode .ew-alert-card.ew-sev-medium {
+  border-color: #78350f !important;
+  border-left: 5px solid #f59e0b !important;
+}
+
+[data-theme="dark"] .ew-alert-card.ew-sev-low,
+body.dark-mode .ew-alert-card.ew-sev-low {
+  border-color: #14532d !important;
+  border-left: 5px solid #22c55e !important;
+}
+
+[data-theme="dark"] .ew-title,
+body.dark-mode .ew-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .ew-message,
+body.dark-mode .ew-message {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .ew-action-box,
+body.dark-mode .ew-action-box {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .ew-action-lbl,
+body.dark-mode .ew-action-lbl {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .ew-action-text,
+body.dark-mode .ew-action-text {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .ew-meta-footer,
+body.dark-mode .ew-meta-footer {
+  color: #94a3b8 !important;
+}
+
+/* Spray Windows Cards */
+[data-theme="dark"] .spray-win-card,
+body.dark-mode .spray-win-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .spray-win-card.win-safe,
+body.dark-mode .spray-win-card.win-safe {
+  background: #14281e !important;
+  border: 1px solid #166534 !important;
+}
+
+[data-theme="dark"] .spray-win-card.win-risky,
+body.dark-mode .spray-win-card.win-risky {
+  background: #271418 !important;
+  border: 1px solid #7f1d1d !important;
+}
+
+[data-theme="dark"] .win-time,
+body.dark-mode .win-time {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .win-condition,
+body.dark-mode .win-condition {
+  color: #cbd5e1 !important;
+}
+
+/* Vulnerability Gauges Cards */
+[data-theme="dark"] .v-card,
+body.dark-mode .v-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .v-header h4,
+body.dark-mode .v-header h4 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .v-desc,
+body.dark-mode .v-desc {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .v-progress-track,
+body.dark-mode .v-progress-track {
+  background: #1e293b !important;
+}
+
+/* 7-Day Forecast Cards */
+[data-theme="dark"] .forecast-card,
+body.dark-mode .forecast-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .forecast-card .f-day,
+body.dark-mode .forecast-card .f-day {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .forecast-card .f-temp,
+body.dark-mode .forecast-card .f-temp {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .forecast-card .f-humidity,
+body.dark-mode .forecast-card .f-humidity {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .forecast-card .f-threat,
+body.dark-mode .forecast-card .f-threat {
+  color: #cbd5e1 !important;
+}
+
+/* Location Select Box */
+[data-theme="dark"] .location-select-box,
+body.dark-mode .location-select-box {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .location-select-box label,
+body.dark-mode .location-select-box label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .district-select,
+body.dark-mode .district-select {
+  background: #141c2e !important;
+  border-color: #283756 !important;
+  color: #f8fafc !important;
+}
+
+/* ==========================================================================
+   4. GEOSPATIAL RISK MAP PAGE IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .riskmap-page .page-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .riskmap-page .page-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .risk-kpi-box {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+}
+
+[data-theme="dark"] .kpi-num-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .kpi-num-lbl {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .riskmap-sidebar-box,
+[data-theme="dark"] .riskmap-controls-bar,
+[data-theme="dark"] .map-legend-box {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .district-cluster-card {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .district-cluster-card:hover {
+  background: #222f4c !important;
+  border-color: #3b4f77 !important;
+}
+
+[data-theme="dark"] .district-cluster-card h4 {
+  color: #f8fafc !important;
+}
+
+/* Invert and tone down Leaflet Map tiles for sleek night mode view */
+[data-theme="dark"] .leaflet-layer,
+[data-theme="dark"] .leaflet-control-zoom-in,
+[data-theme="dark"] .leaflet-control-zoom-out {
+  filter: brightness(0.8) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
+[data-theme="dark"] .leaflet-popup-content-wrapper,
+[data-theme="dark"] .leaflet-popup-tip {
+  background: #111827 !important;
+  color: #f8fafc !important;
+  border: 1px solid #23304b !important;
+}
+
+/* ==========================================================================
+   5. ADMIN & EXPERT DASHBOARDS IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .admin-header-card,
+[data-theme="dark"] .expert-header-card,
+[data-theme="dark"] .admin-data-card,
+[data-theme="dark"] .case-review-card,
+[data-theme="dark"] .expert-review-workspace {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-page h1,
+[data-theme="dark"] .admin-page h2,
+[data-theme="dark"] .admin-page h3,
+[data-theme="dark"] .expert-page h1,
+[data-theme="dark"] .expert-page h2,
+[data-theme="dark"] .expert-page h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-kpi-card,
+[data-theme="dark"] .expert-kpi-card {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .admin-kpi-val,
+[data-theme="dark"] .expert-kpi-val {
+  color: #f8fafc !important;
+}
+
+/* ==========================================================================
+   6. AUTH & LOGIN PAGE IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .auth-white-card,
+[data-theme="dark"] .auth-card,
+body.dark-mode .auth-white-card,
+body.dark-mode .auth-card {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auth-brand-header-card,
+body.dark-mode .auth-brand-header-card {
+  background: linear-gradient(180deg, #111827 0%, #0d1e17 100%) !important;
+  border-bottom: 1px solid #23304b !important;
+}
+
+[data-theme="dark"] .auth-portal-selector-bar,
+body.dark-mode .auth-portal-selector-bar {
+  background: #141c2e !important;
+  border-bottom: 1px solid #23304b !important;
+}
+
+[data-theme="dark"] .portal-select-btn,
+body.dark-mode .portal-select-btn {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .portal-select-btn:hover,
+body.dark-mode .portal-select-btn:hover {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .portal-select-btn.portal-active-farmer,
+body.dark-mode .portal-select-btn.portal-active-farmer {
+  background: #162a1e !important;
+  color: #4ade80 !important;
+  border-color: #22c55e !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2) !important;
+}
+
+[data-theme="dark"] .portal-select-btn.portal-active-expert,
+body.dark-mode .portal-select-btn.portal-active-expert {
+  background: #162438 !important;
+  color: #38bdf8 !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2) !important;
+}
+
+[data-theme="dark"] .portal-select-btn.portal-active-admin,
+body.dark-mode .portal-select-btn.portal-active-admin {
+  background: #2b1d16 !important;
+  color: #fb923c !important;
+  border-color: #ea580c !important;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2) !important;
+}
+
+[data-theme="dark"] .portal-banner-badge,
+body.dark-mode .portal-banner-badge {
+  border-bottom: 1px solid #23304b !important;
+}
+
+[data-theme="dark"] .portal-banner-badge.banner-farmer,
+body.dark-mode .portal-banner-badge.banner-farmer {
+  background: #14281e !important;
+  color: #86efac !important;
+}
+
+[data-theme="dark"] .portal-banner-badge.banner-expert,
+body.dark-mode .portal-banner-badge.banner-expert {
+  background: #15273e !important;
+  color: #7dd3fc !important;
+}
+
+[data-theme="dark"] .portal-banner-badge.banner-admin,
+body.dark-mode .portal-banner-badge.banner-admin {
+  background: #2d1c14 !important;
+  color: #fdba74 !important;
+}
+
+[data-theme="dark"] .auth-tabs-header-white,
+body.dark-mode .auth-tabs-header-white {
+  background: #141c2e !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .auth-tab-btn-white,
+body.dark-mode .auth-tab-btn-white {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auth-tab-btn-white.active,
+body.dark-mode .auth-tab-btn-white.active {
+  background: #222f4c !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .auth-info-banner-card,
+body.dark-mode .auth-info-banner-card {
+  background: #14281e !important;
+  border-color: #166534 !important;
+}
+
+[data-theme="dark"] .info-banner-content,
+body.dark-mode .info-banner-content {
+  color: #86efac !important;
+}
+
+[data-theme="dark"] .auth-brand-title,
+body.dark-mode .auth-brand-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auth-title-h2,
+body.dark-mode .auth-title-h2 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auth-subtext-p,
+body.dark-mode .auth-subtext-p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .role-btn-card,
+body.dark-mode .role-btn-card {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+[data-theme="dark"] .role-btn-card:hover,
+body.dark-mode .role-btn-card:hover {
+  background: #222f4c !important;
+}
+
+[data-theme="dark"] .role-btn-card.active,
+body.dark-mode .role-btn-card.active {
+  background: rgba(34, 197, 94, 0.15) !important;
+  border-color: #22c55e !important;
+}
+
+[data-theme="dark"] .role-name-txt,
+body.dark-mode .role-name-txt {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .demo-banner-box,
+body.dark-mode .demo-banner-box {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+}
+
+/* Universal Badge Pills in Dark Mode */
+[data-theme="dark"] .badge-pill,
+body.dark-mode .badge-pill {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .badge-pill.badge-green,
+body.dark-mode .badge-pill.badge-green {
+  background: #14281e !important;
+  border-color: #166534 !important;
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .badge-pill.badge-amber,
+body.dark-mode .badge-pill.badge-amber {
+  background: #2b1f13 !important;
+  border-color: #78350f !important;
+  color: #fbbf24 !important;
+}
+
+[data-theme="dark"] .badge-pill.badge-red,
+body.dark-mode .badge-pill.badge-red {
+  background: #271418 !important;
+  border-color: #7f1d1d !important;
+  color: #f87171 !important;
+}
+
+[data-theme="dark"] .sih-badge-inline,
+body.dark-mode .sih-badge-inline {
+  background: #14281e !important;
+  border: 1px solid #166534 !important;
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .wr-hero-right,
+body.dark-mode .wr-hero-right {
+  background: rgba(26, 35, 58, 0.7) !important;
+  border: 1px solid #283756 !important;
+  color: #f8fafc !important;
+}
+
+/* ==========================================================================
+   7. MODALS, INPUTS & GENERAL UTILITIES IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .modal-backdrop-overlay {
+  background: rgba(5, 10, 20, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+[data-theme="dark"] .modal-content-card,
+[data-theme="dark"] .kisan-modal-content {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  color: #f8fafc !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-theme="dark"] .modal-header {
+  border-bottom: 1px solid #1f2d48 !important;
+}
+
+[data-theme="dark"] .modal-header h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .modal-close-btn {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .modal-close-btn:hover {
+  background: #243252 !important;
+  color: #ffffff !important;
+}
+
+/* Universal Inputs, Selects & Textareas */
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] input[type="tel"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .form-input {
+  background: #1a233a !important;
+  color: #f8fafc !important;
+  border: 1px solid #2b3b5c !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] .form-input:focus {
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2) !important;
+}
+
+[data-theme="dark"] label,
+[data-theme="dark"] .form-label {
+  color: #cbd5e1 !important;
+}
+
+/* Secondary Buttons in Dark Mode */
+[data-theme="dark"] .secondary-btn-sm,
+[data-theme="dark"] .btn-secondary {
+  background: #1a233a !important;
+  border: 1px solid #2b3b5c !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .secondary-btn-sm:hover,
+[data-theme="dark"] .btn-secondary:hover {
+  background: #243252 !important;
+  color: #ffffff !important;
+}
+
+/* Modal Inner Result Boxes (Spray Calc, Khad Mitra, Yojana, Kendra, Calendar) */
+[data-theme="dark"] .spray-calc-result-box,
+[data-theme="dark"] .npk-split-grid,
+[data-theme="dark"] .fym-advice-box,
+[data-theme="dark"] .kendra-directory-card,
+[data-theme="dark"] .yojana-scheme-card,
+[data-theme="dark"] .timeline-stage-card,
+[data-theme="dark"] .npk-stage-card,
+[data-theme="dark"] .kendra-item-box,
+[data-theme="dark"] .yojana-scheme-item {
+  background: #1a233a !important;
+  border: 1px solid #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .kendra-item-box:hover,
+[data-theme="dark"] .yojana-scheme-item:hover,
+[data-theme="dark"] .npk-stage-card:hover {
+  background: #222f4c !important;
+  border-color: #3b4f77 !important;
+}
+
+/* Footer in Dark Mode */
+[data-theme="dark"] .main-footer,
+[data-theme="dark"] .farmer-bottom-strip {
+  background: #080c16 !important;
+  border-top: 1px solid #1a233a !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .tier-step-item,
+body.dark-mode .tier-step-item {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .tier-step-item:hover,
+body.dark-mode .tier-step-item:hover {
+  background: #222f4c !important;
+  border-color: #3b4f77 !important;
+}
+
+[data-theme="dark"] .tier-step-item.step-completed,
+body.dark-mode .tier-step-item.step-completed {
+  background: #14281e !important;
+  border-color: #166534 !important;
+}
+
+[data-theme="dark"] .step-title,
+body.dark-mode .step-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .step-desc,
+body.dark-mode .step-desc {
+  color: #94a3b8 !important;
+}
+
+
+
 

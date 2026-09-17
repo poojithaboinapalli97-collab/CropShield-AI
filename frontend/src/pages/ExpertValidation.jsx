@@ -26,6 +26,11 @@ import {
   submitExpertValidation,
 } from '../services/api';
 
+import {
+  getExpertReviewQueue,
+  verifyScanInExpertQueue,
+} from '../utils/scanHistory';
+
 import '../styles/ExpertValidation.css';
 
 export default function ExpertValidation() {
@@ -41,21 +46,37 @@ export default function ExpertValidation() {
 
   useEffect(() => {
     loadQueue();
+    window.addEventListener('cropshield_expert_queue_updated', loadQueue);
+    return () => {
+      window.removeEventListener('cropshield_expert_queue_updated', loadQueue);
+    };
   }, []);
 
   const loadQueue = async () => {
     try {
+      const dynamicQueue = getExpertReviewQueue();
       const res = await fetchExpertQueue();
+      const apiQueue = res && res.success && Array.isArray(res.data) ? res.data : [];
 
-      if (res && res.success && Array.isArray(res.data)) {
-        setQueue(res.data);
+      // Merge dynamic queue with API queue without duplicate scanIds
+      const seenIds = new Set();
+      const combined = [];
 
-        if (res.data.length > 0) {
-          const firstScan = res.data[0];
-          setSelectedScan(firstScan);
-          setConfirmedDisease(firstScan.aiPrediction || '');
-          setAgronomistNotes(firstScan.expertNotes || '');
+      for (const item of [...dynamicQueue, ...apiQueue]) {
+        const id = item.scanId || item.id;
+        if (!seenIds.has(id)) {
+          seenIds.add(id);
+          combined.push(item);
         }
+      }
+
+      setQueue(combined);
+
+      if (combined.length > 0 && !selectedScan) {
+        const firstScan = combined[0];
+        setSelectedScan(firstScan);
+        setConfirmedDisease(firstScan.aiPrediction || '');
+        setAgronomistNotes(firstScan.expertNotes || '');
       }
     } catch (error) {
       console.error('Failed to load expert queue:', error);
@@ -86,44 +107,53 @@ export default function ExpertValidation() {
     setSubmitStatus('');
 
     try {
-      const res = await submitExpertValidation(
-        selectedScan.scanId,
-        {
-          confirmedDisease: confirmedDisease,
-          agronomistNotes: agronomistNotes,
-          agronomistName: 'Dr. A. K. Sharma (KVK Lead Pathologist)',
-          certified: certifiedCheck,
-        }
+      const scanId = selectedScan.scanId || selectedScan.id;
+      const expertName = 'Dr. K. Ramanjaneyulu, Ph.D. (KVK Lead Pathologist)';
+      const station = 'Krishi Vigyan Kendra (KVK) Lam Farm, Guntur';
+
+      // 1. Verify scan in local reactive store and notify farmer
+      verifyScanInExpertQueue(scanId, {
+        confirmedDisease: confirmedDisease,
+        agronomistNotes: agronomistNotes,
+        agronomistName: expertName,
+        station: station,
+        certified: certifiedCheck,
+      });
+
+      // 2. Submit to backend API if connected
+      await submitExpertValidation(scanId, {
+        confirmedDisease: confirmedDisease,
+        agronomistNotes: agronomistNotes,
+        agronomistName: expertName,
+        certified: certifiedCheck,
+      });
+
+      setSubmitStatus(
+        'Verified advisory issued successfully! Farmer alerted via App & SMS.'
       );
 
-      if (res && res.success) {
-        setSubmitStatus(
-          'Verified advisory issued successfully! Farmer alerted via SMS & App.'
-        );
-
-        setQueue((previousQueue) => {
-          return previousQueue.map((item) => {
-            if (item.scanId === selectedScan.scanId) {
-              return {
-                ...item,
-                status: 'Validated',
-                expertNotes: agronomistNotes,
-                confirmedDisease: confirmedDisease,
-              };
-            }
-            return item;
-          });
+      setQueue((previousQueue) => {
+        return previousQueue.map((item) => {
+          if (item.scanId === scanId || item.id === scanId) {
+            return {
+              ...item,
+              status: 'Validated',
+              expertNotes: agronomistNotes,
+              confirmedDisease: confirmedDisease,
+              aiPrediction: confirmedDisease,
+            };
+          }
+          return item;
         });
+      });
 
-        setSelectedScan((prev) => ({
-          ...prev,
-          status: 'Validated',
-          expertNotes: agronomistNotes,
-          confirmedDisease: confirmedDisease,
-        }));
-      } else {
-        setSubmitStatus('Unable to submit validation.');
-      }
+      setSelectedScan((prev) => ({
+        ...prev,
+        status: 'Validated',
+        expertNotes: agronomistNotes,
+        confirmedDisease: confirmedDisease,
+        aiPrediction: confirmedDisease,
+      }));
     } catch (error) {
       console.error('Validation submission error:', error);
       setSubmitStatus('Something went wrong while submitting advisory.');

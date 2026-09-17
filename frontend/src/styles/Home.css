@@ -1,11 +1,13 @@
 .home-page {
   width: 100%;
   min-height: 100vh;
-  background: #f6f9f7;
-  color: #0f172a;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg-main, #f6f9f7);
+  color: var(--text-dark, #0f172a);
+  font-family: var(--font-sans, Inter, system-ui, sans-serif);
   overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
+
 
 /* ================= HERO ================= */
 
@@ -716,3 +718,150 @@
   padding: 3px 8px;
   border-radius: 6px;
 }
+
+/* ==========================================================================
+   HOME PAGE DARK MODE OVERRIDES
+   ========================================================================== */
+[data-theme="dark"] .home-page,
+body.dark-mode .home-page {
+  background: #0a0e1a !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .section-header h2,
+body.dark-mode .section-header h2 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .section-header p,
+body.dark-mode .section-header p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .stat-card,
+body.dark-mode .stat-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .stat-number,
+body.dark-mode .stat-number {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .stat-title,
+body.dark-mode .stat-title {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .stat-icon-bg,
+body.dark-mode .stat-icon-bg {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .transparency-card,
+body.dark-mode .transparency-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .transparency-content h3,
+body.dark-mode .transparency-content h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .transparency-content p,
+body.dark-mode .transparency-content p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .transparency-icon,
+body.dark-mode .transparency-icon {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .feature-card,
+body.dark-mode .feature-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .feature-card:hover,
+body.dark-mode .feature-card:hover {
+  background: #18233a !important;
+  border-color: #3b4f77 !important;
+}
+
+[data-theme="dark"] .feature-card h3,
+body.dark-mode .feature-card h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .feature-card p,
+body.dark-mode .feature-card p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .f-link,
+body.dark-mode .f-link {
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .w-step,
+body.dark-mode .w-step {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .w-step h4,
+body.dark-mode .w-step h4 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .w-step p,
+body.dark-mode .w-step p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .graphic-badge,
+body.dark-mode .graphic-badge {
+  background: #111827 !important;
+  color: #4ade80 !important;
+  border: 1px solid #23304b !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .graphic-main-box,
+body.dark-mode .graphic-main-box {
+  background: #111827 !important;
+  border: 1px solid #23304b !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .g-val,
+body.dark-mode .g-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .user-scan-card,
+body.dark-mode .user-scan-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .scan-disease-name,
+body.dark-mode .scan-disease-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .scan-loc-pill,
+body.dark-mode .scan-loc-pill {
+  background: #1a233a !important;
+  color: #94a3b8 !important;
+}

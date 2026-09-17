@@ -1176,3 +1176,654 @@
     justify-content: space-between;
   }
 }
+
+/* ==========================================================================
+   ADMIN DASHBOARD DARK MODE OVERRIDES
+   ========================================================================== */
+[data-theme="dark"] .admin-page,
+body.dark-mode .admin-page {
+  background: #0a0e1a !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-header-card,
+body.dark-mode .admin-header-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  border-top-color: #22c55e !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .admin-page-title,
+body.dark-mode .admin-page-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-page-subtitle,
+body.dark-mode .admin-page-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .command-live-indicator,
+body.dark-mode .command-live-indicator {
+  background: #1a233a !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-export-rep,
+body.dark-mode .btn-export-rep {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-export-rep:hover,
+body.dark-mode .btn-export-rep:hover {
+  background: #243252 !important;
+}
+
+[data-theme="dark"] .impact-tile,
+body.dark-mode .impact-tile {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .telemetry-card,
+body.dark-mode .telemetry-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .t-val,
+body.dark-mode .t-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .t-lbl,
+[data-theme="dark"] .t-sub,
+body.dark-mode .t-lbl,
+body.dark-mode .t-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .admin-card,
+body.dark-mode .admin-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .admin-card-header,
+body.dark-mode .admin-card-header {
+  background: #111827 !important;
+  border-bottom-color: #1f2d48 !important;
+}
+
+[data-theme="dark"] .title-with-icon h3,
+body.dark-mode .title-with-icon h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .custom-table th,
+body.dark-mode .custom-table th {
+  color: #94a3b8 !important;
+  border-bottom-color: #1f2d48 !important;
+}
+
+[data-theme="dark"] .custom-table tbody tr,
+body.dark-mode .custom-table tbody tr {
+  background: #1a233a !important;
+}
+
+[data-theme="dark"] .custom-table tbody tr:hover,
+body.dark-mode .custom-table tbody tr:hover {
+  background: #222f4c !important;
+}
+
+[data-theme="dark"] .custom-table td,
+body.dark-mode .custom-table td {
+  color: #e2e8f0 !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .custom-table td:first-child,
+body.dark-mode .custom-table td:first-child {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .velocity-item,
+[data-theme="dark"] .outbreak-item,
+body.dark-mode .velocity-item,
+body.dark-mode .outbreak-item {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .velocity-item:hover,
+[data-theme="dark"] .outbreak-item:hover,
+body.dark-mode .velocity-item:hover,
+body.dark-mode .outbreak-item:hover {
+  background: #222f4c !important;
+  border-color: #3b4f77 !important;
+}
+
+[data-theme="dark"] .v-info strong,
+[data-theme="dark"] .ob-info strong,
+body.dark-mode .v-info strong,
+body.dark-mode .ob-info strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .v-crop-dis,
+[data-theme="dark"] .ob-meta,
+body.dark-mode .v-crop-dis,
+body.dark-mode .ob-meta {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .v-badge,
+body.dark-mode .v-badge {
+  background: #111827 !important;
+  border-color: #23304b !important;
+}
+
+[data-theme="dark"] .v-action,
+body.dark-mode .v-action {
+  background: #162035 !important;
+  color: #cbd5e1 !important;
+}
+
+/* ADMIN PROFILE CARD & TABS IN DARK MODE */
+[data-theme="dark"] .admin-profile-card,
+body.dark-mode .admin-profile-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .admin-name-heading,
+body.dark-mode .admin-name-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-designation-line,
+body.dark-mode .admin-designation-line {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .admin-meta-chip,
+body.dark-mode .admin-meta-chip {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .btn-edit-admin,
+body.dark-mode .btn-edit-admin {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-edit-admin:hover,
+body.dark-mode .btn-edit-admin:hover {
+  background: #243252 !important;
+}
+
+/* Nav Tab Buttons */
+[data-theme="dark"] .admin-nav-tab-btn,
+body.dark-mode .admin-nav-tab-btn {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .admin-nav-tab-btn:hover,
+body.dark-mode .admin-nav-tab-btn:hover {
+  background: #1a233a !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-nav-tab-btn.tab-active,
+body.dark-mode .admin-nav-tab-btn.tab-active {
+  background: #162a42 !important;
+  color: #4ade80 !important;
+  border-color: #22c55e !important;
+}
+
+/* ==========================================================================
+   ADMIN TAB MANAGEMENT, MANDI RATES, & OUTBREAKS STYLES
+   ========================================================================== */
+.admin-nav-tabs-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.admin-nav-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-weight: 800;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-nav-tab-btn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.admin-nav-tab-btn.tab-active-mandi {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 2px solid #16a34a;
+}
+
+.admin-nav-tab-btn.tab-active-outbreaks {
+  background: #fff7ed;
+  color: #c2410c;
+  border: 2px solid #ea580c;
+}
+
+.admin-nav-tab-btn.tab-active-broadcast {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 2px solid #2563eb;
+}
+
+.admin-nav-tab-btn.tab-active-surveillance {
+  background: #f5f3ff;
+  color: #6d28d9;
+  border: 2px solid #7c3aed;
+}
+
+.admin-mandi-control-card,
+.admin-outbreaks-control-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+}
+
+.admin-section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.admin-block-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.admin-block-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.admin-action-btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-add-crop-btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.admin-save-broadcast-btn {
+  padding: 8px 18px;
+  font-size: 13px;
+  width: auto;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.admin-toast-success {
+  padding: 10px 14px;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  color: #15803d;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-toast-warning {
+  padding: 10px 14px;
+  background: #ffedd5;
+  border: 1px solid #fed7aa;
+  color: #c2410c;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-table-scroll-wrap {
+  overflow-x: auto;
+}
+
+.admin-mandi-live-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  text-align: left;
+}
+
+.admin-mandi-live-table th {
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+  color: #475569;
+  padding: 12px 14px;
+  font-weight: 800;
+}
+
+.admin-mandi-live-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.admin-table-input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.currency-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+}
+
+.admin-delete-row-btn {
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* New Outbreak Alert Form */
+.admin-new-outbreak-form {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 24px;
+}
+
+.admin-form-heading {
+  margin: 0 0 14px;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.admin-form-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.admin-form-grid-2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.admin-form-lbl {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #475569;
+}
+
+.admin-form-select,
+.admin-form-input,
+.admin-form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.admin-publish-outbreak-btn {
+  padding: 9px 20px;
+  width: auto;
+  background: #ea580c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-subheading-title {
+  margin: 0 0 14px;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.admin-threat-directives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-threat-directive-item {
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.admin-threat-directive-item.item-active-alert {
+  border: 1.5px solid #fed7aa;
+  background: #fffbeb;
+}
+
+.directive-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.directive-loc-title {
+  font-weight: 800;
+  font-size: 14.5px;
+  color: #0f172a;
+}
+
+.directive-crop-meta {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.directive-pathogen-title {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: #b45309;
+  font-weight: 700;
+}
+
+.directive-action-desc {
+  margin: 0;
+  font-size: 12.5px;
+  color: #475569;
+}
+
+.directive-item-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-directive-status {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.status-active {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+.status-resolved {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* ==========================================================================
+   ADMIN TAB SECTIONS IN DARK MODE
+   ========================================================================== */
+[data-theme="dark"] .admin-mandi-control-card,
+[data-theme="dark"] .admin-outbreaks-control-card,
+body.dark-mode .admin-mandi-control-card,
+body.dark-mode .admin-outbreaks-control-card {
+  background: #111827 !important;
+  border-color: #23304b !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .admin-block-title,
+[data-theme="dark"] .admin-form-heading,
+[data-theme="dark"] .admin-subheading-title,
+[data-theme="dark"] .directive-loc-title,
+body.dark-mode .admin-block-title,
+body.dark-mode .admin-form-heading,
+body.dark-mode .admin-subheading-title,
+body.dark-mode .directive-loc-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-block-sub,
+[data-theme="dark"] .admin-form-lbl,
+[data-theme="dark"] .directive-crop-meta,
+[data-theme="dark"] .directive-action-desc,
+body.dark-mode .admin-block-sub,
+body.dark-mode .admin-form-lbl,
+body.dark-mode .directive-crop-meta,
+body.dark-mode .directive-action-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .admin-mandi-live-table th,
+body.dark-mode .admin-mandi-live-table th {
+  background: #162035 !important;
+  color: #94a3b8 !important;
+  border-bottom-color: #283756 !important;
+}
+
+[data-theme="dark"] .admin-mandi-live-table td,
+body.dark-mode .admin-mandi-live-table td {
+  border-bottom-color: #1c273e !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .admin-table-input,
+[data-theme="dark"] .admin-form-select,
+[data-theme="dark"] .admin-form-input,
+[data-theme="dark"] .admin-form-textarea,
+body.dark-mode .admin-table-input,
+body.dark-mode .admin-form-select,
+body.dark-mode .admin-form-input,
+body.dark-mode .admin-form-textarea {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-new-outbreak-form,
+body.dark-mode .admin-new-outbreak-form {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .admin-threat-directive-item,
+body.dark-mode .admin-threat-directive-item {
+  background: #1a233a !important;
+  border-color: #283756 !important;
+}
+
+[data-theme="dark"] .admin-threat-directive-item.item-active-alert,
+body.dark-mode .admin-threat-directive-item.item-active-alert {
+  background: #241c18 !important;
+  border-color: #7c2d12 !important;
+}
+
+[data-theme="dark"] .directive-pathogen-title,
+body.dark-mode .directive-pathogen-title {
+  color: #fb923c !important;
+}
+
+
+
