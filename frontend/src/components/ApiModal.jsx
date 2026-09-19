@@ -98,7 +98,7 @@ export default function ApiModal({ isOpen, onClose }) {
               <span>
                 Engine Status:{' '}
                 <strong style={{ color: '#15803d' }}>
-                  {pingStatus === 'online' ? '🟢 Operational & Connected (Port 8001)' : 'Connecting...'}
+                  {pingStatus === 'online' ? '🟢 Operational & Connected (Cloud Neural Engine)' : pingStatus === 'checking' ? 'Connecting...' : '🔴 Offline'}
                 </strong>
               </span>
             </div>
@@ -203,7 +203,7 @@ export default function ApiModal({ isOpen, onClose }) {
                 </div>
                 <div className="expert-spec-card">
                   <span className="expert-spec-lbl">CORS Allowed Origins</span>
-                  <div className="expert-spec-val"><code>localhost:5173, 127.0.0.1</code></div>
+                  <div className="expert-spec-val"><code>Cloud HTTPS / Localhost</code></div>
                 </div>
               </div>
 
@@ -213,7 +213,7 @@ export default function ApiModal({ isOpen, onClose }) {
                   <p style={{ margin: '2px 0 0', fontSize: '11px', color: '#3b82f6' }}>Test live REST endpoints, inspect payload schemas, and view JSON specs</p>
                 </div>
                 <a
-                  href={`${customUrl}/docs`}
+                  href={`${customUrl || ''}/docs`}
                   target="_blank"
                   rel="noreferrer"
                   className="expert-doc-btn"
@@ -229,7 +229,7 @@ export default function ApiModal({ isOpen, onClose }) {
                   className="form-input"
                   value={customUrl}
                   onChange={(e) => setCustomUrl(e.target.value)}
-                  placeholder="e.g. http://127.0.0.1:8001"
+                  placeholder="e.g. https://cropshield-ai-backend.onrender.com"
                 />
               </div>
             </div>

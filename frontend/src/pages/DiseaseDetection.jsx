@@ -43,7 +43,12 @@ import { mockWeather } from '../data/mockData';
 import { indianStates, stateDistrictMap } from '../data/indiaLocations';
 import { getExactDiseaseAdvisory } from '../data/diseaseAdvisories';
 
-const API_URL = import.meta.env?.VITE_AI_API_URL || import.meta.env?.VITE_API_BASE_URL || 'http://127.0.0.1:8001';
+const rawApiUrl = import.meta.env?.VITE_API_URL || import.meta.env?.VITE_API_BASE_URL || import.meta.env?.VITE_AI_API_URL || '';
+const API_URL = rawApiUrl ? rawApiUrl.replace(/\/+$/, '') : (
+  typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://127.0.0.1:8001'
+    : ''
+);
 
 const reportTranslations = {
   en: {
@@ -878,48 +883,43 @@ export default function DiseaseDetection() {
       const isAutoDetect = !selectedCrop || selectedCrop.includes('Auto-Detect');
       formData.append('crop', isAutoDetect ? 'auto' : selectedCrop);
 
-      console.log('Posting image to:', `${API_URL}/predict`, 'Crop Mode:', isAutoDetect ? 'Auto-Detect (Vision)' : selectedCrop);
+      const targetPredictUrl = API_URL ? `${API_URL}/predict` : '/predict';
+      console.log('Posting image to:', targetPredictUrl, 'Crop Mode:', isAutoDetect ? 'Auto-Detect (Vision)' : selectedCrop);
 
       let response = null;
-      const candidateUrls = [
-        '/predict',
-        'http://127.0.0.1:8001/predict',
-        'http://localhost:8001/predict',
-        `${API_URL}/predict`
-      ];
-      const uniqueUrls = [...new Set(candidateUrls)];
-
-      let lastFetchError = null;
-      for (const targetUrl of uniqueUrls) {
-        try {
-          const res = await fetch(targetUrl, {
-            method: 'POST',
-            body: formData,
-          });
-          if (res && res.status < 500) {
-            response = res;
-            break;
+      try {
+        response = await fetch(targetPredictUrl, {
+          method: 'POST',
+          body: formData,
+        });
+      } catch (err) {
+        console.warn(`Connection attempt to ${targetPredictUrl} failed:`, err.message);
+        if (targetPredictUrl !== '/predict') {
+          try {
+            response = await fetch('/predict', {
+              method: 'POST',
+              body: formData,
+            });
+          } catch (relErr) {
+            throw new Error('CropShield AI service is temporarily unavailable. Please try again.');
           }
-        } catch (err) {
-          console.warn(`Connection attempt to ${targetUrl} failed:`, err.message);
-          lastFetchError = err;
+        } else {
+          throw new Error('CropShield AI service is temporarily unavailable. Please try again.');
         }
       }
 
-      if (!response && lastFetchError) {
-        throw lastFetchError;
-      }
-
-      if (!response.ok) {
+      if (!response || !response.ok) {
         let errorDetail = '';
-        try {
-          const errData = await response.json();
-          errorDetail = errData.detail || errData.message || (typeof errData === 'string' ? errData : JSON.stringify(errData));
-        } catch {
-          errorDetail = await response.text();
+        if (response) {
+          try {
+            const errData = await response.json();
+            errorDetail = errData.detail || errData.message || (typeof errData === 'string' ? errData : JSON.stringify(errData));
+          } catch {
+            errorDetail = await response.text();
+          }
         }
         console.error('API Error:', errorDetail);
-        throw new Error(errorDetail || `API request failed with status ${response.status}`);
+        throw new Error(errorDetail || (response ? `API request failed with status ${response.status}` : 'Backend unavailable'));
       }
 
       const data = await response.json();
@@ -1045,14 +1045,15 @@ export default function DiseaseDetection() {
       if (
         error.name === 'TypeError' ||
         errorMsg.toLowerCase().includes('failed to fetch') ||
-        errorMsg.toLowerCase().includes('networkerror')
+        errorMsg.toLowerCase().includes('networkerror') ||
+        errorMsg.toLowerCase().includes('unavailable')
       ) {
         setErrorMessage(
-          `Unable to connect to CropShield AI backend at ${API_URL}/predict. Please ensure the backend server is running.`
+          'CropShield AI service is temporarily unavailable. Please try again.'
         );
       } else {
         setErrorMessage(
-          `Prediction error: ${errorMsg}`
+          errorMsg || 'CropShield AI service is temporarily unavailable. Please try again.'
         );
       }
     } finally {
