@@ -30,6 +30,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import AudioAdvisoryPlayer from '../components/AudioAdvisoryPlayer';
+import BoundingBoxOverlay from '../components/BoundingBoxOverlay';
 import KisanSprayCalcModal from '../components/KisanSprayCalcModal';
 import KisanYojanaModal from '../components/KisanYojanaModal';
 import KisanFertilizerModal from '../components/KisanFertilizerModal';
@@ -45,11 +46,7 @@ import { getExactDiseaseAdvisory } from '../data/diseaseAdvisories';
 import { predictOffline } from '../utils/offlineDiagnosisEngine';
 
 const rawApiUrl = import.meta.env?.VITE_API_URL || import.meta.env?.VITE_API_BASE_URL || import.meta.env?.VITE_AI_API_URL || '';
-const API_URL = rawApiUrl ? rawApiUrl.replace(/\/+$/, '') : (
-  typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://127.0.0.1:8001'
-    : ''
-);
+const API_URL = rawApiUrl ? rawApiUrl.replace(/\/+$/, '') : 'https://cropshield-ai-r7n8.onrender.com';
 
 const reportTranslations = {
   en: {
@@ -1557,11 +1554,19 @@ export default function DiseaseDetection() {
           <div className="result-grid">
             {/* IMAGE */}
             <div className="result-image-container result-box">
-              <img
-                src={result.image}
-                alt="Analyzed crop leaf"
-                className="result-image"
-              />
+              {result.boxes && result.boxes.length > 0 ? (
+                <BoundingBoxOverlay
+                  imageUrl={result.image}
+                  boundingBoxes={result.boxes}
+                  showBoxes={true}
+                />
+              ) : (
+                <img
+                  src={result.image}
+                  alt="Analyzed crop leaf"
+                  className="result-image"
+                />
+              )}
             </div>
 
             {/* RESULT DETAILS */}

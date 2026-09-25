@@ -9,14 +9,9 @@
 import { mockDiseases, mockWeather, mockRiskMapDistricts, mockExpertQueue, mockAdminStats } from '../data/mockData';
 import { predictOffline } from '../utils/offlineDiagnosisEngine';
 
-// Configurable Python FastAPI ML backend endpoint
+// Configurable Python Flask ML backend endpoint
 const rawEnvUrl = import.meta.env?.VITE_API_URL || import.meta.env?.VITE_API_BASE_URL || import.meta.env?.VITE_AI_API_URL || '';
-let API_BASE_URL = rawEnvUrl ? rawEnvUrl.replace(/\/+$/, '') : '';
-
-// In development, if no env var is set and we're on localhost, default to localhost:8001
-if (!API_BASE_URL && typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-  API_BASE_URL = 'http://127.0.0.1:8001';
-}
+let API_BASE_URL = rawEnvUrl ? rawEnvUrl.replace(/\/+$/, '') : 'https://cropshield-ai-r7n8.onrender.com';
 
 const getEndpointUrl = (path) => {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
