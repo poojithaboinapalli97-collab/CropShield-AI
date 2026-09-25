@@ -67,7 +67,6 @@ import {
 import { getAggregatedEarlyWarnings } from '../services/earlyWarningService';
 import KisanVoiceAssistant from '../components/KisanVoiceAssistant';
 import MandiMarketModal from '../components/MandiMarketModal';
-import { getMandiForCrop } from '../services/mandiService';
 import NotificationCenterModal from '../components/NotificationCenterModal';
 import KisanSprayCalcModal from '../components/KisanSprayCalcModal';
 import KisanYojanaModal from '../components/KisanYojanaModal';
@@ -1327,22 +1326,26 @@ export default function FarmerDashboard() {
 
       {/* ================= 8. LIVE APMC MANDI MARKET RATES STRIP ================= */}
       {(() => {
-        const activeMandiItem = getMandiForCrop(currentCrop);
-        const modalPrice = activeMandiItem.modalPrice || activeMandiItem.price || 2100;
-        const trendVal = activeMandiItem.trend || '+120';
-        const minP = activeMandiItem.minPrice || (modalPrice - 250);
-        const maxP = activeMandiItem.maxPrice || (modalPrice + 300);
+        const activeMandiItem = (mandiRatesList || []).find((m) =>
+          m.crop.toLowerCase().includes(currentCrop.toLowerCase()) || currentCrop.toLowerCase().includes(m.crop.toLowerCase())
+        ) || {
+          crop: currentCrop,
+          price: 2100,
+          trend: '+150',
+          minPrice: 1850,
+          maxPrice: 2400,
+        };
 
         return (
           <div className="farmer-mandi-strip" style={{ cursor: 'pointer' }} onClick={() => setShowMandiModal(true)}>
             <div className="mandi-item-group">
               <span className="mandi-badge">APMC Mandi Rates</span>
-              <span><strong>{selectedDistrict} Mandi ({activeMandiItem.crop}):</strong></span>
-              <span className="mandi-price-val">₹{modalPrice.toLocaleString('en-IN')} / Quintal</span>
+              <span><strong>{selectedDistrict} Mandi ({currentCrop}):</strong></span>
+              <span className="mandi-price-val">₹{activeMandiItem.price?.toLocaleString('en-IN')} / Quintal</span>
               <span className="mandi-trend-up">
-                <TrendingUp size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /> ↗ {trendVal.startsWith('+') ? trendVal : `+₹${trendVal}`} Today
+                <TrendingUp size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /> ↗ {activeMandiItem.trend?.startsWith('+') ? activeMandiItem.trend : `+₹${activeMandiItem.trend}`} Today
               </span>
-              <span style={{ color: '#64748b' }}>• Modal Range: ₹{minP.toLocaleString('en-IN')} - ₹{maxP.toLocaleString('en-IN')}</span>
+              <span style={{ color: '#64748b' }}>• Modal Range: ₹{activeMandiItem.minPrice?.toLocaleString('en-IN')} - ₹{activeMandiItem.maxPrice?.toLocaleString('en-IN')}</span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1597,7 +1600,335 @@ export default function FarmerDashboard() {
         </div>
       </section>
 
+      {/* ================= 10A. KISAN PRECISION AGRI-UTILITIES & DECISION SUPPORT HUB ================= */}
+      <section className="farmer-utilities-hub-section" style={{ margin: '24px 0' }}>
+        <div className="section-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sprout size={20} />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '17px', fontWeight: 800, color: '#0f172a' }}>
+                🌾 Kisan Precision Agri-Utilities & Farm Decision Hub
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>
+                Essential daily tools for chemical dilution, fertilizer optimization, government subsidies & local agro-services
+              </p>
+            </div>
+          </div>
+          <span style={{ fontSize: '11.5px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', padding: '3px 10px', borderRadius: '9999px', fontWeight: 700 }}>
+            5 Interactive Decision Tools
+          </span>
+        </div>
 
+        <div className="kisan-utilities-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
+          {/* TOOL 1: SPRAY CALCULATOR */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #059669',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowSprayModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#ecfdf5', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Calculator size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#d1fae5', color: '#065f46', padding: '2px 8px', borderRadius: '4px' }}>
+                  Knapsack & Drone
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                Spray Tank & Dosage Calc
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                Compute exact chemical grams/ml, water liters, and tanks for any field area (Acres/Guntas).
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#059669', fontWeight: 700 }}>Prevent Overdose & Save Cost</span>
+              <ChevronRight size={15} color="#059669" />
+            </div>
+          </div>
+
+          {/* TOOL 2: PM YOJANA NAVIGATOR */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #d97706',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowYojanaModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#fffbeb', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Landmark size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '4px' }}>
+                  Govt Subsidies
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                PM Kisan & Yojana Hub
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                Instant eligibility checks for PMFBY insurance, PMKSY 75% drip subsidy, and Krishi Drone grants.
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#d97706', fontWeight: 700 }}>Direct Apply Links & Docs</span>
+              <ChevronRight size={15} color="#d97706" />
+            </div>
+          </div>
+
+          {/* TOOL 3: KHAD MITRA NPK FERTILIZER */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #2563eb',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowFertilizerModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Layers size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#dbeafe', color: '#1e40af', padding: '2px 8px', borderRadius: '4px' }}>
+                  Balanced NPK
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                NPK Soil Nutrient Calculator
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                3-stage split schedule (Basal, Top 1, Top 2) for Urea, DAP, MOP Potash, and FYM organic manure.
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#2563eb', fontWeight: 700 }}>Prevent Fungal Blights</span>
+              <ChevronRight size={15} color="#2563eb" />
+            </div>
+          </div>
+
+          {/* TOOL 4: CROP CALENDAR */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #7c3aed',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowCalendarModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Calendar size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#ede9fe', color: '#5b21b6', padding: '2px 8px', borderRadius: '4px' }}>
+                  Stage Roadmap
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                Fasal Charka Crop Calendar
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                Stage-wise pest vulnerability alerts, prophylactic spray timings, and critical irrigation windows.
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#7c3aed', fontWeight: 700 }}>5 Phenological Milestones</span>
+              <ChevronRight size={15} color="#7c3aed" />
+            </div>
+          </div>
+
+          {/* TOOL 5: NEARBY AGRO-CENTERS */}
+          <div
+            className="kisan-util-card"
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderTop: '4px solid #0891b2',
+              borderRadius: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              transition: 'all 0.2s ease',
+            }}
+            onClick={() => setShowKendraModal(true)}
+          >
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#ecfeff', color: '#0891b2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Store size={18} />
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#cffafe', color: '#155e75', padding: '2px 8px', borderRadius: '4px' }}>
+                  District Directory
+                </span>
+              </div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>
+                Krishi Kendra & Soil Labs
+              </h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#64748b', lineHeight: 1.4 }}>
+                Verified KVK scientists, soil testing labs, and Custom Hiring Centers (CHC Drone & Tractor rent).
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
+              <span style={{ fontSize: '11px', color: '#0891b2', fontWeight: 700 }}>Direct Call & Verified Centers</span>
+              <ChevronRight size={15} color="#0891b2" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= 10B. UNIFIED FIELD NOTIFICATIONS & ALERTS HUB ================= */}
+      <section className="farmer-notifications-section" style={{ margin: '20px 0' }}>
+        <div className="section-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#dbeafe', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Bell size={18} />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#0f172a' }}>Live Field Notifications & Early Warnings</h3>
+              <p style={{ margin: 0, fontSize: '11.5px', color: '#64748b' }}>Active stream of Crop milestones, Disease outbreaks, Weather risks, and Expert responses</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="btn-pill-action btn-green-pill"
+            style={{ padding: '6px 14px', fontSize: '12px' }}
+            onClick={() => setShowNotifModal(true)}
+          >
+            <Bell size={13} />
+            <span>Open Notification Center ({unifiedNotifs.filter(n => !n.read).length} New)</span>
+          </button>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+          {unifiedNotifs.slice(0, 4).map((notif) => (
+            <div
+              key={notif.id}
+              style={{
+                background: notif.read ? '#ffffff' : '#f8fafc',
+                border: `1px solid ${notif.read ? '#e2e8f0' : notif.category === 'disease' ? '#fecaca' : notif.category === 'weather' ? '#fed7aa' : notif.category === 'expert' ? '#ddd6fe' : '#bbf7d0'}`,
+                borderLeft: `4px solid ${notif.category === 'disease' ? '#ef4444' : notif.category === 'weather' ? '#f59e0b' : notif.category === 'expert' ? '#8b5cf6' : '#10b981'}`,
+                borderRadius: '10px',
+                padding: '12px 14px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+                cursor: 'pointer',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.03)',
+              }}
+              onClick={() => {
+                const updated = toggleNotificationRead(notif.id);
+                setUnifiedNotifs(updated);
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span
+                  style={{
+                    fontSize: '10.5px',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    background: notif.category === 'disease' ? '#fee2e2' : notif.category === 'weather' ? '#fef3c7' : notif.category === 'expert' ? '#f3e8ff' : '#dcfce7',
+                    color: notif.category === 'disease' ? '#991b1b' : notif.category === 'weather' ? '#92400e' : notif.category === 'expert' ? '#6b21a8' : '#166534',
+                  }}
+                >
+                  {notif.categoryLabel}
+                </span>
+
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>{notif.timestamp}</span>
+              </div>
+
+              <h4 style={{ margin: 0, fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{notif.title}</h4>
+              <p style={{ margin: 0, fontSize: '12px', color: '#475569', lineHeight: 1.4 }}>{notif.message.slice(0, 110)}...</p>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                <button
+                  type="button"
+                  style={{ background: 'none', border: 'none', padding: 0, fontSize: '11.5px', fontWeight: 700, color: '#2563eb', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (notif.actionRoute) navigate(notif.actionRoute);
+                  }}
+                >
+                  <span>{notif.actionText}</span>
+                  <ArrowRight size={11} />
+                </button>
+
+                <span style={{ fontSize: '10.5px', color: '#94a3b8' }}>
+                  {notif.read ? 'Read' : '• New'}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= 11. HORIZONTAL HELPFUL STATUS STRIP ================= */}
+      <footer className="farmer-bottom-strip">
+        <div className="bottom-strip-item">
+          <ShieldAlert size={16} color="#16a34a" />
+          <span>Regional Outbreak Threat: <strong>Low Threat in {selectedDistrict}</strong></span>
+        </div>
+
+        <div className="bottom-strip-item">
+          <Droplets size={16} color="#2563eb" />
+          <span>Soil Moisture: <strong>Adequate (68%) • Next watering in 2 days</strong></span>
+        </div>
+
+        <div className="bottom-strip-item">
+          <Phone size={16} color="#16a34a" />
+          <span>Free Kisan Call Center: <strong>1800-180-1551</strong></span>
+        </div>
+      </footer>
 
       {/* ================= MODAL: VIEW ALL SCANS ================= */}
       {showAllScansModal && (

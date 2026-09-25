@@ -325,12 +325,12 @@ export default function RiskMap() {
               {/* CONTAINMENT BUFFER CIRCLES */}
               {showContainmentZones &&
                 districts
-                  .filter((d) => (d.riskLevel === 'Critical' || d.riskLevel === 'High') && d.coords)
+                  .filter((d) => d.riskLevel === 'Critical' || d.riskLevel === 'High')
                   .map((d) => (
                     <circle
                       key={`buffer-${d.id}`}
-                      cx={d.coords?.x ?? 50}
-                      cy={d.coords?.y ?? 50}
+                      cx={d.coords.x}
+                      cy={d.coords.y}
                       r={d.riskLevel === 'Critical' ? '12' : '8'}
                       fill={d.riskLevel === 'Critical' ? 'rgba(239, 68, 68, 0.18)' : 'rgba(249, 115, 22, 0.14)'}
                       stroke={d.riskLevel === 'Critical' ? '#ef4444' : '#f97316'}
@@ -351,8 +351,8 @@ export default function RiskMap() {
                     selectedDistrict?.id === district.id ? 'geo-pin-active' : ''
                   }`}
                   style={{
-                    left: `${district.coords?.x ?? 50}%`,
-                    top: `${district.coords?.y ?? 50}%`,
+                    left: `${district.coords.x}%`,
+                    top: `${district.coords.y}%`,
                   }}
                   onClick={() => {
                     setSelectedDistrict(district);
@@ -368,14 +368,14 @@ export default function RiskMap() {
                     <span>{district.district}</span>
                     <span
                       className={`pin-score-sub ${
-                        (district.riskScore || 0) > 80
+                        district.riskScore > 80
                           ? 'score-badge-red'
-                          : (district.riskScore || 0) > 50
+                          : district.riskScore > 50
                           ? 'score-badge-amber'
                           : 'score-badge-green'
                       }`}
                     >
-                      {district.riskScore || 75}
+                      {district.riskScore}
                     </span>
                   </div>
                 </button>

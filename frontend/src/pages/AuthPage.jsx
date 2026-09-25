@@ -16,21 +16,8 @@ import {
   Tag,
   Home,
   Sparkles,
-  Eye,
-  EyeOff,
 } from 'lucide-react';
 import { indianStates, stateDistrictMap } from '../data/indiaLocations';
-
-// Password Validation Helper: At least 6 characters and must include numbers
-const validatePassword = (pass) => {
-  if (!pass || pass.trim().length < 6) {
-    return { isValid: false, message: 'Password must be at least 6 characters long and include numbers.' };
-  }
-  if (!/\d/.test(pass)) {
-    return { isValid: false, message: 'Password must include at least one number (e.g. kisan123).' };
-  }
-  return { isValid: true, message: '' };
-};
 
 export default function AuthPage({ initialRole = 'Farmer' }) {
   const navigate = useNavigate();
@@ -93,13 +80,6 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
   const [adminPhotoUrl, setAdminPhotoUrl] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
 
-  // Password Visibility Toggle States
-  const [showFarmerPassword, setShowFarmerPassword] = useState(false);
-  const [showAgronomistPassword, setShowAgronomistPassword] = useState(false);
-  const [showAdminPassword, setShowAdminPassword] = useState(false);
-  const [showRegPassword, setShowRegPassword] = useState(false);
-  const [showRegConfirmPassword, setShowRegConfirmPassword] = useState(false);
-
   // Common errors
   const [loginError, setLoginError] = useState('');
 
@@ -131,11 +111,11 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
       setFarmerDistrict('Guntur');
       setFarmerVillage('Tadikonda');
       setFarmerSize('6.5 Acres');
-      setFarmerPassword('kisan123');
+      setFarmerPassword('demo123');
     } else if (loginRole === 'Agronomist') {
       setAgronomistName('Dr. A. K. Sharma');
       setAgronomistKvk('ANGRAU Regional Agricultural Research Station (Guntur)');
-      setAgronomistPassword('expert123');
+      setAgronomistPassword('demo123');
     } else if (loginRole === 'Admin') {
       setAdminName('Dr. Rajeshwar Rao, IAS');
       setAdminBadge('DIR-AGRI-0428');
@@ -145,7 +125,7 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
       setAdminPhone('+91 98480 23456');
       setAdminZones('AP & Telangana Agricultural Surveillance Zones');
       setAdminPhotoUrl('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80');
-      setAdminPassword('admin123');
+      setAdminPassword('demo123');
     }
   };
 
@@ -160,12 +140,7 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
         return;
       }
       if (!farmerPassword.trim()) {
-        setLoginError('Please enter your password or Kisan PIN.');
-        return;
-      }
-      const passCheck = validatePassword(farmerPassword);
-      if (!passCheck.isValid) {
-        setLoginError(passCheck.message);
+        setLoginError('Please enter your password or demo PIN.');
         return;
       }
 
@@ -189,7 +164,7 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
       localStorage.setItem('selectedState', farmerState || 'Andhra Pradesh');
       localStorage.setItem('farmerFarmSize', cleanFarmSize);
 
-      navigate('/');
+      navigate('/dashboard');
       return;
     }
 
@@ -202,16 +177,11 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
         setLoginError('Please enter your password.');
         return;
       }
-      const passCheck = validatePassword(agronomistPassword);
-      if (!passCheck.isValid) {
-        setLoginError(passCheck.message);
-        return;
-      }
 
       login(agronomistName, 'Agronomist', {
         kvkStation: agronomistKvk,
       });
-      navigate('/');
+      navigate('/expert');
       return;
     }
 
@@ -224,11 +194,6 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
         setLoginError('Please enter your password.');
         return;
       }
-      const passCheck = validatePassword(adminPassword);
-      if (!passCheck.isValid) {
-        setLoginError(passCheck.message);
-        return;
-      }
 
       login(adminName, 'Admin', {
         badgeNumber: adminBadge,
@@ -239,7 +204,7 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
         supervisedZones: adminZones,
         photoUrl: adminPhotoUrl,
       });
-      navigate('/');
+      navigate('/admin');
       return;
     }
   };
@@ -255,11 +220,6 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
     }
     if (!regPassword.trim()) {
       setRegError('Please create a password.');
-      return;
-    }
-    const passCheck = validatePassword(regPassword);
-    if (!passCheck.isValid) {
-      setRegError(passCheck.message);
       return;
     }
     if (regPassword !== regConfirmPassword) {
@@ -284,13 +244,13 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
       localStorage.setItem('selectedDistrict', regDistrict || 'Guntur');
       localStorage.setItem('selectedState', regState || 'Andhra Pradesh');
       localStorage.setItem('farmerFarmSize', cleanFarmSize);
-      navigate('/');
+      navigate('/dashboard');
     } else if (regRole === 'Agronomist') {
       login(regName, 'Agronomist');
-      navigate('/');
+      navigate('/expert');
     } else {
       login(regName, 'Admin');
-      navigate('/');
+      navigate('/admin');
     }
   };
 
@@ -481,25 +441,14 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                       <div className="input-with-icon">
                         <Lock size={18} className="input-icon" />
                         <input
-                          type={showFarmerPassword ? "text" : "password"}
-                          className="form-input password-padded"
-                          placeholder="Min 6 characters with numbers"
+                          type="password"
+                          className="form-input icon-padded"
+                          placeholder="Enter your password or PIN"
                           value={farmerPassword}
                           onChange={(e) => setFarmerPassword(e.target.value)}
                           required
                         />
-                        <button
-                          type="button"
-                          className="password-toggle-btn"
-                          onClick={() => setShowFarmerPassword(!showFarmerPassword)}
-                          title={showFarmerPassword ? "Hide password" : "Show password"}
-                        >
-                          {showFarmerPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
                       </div>
-                      <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>
-                        🔒 Must be at least 6 characters and include numbers
-                      </span>
                     </div>
                   </div>
                 </>
@@ -556,25 +505,14 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     <div className="input-with-icon">
                       <Lock size={18} className="input-icon" />
                       <input
-                        type={showAgronomistPassword ? "text" : "password"}
-                        className="form-input password-padded"
-                        placeholder="Min 6 characters with numbers"
+                        type="password"
+                        className="form-input icon-padded"
+                        placeholder="Enter password"
                         value={agronomistPassword}
                         onChange={(e) => setAgronomistPassword(e.target.value)}
                         required
                       />
-                      <button
-                        type="button"
-                        className="password-toggle-btn"
-                        onClick={() => setShowAgronomistPassword(!showAgronomistPassword)}
-                        title={showAgronomistPassword ? "Hide password" : "Show password"}
-                      >
-                        {showAgronomistPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
                     </div>
-                    <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>
-                      🔒 Must be at least 6 characters and include numbers
-                    </span>
                   </div>
                 </>
               )}
@@ -705,25 +643,14 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     <div className="input-with-icon">
                       <Lock size={18} className="input-icon" />
                       <input
-                        type={showAdminPassword ? "text" : "password"}
-                        className="form-input password-padded"
-                        placeholder="Min 6 characters with numbers"
+                        type="password"
+                        className="form-input icon-padded"
+                        placeholder="Enter admin password"
                         value={adminPassword}
                         onChange={(e) => setAdminPassword(e.target.value)}
                         required
                       />
-                      <button
-                        type="button"
-                        className="password-toggle-btn"
-                        onClick={() => setShowAdminPassword(!showAdminPassword)}
-                        title={showAdminPassword ? "Hide password" : "Show password"}
-                      >
-                        {showAdminPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
                     </div>
-                    <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>
-                      🔒 Must be at least 6 characters and include numbers
-                    </span>
                   </div>
                 </>
               )}
@@ -920,25 +847,14 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                   <div className="input-with-icon">
                     <Lock size={18} className="input-icon" />
                     <input
-                      type={showRegPassword ? "text" : "password"}
-                      className="form-input password-padded"
-                      placeholder="Min 6 characters with numbers"
+                      type="password"
+                      className="form-input icon-padded"
+                      placeholder="Min 6 characters"
                       value={regPassword}
                       onChange={(e) => setRegPassword(e.target.value)}
                       required
                     />
-                    <button
-                      type="button"
-                      className="password-toggle-btn"
-                      onClick={() => setShowRegPassword(!showRegPassword)}
-                      title={showRegPassword ? "Hide password" : "Show password"}
-                    >
-                      {showRegPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
                   </div>
-                  <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>
-                    🔒 Min 6 chars with numbers
-                  </span>
                 </div>
 
                 <div className="form-group">
@@ -946,21 +862,13 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                   <div className="input-with-icon">
                     <Lock size={18} className="input-icon" />
                     <input
-                      type={showRegConfirmPassword ? "text" : "password"}
-                      className="form-input password-padded"
+                      type="password"
+                      className="form-input icon-padded"
                       placeholder="Repeat password"
                       value={regConfirmPassword}
                       onChange={(e) => setRegConfirmPassword(e.target.value)}
                       required
                     />
-                    <button
-                      type="button"
-                      className="password-toggle-btn"
-                      onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
-                      title={showRegConfirmPassword ? "Hide password" : "Show password"}
-                    >
-                      {showRegConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
                   </div>
                 </div>
               </div>

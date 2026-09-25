@@ -59,3 +59,5 @@ Thumbs.db
 scratch_*.py
 powershell.bat
 powershell.cmd
+
+frontend/.env
