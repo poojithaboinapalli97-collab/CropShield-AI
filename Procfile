@@ -1,1 +1,1 @@
-web: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+web: gunicorn backend.app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120

@@ -349,6 +349,34 @@
   padding-left: 44px;
 }
 
+.form-input.password-padded {
+  padding-left: 44px;
+  padding-right: 44px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease;
+  z-index: 2;
+}
+
+.password-toggle-btn:hover {
+  color: #16a34a;
+  background: rgba(22, 163, 74, 0.08);
+}
+
 .form-input:focus {
   background: #ffffff;
   border-color: #22c55e;

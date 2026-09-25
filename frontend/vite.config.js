@@ -10,23 +10,23 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 function autoStartBackendPlugin() {
   return {
-    name: 'auto-start-fastapi-backend',
+    name: 'auto-start-flask-backend',
     configureServer() {
-      // Check if backend is already active on port 8001
-      const req = http.get('http://127.0.0.1:8001/health', (res) => {
+      // Check if Flask backend is already active on port 8001
+      const req = http.get('http://127.0.0.1:8001/api/health', (res) => {
         if (res.statusCode === 200) {
-          console.log('\x1b[32m[CropShield AI] FastAPI backend is already running on http://127.0.0.1:8001\x1b[0m')
+          console.log('\x1b[32m[CropShield AI] Flask ML backend is already running on http://127.0.0.1:8001\x1b[0m')
         }
       })
       req.on('error', () => {
-        console.log('\x1b[33m[CropShield AI] Starting FastAPI backend on http://127.0.0.1:8001...\x1b[0m')
+        console.log('\x1b[33m[CropShield AI] Starting Flask ML backend on http://127.0.0.1:8001...\x1b[0m')
         const rootDir = path.resolve(__dirname, '..')
         const venvPython = path.join(rootDir, 'ml', '.venv', 'Scripts', 'python.exe')
         const pythonCmd = fs.existsSync(venvPython) ? venvPython : 'python'
 
         const backendProcess = spawn(
           pythonCmd,
-          ['-m', 'uvicorn', 'backend.main:app', '--host', '127.0.0.1', '--port', '8001'],
+          ['app.py'],
           {
             cwd: rootDir,
             stdio: 'inherit',
@@ -60,6 +60,10 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/health': {
+        target: 'http://127.0.0.1:8001',
+        changeOrigin: true,
+      },
+      '/api': {
         target: 'http://127.0.0.1:8001',
         changeOrigin: true,
       },

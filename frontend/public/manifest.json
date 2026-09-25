@@ -1,0 +1,17 @@
+{
+  "short_name": "CropShield AI",
+  "name": "CropShield AI - Precision Agriculture & Crop Protection",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#064e3b",
+  "theme_color": "#059669",
+  "display": "standalone",
+  "orientation": "portrait",
+  "description": "AI-powered crop disease detection, weather risk forecasting, and offline agronomic advisory for Indian farmers."
+}
