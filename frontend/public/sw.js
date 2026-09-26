@@ -4,32 +4,22 @@
  * even when the server is off, disconnected, or offline.
  */
 
-const CACHE_NAME = 'cropshield-ai-v1';
-const PRECACHE_ASSETS = [
-  '/',
-  '/index.html',
-  '/favicon.svg',
-  '/manifest.json',
-  '/icons.svg',
-  '/sample_leaves/Tomato___Early_blight.jpg',
-  '/sample_leaves/Potato___Late_blight.jpg',
-  '/sample_leaves/Corn_(maize)___Common_rust_.jpg',
-  '/sample_leaves/Pepper,_bell___Bacterial_spot.jpg',
-  '/sample_leaves/Tomato___healthy.jpg'
-];
+const CACHE_NAME = 'cropshield-ai-v3';
+const PRECACHE_ASSETS = [];
 
-// Install Event: Pre-cache App Shell
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[CropShield PWA] Pre-caching offline app shell');
-      return cache.addAll(PRECACHE_ASSETS).catch((err) => {
-        console.warn('[CropShield PWA] Pre-cache partial warning:', err);
-      });
-    })
-  );
   self.skipWaiting();
 });
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((key) => caches.delete(key)))
+    )
+  );
+  self.clients.claim();
+});
+
 
 // Activate Event: Clean up older caches
 self.addEventListener('activate', (event) => {
