@@ -1091,23 +1091,397 @@ export default function DiseaseDetection() {
   // -----------------------------
   return (
     <div className="disease-detection-page">
+      <style>{`
+        .disease-detection-page {
+          max-width: 1240px !important;
+          margin: 0 auto !important;
+          padding: 24px 16px 60px !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+        }
 
-      {/* HEADER */}
-      <div className="page-header-clean">
-        <div className="title-area">
-          <span className="sih-badge-inline">
-            AI CROP HEALTH DIAGNOSTICS
+        /* 1. TOP HERO HEADER BOX */
+        .box-hero-header {
+          background: linear-gradient(135deg, #064e3b 0%, #0f172a 60%, #1e3a8a 100%) !important;
+          border-radius: 20px !important;
+          padding: 28px 32px !important;
+          margin-bottom: 24px !important;
+          color: #ffffff !important;
+          border: 1px solid rgba(52, 211, 153, 0.3) !important;
+          box-shadow: 0 12px 32px rgba(6, 78, 59, 0.25) !important;
+          display: flex !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          flex-wrap: wrap !important;
+          gap: 16px !important;
+        }
+
+        .hero-badge-pill {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 6px !important;
+          padding: 4px 12px !important;
+          border-radius: 20px !important;
+          background: rgba(16, 185, 129, 0.25) !important;
+          border: 1px solid #34d399 !important;
+          color: #a7f3d0 !important;
+          font-size: 11px !important;
+          font-weight: 800 !important;
+          letter-spacing: 0.8px !important;
+          margin-bottom: 8px !important;
+        }
+
+        .hero-box-title {
+          font-family: 'Outfit', sans-serif !important;
+          font-size: 28px !important;
+          font-weight: 800 !important;
+          color: #ffffff !important;
+          margin: 0 0 6px 0 !important;
+          letter-spacing: -0.02em !important;
+        }
+
+        .hero-box-subtitle {
+          font-size: 14px !important;
+          color: #cbd5e1 !important;
+          margin: 0 !important;
+          max-width: 680px !important;
+          line-height: 1.5 !important;
+        }
+
+        /* 2. TWO-COLUMN BOXES CONTAINER */
+        .boxes-scanner-grid {
+          display: grid !important;
+          grid-template-columns: 1fr 1.15fr !important;
+          gap: 20px !important;
+          margin-bottom: 20px !important;
+        }
+
+        @media (max-width: 900px) {
+          .boxes-scanner-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
+        /* CARD BOX STYLING */
+        .scan-box-card {
+          background: #ffffff !important;
+          border: 1.5px solid #e2e8f0 !important;
+          border-radius: 20px !important;
+          padding: 24px !important;
+          box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.06) !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
+          transition: all 0.25s ease !important;
+          box-sizing: border-box !important;
+        }
+
+        [data-theme="dark"] .scan-box-card,
+        body.dark-mode .scan-box-card {
+          background: #111827 !important;
+          border-color: #26334d !important;
+          box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .box-card-header {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          padding-bottom: 14px !important;
+          margin-bottom: 16px !important;
+          border-bottom: 1.5px solid #f1f5f9 !important;
+        }
+
+        [data-theme="dark"] .box-card-header,
+        body.dark-mode .box-card-header {
+          border-bottom-color: #1e293b !important;
+        }
+
+        .box-title-row {
+          display: flex !important;
+          align-items: center !important;
+          gap: 10px !important;
+        }
+
+        .box-icon-wrap {
+          width: 36px !important;
+          height: 36px !important;
+          border-radius: 10px !important;
+          background: #ecfdf5 !important;
+          color: #059669 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+
+        [data-theme="dark"] .box-icon-wrap,
+        body.dark-mode .box-icon-wrap {
+          background: rgba(34, 197, 94, 0.15) !important;
+          color: #34d399 !important;
+        }
+
+        .box-title-txt {
+          font-family: 'Outfit', sans-serif !important;
+          font-size: 17px !important;
+          font-weight: 800 !important;
+          color: #0f172a !important;
+          margin: 0 !important;
+        }
+
+        [data-theme="dark"] .box-title-txt,
+        body.dark-mode .box-title-txt {
+          color: #f8fafc !important;
+        }
+
+        .box-step-tag {
+          font-size: 11px !important;
+          font-weight: 800 !important;
+          padding: 3px 8px !important;
+          border-radius: 6px !important;
+          background: #dcfce7 !important;
+          color: #15803d !important;
+        }
+
+        [data-theme="dark"] .box-step-tag,
+        body.dark-mode .box-step-tag {
+          background: rgba(34, 197, 94, 0.25) !important;
+          color: #86efac !important;
+        }
+
+        /* DROPZONE BOX */
+        .leaf-dropzone-box {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-align: center !important;
+          padding: 32px 20px !important;
+          border: 2px dashed #86efac !important;
+          background: #f0fdf4 !important;
+          border-radius: 16px !important;
+          cursor: pointer !important;
+          min-height: 200px !important;
+          transition: all 0.25s ease !important;
+          box-sizing: border-box !important;
+        }
+
+        [data-theme="dark"] .leaf-dropzone-box,
+        body.dark-mode .leaf-dropzone-box {
+          background: rgba(34, 197, 94, 0.06) !important;
+          border-color: rgba(34, 197, 94, 0.35) !important;
+        }
+
+        .leaf-dropzone-box:hover {
+          background: #dcfce7 !important;
+          border-color: #22c55e !important;
+          transform: translateY(-2px) !important;
+        }
+
+        [data-theme="dark"] .leaf-dropzone-box:hover,
+        body.dark-mode .leaf-dropzone-box:hover {
+          background: rgba(34, 197, 94, 0.12) !important;
+          border-color: #4ade80 !important;
+        }
+
+        .dropzone-icon-circle {
+          width: 56px !important;
+          height: 56px !important;
+          border-radius: 50% !important;
+          background: #dcfce7 !important;
+          color: #16a34a !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          margin-bottom: 12px !important;
+        }
+
+        [data-theme="dark"] .dropzone-icon-circle,
+        body.dark-mode .dropzone-icon-circle {
+          background: rgba(34, 197, 94, 0.2) !important;
+          color: #4ade80 !important;
+        }
+
+        .dropzone-heading {
+          font-family: 'Outfit', sans-serif !important;
+          font-size: 17px !important;
+          font-weight: 700 !important;
+          color: #065f46 !important;
+          margin: 0 0 4px 0 !important;
+        }
+
+        [data-theme="dark"] .dropzone-heading,
+        body.dark-mode .dropzone-heading {
+          color: #86efac !important;
+        }
+
+        .dropzone-formats {
+          font-size: 12.5px !important;
+          color: #64748b !important;
+          margin: 0 !important;
+        }
+
+        [data-theme="dark"] .dropzone-formats,
+        body.dark-mode .dropzone-formats {
+          color: #94a3b8 !important;
+        }
+
+        /* FORM INPUT ROWS IN BOX 2 */
+        .box-form-rows {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 12px !important;
+        }
+
+        .box-form-field {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 5px !important;
+        }
+
+        .box-field-label {
+          font-size: 12.5px !important;
+          font-weight: 700 !important;
+          color: #334155 !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 6px !important;
+        }
+
+        [data-theme="dark"] .box-field-label,
+        body.dark-mode .box-field-label {
+          color: #cbd5e1 !important;
+        }
+
+        .box-field-select,
+        .box-field-input {
+          padding: 10px 14px !important;
+          border-radius: 10px !important;
+          border: 1.5px solid #cbd5e1 !important;
+          background: #f8fafc !important;
+          color: #0f172a !important;
+          font-size: 13.5px !important;
+          font-weight: 600 !important;
+          outline: none !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          transition: all 0.2s ease !important;
+        }
+
+        [data-theme="dark"] .box-field-select,
+        [data-theme="dark"] .box-field-input,
+        body.dark-mode .box-field-select,
+        body.dark-mode .box-field-input {
+          background: #162035 !important;
+          border-color: #2b3a58 !important;
+          color: #f8fafc !important;
+        }
+
+        .box-field-select:focus,
+        .box-field-input:focus {
+          border-color: #10b981 !important;
+          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+          background: #ffffff !important;
+        }
+
+        [data-theme="dark"] .box-field-select:focus,
+        [data-theme="dark"] .box-field-input:focus,
+        body.dark-mode .box-field-select:focus,
+        body.dark-mode .box-field-input:focus {
+          border-color: #34d399 !important;
+          background: #141c2e !important;
+          box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25) !important;
+        }
+
+        /* 3. ACTION BUTTON BAR BOX */
+        .scan-action-box {
+          background: #ffffff !important;
+          border: 1.5px solid #e2e8f0 !important;
+          border-radius: 20px !important;
+          padding: 20px 24px !important;
+          box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05) !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          gap: 10px !important;
+          margin-bottom: 24px !important;
+        }
+
+        [data-theme="dark"] .scan-action-box,
+        body.dark-mode .scan-action-box {
+          background: #111827 !important;
+          border-color: #26334d !important;
+          box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .btn-run-neural-scan {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 10px !important;
+          width: 100% !important;
+          padding: 15px 28px !important;
+          border-radius: 12px !important;
+          background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
+          color: #ffffff !important;
+          font-family: 'Outfit', sans-serif !important;
+          font-size: 17px !important;
+          font-weight: 800 !important;
+          border: none !important;
+          cursor: pointer !important;
+          box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+          transition: all 0.25s ease !important;
+        }
+
+        .btn-run-neural-scan:hover:not(:disabled) {
+          background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+          transform: translateY(-2px) !important;
+          box-shadow: 0 8px 26px rgba(16, 185, 129, 0.5) !important;
+        }
+
+        .btn-run-neural-scan:disabled {
+          opacity: 0.55 !important;
+          cursor: not-allowed !important;
+          transform: none !important;
+          box-shadow: none !important;
+        }
+
+        .action-sub-tip {
+          font-size: 12px !important;
+          color: #64748b !important;
+          margin: 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 6px !important;
+        }
+
+        [data-theme="dark"] .action-sub-tip,
+        body.dark-mode .action-sub-tip {
+          color: #94a3b8 !important;
+        }
+      `}</style>
+
+      {/* 1. HERO HEADER BOX */}
+      <div className="box-hero-header">
+        <div>
+          <span className="hero-badge-pill">
+            <Sprout size={13} /> AI CROP HEALTH DIAGNOSTICS
           </span>
-          <h1 className="page-title">
-            Practical AI Crop Disease Diagnosis
-          </h1>
-          <p className="page-subtitle">
+          <h1 className="hero-box-title">Practical AI Crop Disease Diagnosis</h1>
+          <p className="hero-box-subtitle">
             Upload a crop leaf photo for AI-powered disease classification, severity scoring, and agricultural guidance.
           </p>
         </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <span style={{ background: 'rgba(255,255,255,0.15)', padding: '6px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: '700' }}>
+            ⚡ YOLOv8 Neural Vision
+          </span>
+          <span style={{ background: 'rgba(255,255,255,0.15)', padding: '6px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: '700' }}>
+            🌾 ICAR/CIBRC IPDM
+          </span>
+        </div>
       </div>
 
-      {/* ERROR */}
+      {/* ERROR BANNER */}
       {errorMessage && (
         <div className="notice-banner banner-danger mb-16">
           <AlertTriangle size={20} />
@@ -1115,168 +1489,201 @@ export default function DiseaseDetection() {
         </div>
       )}
 
-      {/* MAIN CARD */}
-      <div className="dash-card">
-        <div className="section-heading">
-          <div className="title-with-icon">
-            <Scan size={22} className="icon-green" />
-            <div>
-              <h2>AI Disease Detection</h2>
-              <p className="sub-title-text">
-                Upload a clear image of the crop leaf.
-              </p>
+      {/* 2. TWO-COLUMN BOXES CONTAINER */}
+      <div className="boxes-scanner-grid">
+        {/* BOX 1: STEP 1 - UPLOAD CROP LEAF */}
+        <div className="scan-box-card">
+          <div className="box-card-header">
+            <div className="box-title-row">
+              <div className="box-icon-wrap">
+                <UploadCloud size={18} />
+              </div>
+              <h3 className="box-title-txt">Crop Leaf Specimen</h3>
             </div>
+            <span className="box-step-tag">Step 1</span>
           </div>
-        </div>
 
-        {/* MEDIUM-SIZED CLEAN UPLOAD BOX */}
-        <div className="upload-container-medium" style={{ maxWidth: '640px', margin: '0 auto 20px auto' }}>
-          {!imagePreview ? (
-            <label className="upload-area upload-area-medium" htmlFor="leaf-image-upload">
-              <UploadCloud size={40} className="icon-green" />
-              <h3>Upload Crop Leaf Image</h3>
-              <p>JPG, JPEG, PNG or WEBP (Clear, well-lit leaf photo)</p>
-              <input
-                id="leaf-image-upload"
-                type="file"
-                accept="image/jpeg,image/jpg,image/png,image/webp"
-                onChange={handleFileChange}
-                hidden
-              />
-            </label>
-          ) : (
-            <div className="image-preview-section">
-              <div className="preview-header">
-                <div>
-                  <strong>Selected crop leaf</strong>
-                  <p>
-                    {fileName} ({fileSize})
-                  </p>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            {!imagePreview ? (
+              <label className="leaf-dropzone-box" htmlFor="leaf-image-upload">
+                <div className="dropzone-icon-circle">
+                  <UploadCloud size={28} />
                 </div>
-                <button
-                  type="button"
-                  className="secondary-btn-sm"
-                  onClick={handleRemoveImage}
-                >
-                  <X size={16} />
-                  Remove
-                </button>
-              </div>
-              <div className="image-preview-wrapper" style={{ maxHeight: '220px', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
-                <img
-                  src={imagePreview}
-                  alt="Selected crop leaf"
-                  className="leaf-preview"
-                  style={{ maxHeight: '220px', objectFit: 'contain', borderRadius: '10px' }}
+                <h4 className="dropzone-heading">Upload Crop Leaf Image</h4>
+                <p className="dropzone-formats">JPG, JPEG, PNG or WEBP (Clear, well-lit photo)</p>
+                <input
+                  id="leaf-image-upload"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  onChange={handleFileChange}
+                  hidden
                 />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* FORM */}
-        <div className="form-grid mt-16">
-          {/* CROP */}
-          <div className="form-group">
-            <label>Crop Plant Type</label>
-            <select
-              value={selectedCrop}
-              onChange={(event) => setSelectedCrop(event.target.value)}
-            >
-              {cropOptions.map((crop) => (
-                <option key={crop} value={crop}>
-                  {crop}
-                </option>
-              ))}
-            </select>
-            {detectedBadge && (
-              <div className="ai-detected-plant-chip mt-6">
-                <span>{detectedBadge}</span>
+              </label>
+            ) : (
+              <div className="image-preview-section">
+                <div className="preview-header">
+                  <div>
+                    <strong>Selected crop leaf</strong>
+                    <p>{fileName} ({fileSize})</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="secondary-btn-sm"
+                    onClick={handleRemoveImage}
+                  >
+                    <X size={15} /> Remove
+                  </button>
+                </div>
+                <div className="image-preview-wrapper" style={{ maxHeight: '220px', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
+                  <img
+                    src={imagePreview}
+                    alt="Selected crop leaf"
+                    className="leaf-preview"
+                    style={{ maxHeight: '220px', objectFit: 'contain', borderRadius: '10px' }}
+                  />
+                </div>
               </div>
             )}
           </div>
-
-          {/* GROWTH STAGE */}
-          <div className="form-group">
-            <label>Crop Phenological Stage</label>
-            <select
-              value={growthStage}
-              onChange={(event) => setGrowthStage(event.target.value)}
-            >
-              {growthOptions.map((stage) => (
-                <option key={stage} value={stage}>
-                  {stage}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* STATE / UT */}
-          <div className="form-group">
-            <label>Farm State (AP / Telangana / Pan-India)</label>
-            <select
-              value={state}
-              onChange={(event) => {
-                const newState = event.target.value;
-                setState(newState);
-                const dists = stateDistrictMap[newState] || [];
-                setDistrict(dists[0] || '');
-              }}
-            >
-              {indianStates.map((st) => (
-                <option key={st} value={st}>
-                  {st}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* DISTRICT */}
-          <div className="form-group">
-            <label>Farm District</label>
-            <select
-              value={district}
-              onChange={(event) => setDistrict(event.target.value)}
-            >
-              {(stateDistrictMap[state] || []).map((dist) => (
-                <option key={dist} value={dist}>
-                  {dist}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* VILLAGE */}
-          <div className="form-group">
-            <label>Village / Gram Panchayat</label>
-            <input
-              type="text"
-              placeholder="Enter village name (e.g. Vennaram, Rampur, Kothapalli)"
-              value={village}
-              onChange={(event) => setVillage(event.target.value)}
-            />
-          </div>
         </div>
 
-        {/* BUTTON */}
+        {/* BOX 2: STEP 2 - FARM & CROP PARAMETERS */}
+        <div className="scan-box-card">
+          <div className="box-card-header">
+            <div className="box-title-row">
+              <div className="box-icon-wrap" style={{ background: '#eff6ff', color: '#0284c7' }}>
+                <Layers size={18} />
+              </div>
+              <h3 className="box-title-txt">Crop & Location Telemetry</h3>
+            </div>
+            <span className="box-step-tag" style={{ background: '#e0f2fe', color: '#0369a1' }}>Step 2</span>
+          </div>
+
+          <div className="box-form-rows">
+            {/* CROP PLANT TYPE */}
+            <div className="box-form-field">
+              <label className="box-field-label">
+                <Sprout size={14} style={{ color: '#16a34a' }} /> Crop Plant Type
+              </label>
+              <select
+                className="box-field-select"
+                value={selectedCrop}
+                onChange={(event) => setSelectedCrop(event.target.value)}
+              >
+                {cropOptions.map((crop) => (
+                  <option key={crop} value={crop}>
+                    {crop}
+                  </option>
+                ))}
+              </select>
+              {detectedBadge && (
+                <div className="ai-detected-plant-chip">
+                  <span>{detectedBadge}</span>
+                </div>
+              )}
+            </div>
+
+            {/* GROWTH STAGE */}
+            <div className="box-form-field">
+              <label className="box-field-label">
+                <Activity size={14} style={{ color: '#f59e0b' }} /> Crop Phenological Stage
+              </label>
+              <select
+                className="box-field-select"
+                value={growthStage}
+                onChange={(event) => setGrowthStage(event.target.value)}
+              >
+                {growthOptions.map((stage) => (
+                  <option key={stage} value={stage}>
+                    {stage}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* STATE & DISTRICT GRID */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div className="box-form-field">
+                <label className="box-field-label">
+                  <MapPin size={14} style={{ color: '#6366f1' }} /> Farm State
+                </label>
+                <select
+                  className="box-field-select"
+                  value={state}
+                  onChange={(event) => {
+                    const newState = event.target.value;
+                    setState(newState);
+                    const dists = stateDistrictMap[newState] || [];
+                    setDistrict(dists[0] || '');
+                  }}
+                >
+                  {indianStates.map((st) => (
+                    <option key={st} value={st}>
+                      {st}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="box-form-field">
+                <label className="box-field-label">
+                  <MapPin size={14} style={{ color: '#6366f1' }} /> District
+                </label>
+                <select
+                  className="box-field-select"
+                  value={district}
+                  onChange={(event) => setDistrict(event.target.value)}
+                >
+                  {(stateDistrictMap[state] || []).map((dist) => (
+                    <option key={dist} value={dist}>
+                      {dist}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* VILLAGE */}
+            <div className="box-form-field">
+              <label className="box-field-label">
+                <Store size={14} style={{ color: '#ec4899' }} /> Village / Gram Panchayat
+              </label>
+              <input
+                type="text"
+                className="box-field-input"
+                placeholder="Enter village name (e.g. Vennaram, Rampur, Kothapalli)"
+                value={village}
+                onChange={(event) => setVillage(event.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. STEP 3: ACTION BAR BOX */}
+      <div className="scan-action-box">
         <button
           type="button"
-          className="primary-btn mt-20"
+          className="btn-run-neural-scan"
           onClick={handleDiagnosis}
           disabled={isAnalyzing || !imageFile}
         >
           {isAnalyzing ? (
             <>
-              <Loader2 size={18} className="spin-icon" />
+              <Loader2 size={20} className="spin-icon" />
               Running Neural Diagnostic Scan & Severity Analysis...
             </>
           ) : (
             <>
-              <Scan size={18} />
+              <Scan size={20} />
               Run AI Diagnostic Scan
             </>
           )}
         </button>
+        <p className="action-sub-tip">
+          <Sparkles size={14} style={{ color: '#f59e0b' }} />
+          {!imageFile ? 'Please select or upload a leaf photo above in Step 1 to enable the scan.' : 'Ready to diagnose. Click to evaluate disease severity and 4-tier IPDM prescription.'}
+        </p>
       </div>
 
       {/* INVALID SPECIMEN REJECTION CARD */}
