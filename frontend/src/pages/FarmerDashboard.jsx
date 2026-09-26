@@ -2395,6 +2395,80 @@ export default function FarmerDashboard() {
           </div>
         </div>
       )}
+
+      {/* ================= 8 QUICK ACTION MODALS ================= */}
+      {/* 1. KISAN SPRAY TANK CALCULATOR */}
+      {showSprayModal && (
+        <KisanSprayCalcModal
+          isOpen={showSprayModal}
+          onClose={() => setShowSprayModal(false)}
+          cropName={selectedCrop}
+        />
+      )}
+
+      {/* 2. MANDI MARKET RATES */}
+      {showMandiModal && (
+        <MandiMarketModal
+          isOpen={showMandiModal}
+          onClose={() => setShowMandiModal(false)}
+          currentCrop={selectedCrop}
+          selectedDistrict={selectedDistrict}
+        />
+      )}
+
+      {/* 3. NOTIFICATION & ALERTS HUB */}
+      {showNotifModal && (
+        <NotificationCenterModal
+          isOpen={showNotifModal}
+          onClose={() => setShowNotifModal(false)}
+        />
+      )}
+
+      {/* 4. KISAN VOICE AI ASSISTANT */}
+      {showAiModal && (
+        <KisanVoiceAssistant
+          isOpen={showAiModal}
+          onClose={() => setShowAiModal(false)}
+          currentCrop={selectedCrop}
+        />
+      )}
+
+      {/* 5. PM KRISHI YOJANA SUBSIDIES */}
+      {showYojanaModal && (
+        <KisanYojanaModal
+          isOpen={showYojanaModal}
+          onClose={() => setShowYojanaModal(false)}
+          userState={selectedState}
+        />
+      )}
+
+      {/* 6. KHAD MITRA NPK FERTILIZER */}
+      {showFertilizerModal && (
+        <KisanFertilizerModal
+          isOpen={showFertilizerModal}
+          onClose={() => setShowFertilizerModal(false)}
+          defaultCrop={selectedCrop}
+        />
+      )}
+
+      {/* 7. CROP CALENDAR (FASAL CHARKA) */}
+      {showCalendarModal && (
+        <CropCalendarModal
+          isOpen={showCalendarModal}
+          onClose={() => setShowCalendarModal(false)}
+          currentCrop={selectedCrop}
+        />
+      )}
+
+      {/* 8. AGRO-CENTERS & LAB DIRECTORY */}
+      {showKendraModal && (
+        <KisanKendraModal
+          isOpen={showKendraModal}
+          onClose={() => setShowKendraModal(false)}
+          initialState={selectedState}
+          initialDistrict={selectedDistrict}
+        />
+      )}
     </div>
   );
 }
