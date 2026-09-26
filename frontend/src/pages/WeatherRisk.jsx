@@ -23,6 +23,7 @@ import {
   AlertOctagon,
   Eye,
   RefreshCw,
+  MapPin,
 } from 'lucide-react';
 import { allIndiaDistrictOptions } from '../data/indiaLocations';
 import { fetchLiveWeatherTelemetry } from '../services/weatherService';
