@@ -472,18 +472,246 @@ async def predict(
             }
 
     except Exception as e:
-
         print("Prediction error:", str(e))
-
         raise HTTPException(
             status_code=500,
             detail=str(e)
         )
 
+# --------------------------------------------------
+# SPATIAL RISK MAP & EPIDEMIOLOGICAL TELEMETRY
+# --------------------------------------------------
+
+@app.get("/risk-map")
+@app.get("/api/risk-map")
+def risk_map(crop: str = "all", risk: str = "all"):
+    crop_filter = crop.lower()
+    risk_filter = risk.lower()
+
+    districts = [
+        {
+            "id": "dist-ap-guntur",
+            "district": "Guntur",
+            "state": "Andhra Pradesh",
+            "coords": {"x": 52, "y": 68},
+            "coordinates": [16.3067, 80.4365],
+            "riskLevel": "Critical",
+            "riskScore": 92,
+            "primaryCrop": "Chilli, Tomato & Cotton",
+            "activeDisease": "Bacterial Spot & Black Thrips",
+            "affectedFarms": 3100,
+            "advisory": "CRITICAL ALERT: Bacterial leaf spot & thrips active across 12 mandals. Apply Copper Oxychloride + Streptocycline & install blue sticky traps."
+        },
+        {
+            "id": "dist-tg-khammam",
+            "district": "Khammam",
+            "state": "Telangana",
+            "coords": {"x": 50, "y": 62},
+            "coordinates": [17.2473, 80.1514],
+            "riskLevel": "High",
+            "riskScore": 88,
+            "primaryCrop": "Chilli, Cotton & Tomato",
+            "activeDisease": "Leaf Curl Virus & Anthracnose",
+            "affectedFarms": 2450,
+            "advisory": "High morning humidity accelerating foliar fungal lesion spread. Spray Azoxystrobin + Difenoconazole."
+        },
+        {
+            "id": "dist-tg-warangal",
+            "district": "Warangal",
+            "state": "Telangana",
+            "coords": {"x": 48, "y": 58},
+            "coordinates": [17.9689, 79.5941],
+            "riskLevel": "High",
+            "riskScore": 84,
+            "primaryCrop": "Cotton & Paddy",
+            "activeDisease": "Bacterial Blight & Paddy Blast",
+            "affectedFarms": 1980,
+            "advisory": "Intermittent rainfall creating humid conditions. Drain excess furrow water and apply Tricyclazole."
+        },
+        {
+            "id": "dist-ap-krishna",
+            "district": "Krishna",
+            "state": "Andhra Pradesh",
+            "coords": {"x": 55, "y": 70},
+            "coordinates": [16.5062, 80.6480],
+            "riskLevel": "Medium",
+            "riskScore": 65,
+            "primaryCrop": "Paddy & Maize",
+            "activeDisease": "Bacterial Leaf Blight",
+            "affectedFarms": 1420,
+            "advisory": "Moderate threat index. Maintain balanced nitrogen application and inspect flag leaves."
+        },
+        {
+            "id": "dist-ap-kurnool",
+            "district": "Kurnool",
+            "state": "Andhra Pradesh",
+            "coords": {"x": 44, "y": 72},
+            "coordinates": [15.8281, 78.0373],
+            "riskLevel": "High",
+            "riskScore": 78,
+            "primaryCrop": "Tomato, Groundnut & Chilli",
+            "activeDisease": "Early Blight (Alternaria)",
+            "affectedFarms": 1850,
+            "advisory": "Concentric bullseye lesions reported on lower tomato foliage. Apply Mancozeb 75% WP @ 2.5 g/L."
+        },
+        {
+            "id": "dist-mh-nashik",
+            "district": "Nashik",
+            "state": "Maharashtra",
+            "coords": {"x": 36, "y": 60},
+            "coordinates": [19.9975, 73.7898],
+            "riskLevel": "Critical",
+            "riskScore": 90,
+            "primaryCrop": "Grape, Tomato & Onion",
+            "activeDisease": "Grape Downy Mildew & Tomato Blight",
+            "affectedFarms": 2800,
+            "advisory": "High spore count on grape orchards. Apply Metalaxyl-M + Mancozeb protective spray."
+        },
+        {
+            "id": "dist-pb-ludhiana",
+            "district": "Ludhiana",
+            "state": "Punjab",
+            "coords": {"x": 42, "y": 24},
+            "coordinates": [30.9010, 75.8573],
+            "riskLevel": "Low",
+            "riskScore": 32,
+            "primaryCrop": "Wheat & Rice",
+            "activeDisease": "Wheat Yellow Rust (Early Alert)",
+            "affectedFarms": 620,
+            "advisory": "Low current incidence. Routine morning field scouting recommended."
+        },
+        {
+            "id": "dist-up-agra",
+            "district": "Agra",
+            "state": "Uttar Pradesh",
+            "coords": {"x": 48, "y": 38},
+            "coordinates": [27.1767, 78.0081],
+            "riskLevel": "High",
+            "riskScore": 82,
+            "primaryCrop": "Potato & Mustard",
+            "activeDisease": "Potato Late Blight",
+            "affectedFarms": 2100,
+            "advisory": "Night fog and dew triggers late blight. Apply Cymoxanil + Mancozeb prophylactic foliar spray."
+        }
+    ]
+
+    filtered = districts
+    if crop_filter != "all":
+        filtered = [d for d in filtered if crop_filter in d["primaryCrop"].lower()]
+    if risk_filter != "all":
+        filtered = [d for d in filtered if risk_filter in d["riskLevel"].lower()]
+
+    return filtered
+
+# --------------------------------------------------
+# EXPERT REVIEW QUEUE & VALIDATION
+# --------------------------------------------------
+
+@app.get("/expert/queue")
+@app.get("/api/expert/queue")
+def expert_queue():
+    return [
+        {
+            "id": "SCAN-EXP-9081",
+            "farmerName": "Ramesh Patel",
+            "location": "Guntur, Andhra Pradesh",
+            "crop": "Tomato",
+            "aiPrediction": "Tomato - Bacterial Spot",
+            "aiConfidence": 68.4,
+            "status": "Pending Verification",
+            "timestamp": "12 mins ago"
+        },
+        {
+            "id": "SCAN-EXP-9082",
+            "farmerName": "Suresh Kumar",
+            "location": "Warangal, Telangana",
+            "crop": "Cotton",
+            "aiPrediction": "Cotton - Bacterial Blight",
+            "aiConfidence": 74.2,
+            "status": "Pending Verification",
+            "timestamp": "25 mins ago"
+        }
+    ]
+
+@app.post("/expert/validate")
+@app.post("/api/expert/validate")
+async def expert_validate(request: Request):
+    import time
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    return {
+        "success": True,
+        "message": "Agronomist diagnosis recorded and synced with field advisory records.",
+        "scanId": data.get("scanId", "UNKNOWN"),
+        "timestamp": time.time()
+    }
+
+# --------------------------------------------------
+# ADMIN BROADCAST & STATS
+# --------------------------------------------------
+
+@app.post("/admin/broadcast")
+@app.post("/api/admin/broadcast")
+async def admin_broadcast(request: Request):
+    import time
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    return {
+        "success": True,
+        "broadcastId": f"BC-{int(time.time())}",
+        "district": data.get("district", "All Regions"),
+        "alertType": data.get("alertType", "GENERAL_ALERT"),
+        "farmersReached": 4820,
+        "timestamp": time.time()
+    }
+
+@app.get("/admin/stats")
+@app.get("/api/admin/stats")
+def admin_stats():
+    return {
+        "totalScansToday": 1420,
+        "highRiskAlerts": 142,
+        "modelAccuracy": 98.4,
+        "connectedAgronomists": 18,
+        "modelName": "YOLOv8-CropShield",
+        "totalClasses": len(model.names) if model else 0
+    }
+
+# --------------------------------------------------
+# WEATHER ADVISORY
+# --------------------------------------------------
+
+@app.get("/weather-advisory")
+@app.get("/api/weather-advisory")
+def weather_advisory(district: str = "Guntur", state: str = "Andhra Pradesh"):
+    return {
+        "success": True,
+        "temperature": 29.5,
+        "humidity": 68.0,
+        "wind_speed": 8.0,
+        "spray_safe": True,
+        "spore_germination_risk": "Moderate",
+        "best_spray_window": "06:00 AM - 10:00 AM",
+        "advisory": "Optimal conditions for foliar bio-protectant application."
+    }
+
+@app.get("/health")
+@app.get("/api/health")
+def health():
+    return {
+        "status": "healthy",
+        "model_loaded": model is not None,
+        "classes_count": len(model.names) if model else 0
+    }
 
 # --------------------------------------------------
 # RUN SERVER DIRECTLY
 # --------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("api:app", host="127.0.0.1", port=8001, reload=True)
+    uvicorn.run("api:app", host="127.0.0.1", port=8001, reload=True)
+

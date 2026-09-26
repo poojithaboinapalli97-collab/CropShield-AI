@@ -16,8 +16,13 @@ import {
   Tag,
   Home,
   Sparkles,
+  Sprout,
+  ArrowRight,
+  ShieldAlert,
+  Award,
 } from 'lucide-react';
 import { indianStates, stateDistrictMap } from '../data/indiaLocations';
+import '../styles/AuthPage.css';
 
 export default function AuthPage({ initialRole = 'Farmer' }) {
   const navigate = useNavigate();
@@ -54,7 +59,7 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
     else if (targetRole === 'Admin') navigate('/login/admin');
   };
 
-  // Farmer specific login fields (empty by default so user enters their own data)
+  // Farmer specific login fields
   const [farmerName, setFarmerName] = useState('');
   const [farmerMobile, setFarmerMobile] = useState('');
   const [farmerCrop, setFarmerCrop] = useState('Tomato');
@@ -77,7 +82,6 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPhone, setAdminPhone] = useState('');
   const [adminZones, setAdminZones] = useState('');
-  const [adminPhotoUrl, setAdminPhotoUrl] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
 
   // Common errors
@@ -124,7 +128,6 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
       setAdminEmail('rajeshwar.rao@agri.gov.in');
       setAdminPhone('+91 98480 23456');
       setAdminZones('AP & Telangana Agricultural Surveillance Zones');
-      setAdminPhotoUrl('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80');
       setAdminPassword('demo123');
     }
   };
@@ -144,78 +147,70 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
         return;
       }
 
-      const cleanFarmSize = farmerSize.trim() 
+      const cleanFarmSize = farmerSize.trim()
         ? (farmerSize.toLowerCase().includes('acre') ? farmerSize.trim() : `${farmerSize.trim()} Acres`)
         : (localStorage.getItem('farmerFarmSize') || '5 Acres');
 
       login(farmerName, 'Farmer', {
-        mobile: farmerMobile,
-        crop: farmerCrop,
-        village: farmerVillage.trim() || 'Not specified',
-        district: farmerDistrict || 'Guntur',
+        mobile: farmerMobile.trim() || '+91 98480 12345',
+        crop: farmerCrop || 'Tomato',
         state: farmerState || 'Andhra Pradesh',
+        district: farmerDistrict || 'Guntur',
+        village: farmerVillage.trim() || 'Tadikonda',
         farmSize: cleanFarmSize,
       });
 
-      // Save to localStorage for Farmer Dashboard fallback
-      localStorage.setItem('farmerName', farmerName);
-      localStorage.setItem('selectedVillage', farmerVillage.trim());
-      localStorage.setItem('selectedDistrict', farmerDistrict || 'Guntur');
+      localStorage.setItem('farmerName', farmerName.trim());
+      localStorage.setItem('farmerCrop', farmerCrop || 'Tomato');
       localStorage.setItem('selectedState', farmerState || 'Andhra Pradesh');
+      localStorage.setItem('selectedDistrict', farmerDistrict || 'Guntur');
+      if (farmerVillage.trim()) localStorage.setItem('selectedVillage', farmerVillage.trim());
       localStorage.setItem('farmerFarmSize', cleanFarmSize);
 
       navigate('/dashboard');
-      return;
-    }
-
-    if (loginRole === 'Agronomist') {
+    } else if (loginRole === 'Agronomist') {
       if (!agronomistName.trim()) {
         setLoginError('Please enter Agronomist / Expert Name.');
         return;
       }
       if (!agronomistPassword.trim()) {
-        setLoginError('Please enter your password.');
+        setLoginError('Please enter password.');
         return;
       }
 
       login(agronomistName, 'Agronomist', {
-        kvkStation: agronomistKvk,
+        kvkCenter: agronomistKvk || 'ANGRAU Regional Agricultural Research Station (Guntur)',
       });
       navigate('/expert');
-      return;
-    }
-
-    if (loginRole === 'Admin') {
+    } else if (loginRole === 'Admin') {
       if (!adminName.trim()) {
-        setLoginError('Please enter Directorate Officer Name.');
+        setLoginError('Please enter Official Name.');
         return;
       }
       if (!adminPassword.trim()) {
-        setLoginError('Please enter your password.');
+        setLoginError('Please enter password.');
         return;
       }
 
       login(adminName, 'Admin', {
-        badgeNumber: adminBadge,
-        designation: adminDesignation,
-        department: adminDepartment,
-        email: adminEmail,
-        phone: adminPhone,
-        supervisedZones: adminZones,
-        photoUrl: adminPhotoUrl,
+        badgeId: adminBadge || 'DIR-AGRI-0428',
+        designation: adminDesignation || 'Joint Director of Agriculture',
+        department: adminDepartment || 'Directorate of Plant Protection',
+        email: adminEmail || 'rajeshwar.rao@agri.gov.in',
+        phone: adminPhone || '+91 98480 23456',
+        zones: adminZones || 'National Crop Surveillance Grid',
       });
       navigate('/admin');
-      return;
     }
   };
 
-  // Handle Registration Submit
+  // Handle Register Submit
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
     setRegError('');
 
     if (!regName.trim()) {
-      setRegError('Full Name is required.');
+      setRegError('Please enter your full name.');
       return;
     }
     if (!regPassword.trim()) {
@@ -223,20 +218,17 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
       return;
     }
     if (regPassword !== regConfirmPassword) {
-      setRegError('Confirm password does not match created password.');
+      setRegError('Passwords do not match. Please verify.');
       return;
     }
 
     if (regRole === 'Farmer') {
-      const cleanFarmSize = regFarmSize.trim()
-        ? (regFarmSize.toLowerCase().includes('acre') ? regFarmSize.trim() : `${regFarmSize.trim()} Acres`)
-        : '5 Acres';
-
+      const cleanFarmSize = regFarmSize.trim() || '5 Acres';
       login(regName, 'Farmer', {
         crop: regCrop,
-        village: regVillage.trim() || 'Not specified',
-        district: regDistrict || 'Guntur',
-        state: regState || 'Andhra Pradesh',
+        state: regState,
+        district: regDistrict,
+        village: regVillage,
         farmSize: cleanFarmSize,
       });
       localStorage.setItem('farmerName', regName);
@@ -255,69 +247,96 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
   };
 
   return (
-    <div className="auth-page-container">
+    <div className="auth-fullscreen-container">
+      <div className="auth-card-wrapper">
+        
+        {/* VIBRANT TOP BRAND HEADER */}
+        <div className="auth-colorful-header">
+          <div className="auth-brand-logo-row">
+            <div className="auth-brand-icon-box">
+              <Sprout size={28} className="auth-sprout-icon" />
+            </div>
+            <div className="auth-brand-text-col">
+              <h1 className="auth-brand-title">CropShield <span className="text-gradient-emerald">AI</span></h1>
+              <span className="auth-sih-badge">🌿 AI Precision Agriculture System</span>
+            </div>
+          </div>
+          <p className="auth-brand-tagline">Early Foliar Disease Detection • IPDM Dosage • Outbreak Surveillance</p>
+        </div>
 
-      {/* WHITE BOX 3: MAIN FORM & TABS CARD */}
-      <div className="auth-white-card auth-main-form-card">
-
-        {/* 3-PORTAL DEDICATED SELECTOR HEADER */}
-        <div className="auth-portal-selector-bar">
+        {/* 3-PORTAL VIBRANT ROLE SELECTOR BAR */}
+        <div className="auth-portal-tabs-bar">
           <button
             type="button"
-            className={`portal-select-btn ${loginRole === 'Farmer' ? 'portal-active-farmer' : ''}`}
+            className={`auth-portal-tab-btn ${loginRole === 'Farmer' ? 'portal-tab-farmer-active' : ''}`}
             onClick={() => handleRoleTabChange('Farmer')}
           >
-            <Tractor size={16} />
+            <Tractor size={18} className="tab-icon" />
             <span>🌾 Farmer Portal</span>
           </button>
           <button
             type="button"
-            className={`portal-select-btn ${loginRole === 'Agronomist' ? 'portal-active-expert' : ''}`}
+            className={`auth-portal-tab-btn ${loginRole === 'Agronomist' ? 'portal-tab-expert-active' : ''}`}
             onClick={() => handleRoleTabChange('Agronomist')}
           >
-            <UserCheck size={16} />
+            <UserCheck size={18} className="tab-icon" />
             <span>🔬 Expert / KVK</span>
           </button>
           <button
             type="button"
-            className={`portal-select-btn ${loginRole === 'Admin' ? 'portal-active-admin' : ''}`}
+            className={`auth-portal-tab-btn ${loginRole === 'Admin' ? 'portal-tab-admin-active' : ''}`}
             onClick={() => handleRoleTabChange('Admin')}
           >
-            <ShieldCheck size={16} />
+            <ShieldCheck size={18} className="tab-icon" />
             <span>🛡️ Admin Portal</span>
           </button>
         </div>
 
-        {/* PORTAL ROLE TITLE BANNER */}
-        <div className={`portal-banner-badge ${loginRole === 'Farmer' ? 'banner-farmer' : (loginRole === 'Agronomist' ? 'banner-expert' : 'banner-admin')}`}>
-          {loginRole === 'Farmer' && <span>👨‍🌾 Kisan / Farmer Secure Sign-In Portal</span>}
-          {loginRole === 'Agronomist' && <span>🔬 ICAR / KVK Agricultural Scientist & Pathologist Portal</span>}
-          {loginRole === 'Admin' && <span>🏛️ Agriculture Directorate & Surveillance Command Center</span>}
+        {/* ROLE STATUS BANNER */}
+        <div className={`auth-role-status-banner banner-theme-${loginRole.toLowerCase()}`}>
+          {loginRole === 'Farmer' && (
+            <div className="role-banner-content">
+              <Tractor size={16} />
+              <span>👨‍🌾 Kisan / Farmer Sign-In • Access Crop Scans & Weather Advisory</span>
+            </div>
+          )}
+          {loginRole === 'Agronomist' && (
+            <div className="role-banner-content">
+              <UserCheck size={16} />
+              <span>🔬 ICAR & KVK Scientist Portal • Clinical Image Validation</span>
+            </div>
+          )}
+          {loginRole === 'Admin' && (
+            <div className="role-banner-content">
+              <ShieldCheck size={16} />
+              <span>🏛️ Agricultural Directorate Command & Outbreak Center</span>
+            </div>
+          )}
         </div>
 
-        {/* MODE TOGGLE TABS */}
-        <div className="auth-tabs-header-white">
+        {/* MODE TOGGLE: SIGN IN / CREATE ACCOUNT */}
+        <div className="auth-mode-toggle-bar">
           <button
             type="button"
-            className={`auth-tab-btn-white ${mode === 'login' ? 'active' : ''}`}
+            className={`mode-toggle-btn ${mode === 'login' ? 'mode-active' : ''}`}
             onClick={() => {
               setMode('login');
               setLoginError('');
               setRegError('');
             }}
           >
-            <LogIn size={18} /> Sign In
+            <LogIn size={16} /> Sign In
           </button>
           <button
             type="button"
-            className={`auth-tab-btn-white ${mode === 'register' ? 'active' : ''}`}
+            className={`mode-toggle-btn ${mode === 'register' ? 'mode-active' : ''}`}
             onClick={() => {
               setMode('register');
               setLoginError('');
               setRegError('');
             }}
           >
-            <UserPlus size={18} /> Create Account
+            <UserPlus size={16} /> Create Account
           </button>
         </div>
 
@@ -325,39 +344,38 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
             MODE 1: SIGN IN (LOGIN FORM)
            ========================================================================= */}
         {mode === 'login' && (
-          <div className="auth-form-body">
+          <div className="auth-form-card-body">
             {loginError && (
-              <div className="notice-banner banner-danger mb-12">
-                <AlertTriangle size={16} /> {loginError}
+              <div className="auth-error-alert">
+                <AlertTriangle size={18} />
+                <span>{loginError}</span>
               </div>
             )}
 
-            <form onSubmit={handleLoginSubmit} className="auth-form">
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
-                <button
-                  type="button"
-                  onClick={handleQuickFill}
-                  className="btn-pill-action btn-green-pill"
-                  style={{ padding: '4px 10px', fontSize: '11.5px' }}
-                >
-                  <Sparkles size={12} />
-                  <span>⚡ Quick Fill Demo</span>
-                </button>
-              </div>
+            <div className="auth-quick-fill-row">
+              <button
+                type="button"
+                onClick={handleQuickFill}
+                className="quick-fill-glow-btn"
+              >
+                <Sparkles size={14} className="icon-sparkle" />
+                <span>⚡ Auto Fill Demo ({loginRole})</span>
+              </button>
+            </div>
 
+            <form onSubmit={handleLoginSubmit} className="colorful-auth-form">
               {/* -------------------------------------------------------------
                   A. ROLE: FARMER LOGIN FIELDS
                   ------------------------------------------------------------- */}
               {loginRole === 'Farmer' && (
                 <>
-
-                  <div className="form-group">
-                    <label className="form-label">Farmer / Kisan Name *</label>
-                    <div className="input-with-icon">
-                      <User size={18} className="input-icon" />
+                  <div className="form-group-colorful">
+                    <label className="form-label-colorful">Farmer / Kisan Name *</label>
+                    <div className="input-icon-box">
+                      <User size={18} className="icon-green" />
                       <input
                         type="text"
-                        className="form-input icon-padded"
+                        className="colorful-input"
                         placeholder="Enter your Name (e.g. Boinapalli Poojitha)"
                         value={farmerName}
                         onChange={(e) => setFarmerName(e.target.value)}
@@ -366,36 +384,39 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Kisan Mobile / Registered ID</label>
-                    <div className="input-with-icon">
-                      <Phone size={18} className="input-icon" />
+                  <div className="form-group-colorful">
+                    <label className="form-label-colorful">Kisan Mobile / Registered ID</label>
+                    <div className="input-icon-box">
+                      <Phone size={18} className="icon-green" />
                       <input
                         type="tel"
-                        className="form-input icon-padded"
-                        placeholder="Enter mobile number (e.g. +91 98765 43210)"
+                        className="colorful-input"
+                        placeholder="Enter mobile (e.g. +91 98480 12345)"
                         value={farmerMobile}
                         onChange={(e) => setFarmerMobile(e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Village / Gram Panchayat</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="e.g. Rampur, Kothapalli, Manjri"
-                      value={farmerVillage}
-                      onChange={(e) => setFarmerVillage(e.target.value)}
-                    />
+                  <div className="form-group-colorful">
+                    <label className="form-label-colorful">Village / Gram Panchayat</label>
+                    <div className="input-icon-box">
+                      <MapPin size={18} className="icon-green" />
+                      <input
+                        type="text"
+                        className="colorful-input"
+                        placeholder="e.g. Rampur, Kothapalli, Tadikonda"
+                        value={farmerVillage}
+                        onChange={(e) => setFarmerVillage(e.target.value)}
+                      />
+                    </div>
                   </div>
 
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label className="form-label">Farm State / UT (All India)</label>
+                  <div className="form-grid-2">
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">State / UT (All India)</label>
                       <select
-                        className="form-input"
+                        className="colorful-select"
                         value={farmerState}
                         onChange={(e) => {
                           const newState = e.target.value;
@@ -410,10 +431,10 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                       </select>
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Farm District</label>
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">District</label>
                       <select
-                        className="form-input"
+                        className="colorful-select"
                         value={farmerDistrict}
                         onChange={(e) => setFarmerDistrict(e.target.value)}
                       >
@@ -424,26 +445,26 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label className="form-label">Farm Land Size</label>
+                  <div className="form-grid-2">
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">Farm Land Size</label>
                       <input
                         type="text"
-                        className="form-input"
+                        className="colorful-input"
                         placeholder="e.g. 5 Acres, 10 Bigha"
                         value={farmerSize}
                         onChange={(e) => setFarmerSize(e.target.value)}
                       />
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Password / Kisan PIN *</label>
-                      <div className="input-with-icon">
-                        <Lock size={18} className="input-icon" />
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">Password / Kisan PIN *</label>
+                      <div className="input-icon-box">
+                        <Lock size={18} className="icon-green" />
                         <input
                           type="password"
-                          className="form-input icon-padded"
-                          placeholder="Enter your password or PIN"
+                          className="colorful-input"
+                          placeholder="Enter password or PIN"
                           value={farmerPassword}
                           onChange={(e) => setFarmerPassword(e.target.value)}
                           required
@@ -451,6 +472,11 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                       </div>
                     </div>
                   </div>
+
+                  <button type="submit" className="submit-btn-colorful btn-farmer-theme">
+                    <span>🚀 Login to Farmer Dashboard</span>
+                    <ArrowRight size={18} />
+                  </button>
                 </>
               )}
 
@@ -459,26 +485,13 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                   ------------------------------------------------------------- */}
               {loginRole === 'Agronomist' && (
                 <>
-                  <div className="auth-role-banner banner-agronomist">
-                    <div className="auth-role-banner-head">
-                      <UserCheck size={18} className="text-emerald" />
-                      <span>Agronomist & KVK Scientist Portal</span>
-                      <span className="badge-pill badge-green" style={{ marginLeft: 'auto' }}>
-                        Expert Review
-                      </span>
-                    </div>
-                    <p>
-                      Inspect field crop scans, calibrate AI pathogen severity, verify clinical diagnoses, and issue certified IPDM advisories.
-                    </p>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Agronomist Full Name *</label>
-                    <div className="input-with-icon">
-                      <User size={18} className="input-icon" />
+                  <div className="form-group-colorful">
+                    <label className="form-label-colorful">Agronomist Full Name *</label>
+                    <div className="input-icon-box">
+                      <User size={18} className="icon-blue" />
                       <input
                         type="text"
-                        className="form-input icon-padded"
+                        className="colorful-input"
                         placeholder="e.g. Dr. A. K. Sharma"
                         value={agronomistName}
                         onChange={(e) => setAgronomistName(e.target.value)}
@@ -487,26 +500,27 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">KVK Extension Center / Ag-Station</label>
-                    <div className="input-with-icon">
-                      <MapPin size={18} className="input-icon" />
+                  <div className="form-group-colorful">
+                    <label className="form-label-colorful">KVK Extension Center / Ag-Station</label>
+                    <div className="input-icon-box">
+                      <MapPin size={18} className="icon-blue" />
                       <input
                         type="text"
-                        className="form-input icon-padded"
+                        className="colorful-input"
+                        placeholder="e.g. ANGRAU Regional Agricultural Research Station"
                         value={agronomistKvk}
                         onChange={(e) => setAgronomistKvk(e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Password *</label>
-                    <div className="input-with-icon">
-                      <Lock size={18} className="input-icon" />
+                  <div className="form-group-colorful">
+                    <label className="form-label-colorful">Password *</label>
+                    <div className="input-icon-box">
+                      <Lock size={18} className="icon-blue" />
                       <input
                         type="password"
-                        className="form-input icon-padded"
+                        className="colorful-input"
                         placeholder="Enter password"
                         value={agronomistPassword}
                         onChange={(e) => setAgronomistPassword(e.target.value)}
@@ -514,6 +528,11 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                       />
                     </div>
                   </div>
+
+                  <button type="submit" className="submit-btn-colorful btn-expert-theme">
+                    <span>🔬 Access KVK Validation Portal</span>
+                    <ArrowRight size={18} />
+                  </button>
                 </>
               )}
 
@@ -522,26 +541,13 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                   ------------------------------------------------------------- */}
               {loginRole === 'Admin' && (
                 <>
-                  <div className="auth-role-banner banner-admin">
-                    <div className="auth-role-banner-head">
-                      <ShieldCheck size={18} className="text-sky" />
-                      <span>Agricultural Directorate Command & Outbreak Center</span>
-                      <span className="badge-pill badge-amber" style={{ marginLeft: 'auto' }}>
-                        Command Level
-                      </span>
-                    </div>
-                    <p>
-                      Access national outbreak velocity indices, regional bio-input buffer stocks, and multi-channel mass emergency broadcast tools.
-                    </p>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Directorate Officer Name *</label>
-                    <div className="input-with-icon">
-                      <User size={18} className="input-icon" />
+                  <div className="form-group-colorful">
+                    <label className="form-label-colorful">Directorate Officer Name *</label>
+                    <div className="input-icon-box">
+                      <User size={18} className="icon-amber" />
                       <input
                         type="text"
-                        className="form-input icon-padded"
+                        className="colorful-input"
                         placeholder="e.g. Dr. Rajeshwar Rao, IAS"
                         value={adminName}
                         onChange={(e) => setAdminName(e.target.value)}
@@ -550,14 +556,14 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label className="form-label">Admin / Officer Badge ID *</label>
-                      <div className="input-with-icon">
-                        <Tag size={18} className="input-icon" />
+                  <div className="form-grid-2">
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">Officer Badge ID *</label>
+                      <div className="input-icon-box">
+                        <Tag size={18} className="icon-amber" />
                         <input
                           type="text"
-                          className="form-input icon-padded"
+                          className="colorful-input"
                           placeholder="e.g. DIR-AGRI-0428"
                           value={adminBadge}
                           onChange={(e) => setAdminBadge(e.target.value)}
@@ -566,196 +572,82 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                       </div>
                     </div>
 
-                    <div className="form-group">
-                      <label className="form-label">Designation</label>
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">Designation</label>
                       <input
                         type="text"
-                        className="form-input"
-                        placeholder="e.g. Joint Director of Agriculture"
+                        className="colorful-input"
+                        placeholder="e.g. Joint Director"
                         value={adminDesignation}
                         onChange={(e) => setAdminDesignation(e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Department / Directorate</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="e.g. Directorate of Plant Protection, Quarantine & Storage"
-                      value={adminDepartment}
-                      onChange={(e) => setAdminDepartment(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label className="form-label">Official Email</label>
-                      <input
-                        type="email"
-                        className="form-input"
-                        placeholder="e.g. rajeshwar.rao@agri.gov.in"
-                        value={adminEmail}
-                        onChange={(e) => setAdminEmail(e.target.value)}
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label className="form-label">Contact Phone</label>
-                      <input
-                        type="tel"
-                        className="form-input"
-                        placeholder="e.g. +91 98480 23456"
-                        value={adminPhone}
-                        onChange={(e) => setAdminPhone(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Authorized Surveillance Zones / Jurisdiction</label>
-                    <div className="input-with-icon">
-                      <ShieldCheck size={18} className="input-icon" />
-                      <input
-                        type="text"
-                        className="form-input icon-padded"
-                        placeholder="e.g. 7 Agricultural State Surveillance Zones"
-                        value={adminZones}
-                        onChange={(e) => setAdminZones(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Admin Profile Photo URL</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Enter photo URL"
-                      value={adminPhotoUrl}
-                      onChange={(e) => setAdminPhotoUrl(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Password *</label>
-                    <div className="input-with-icon">
-                      <Lock size={18} className="input-icon" />
+                  <div className="form-group-colorful">
+                    <label className="form-label-colorful">Password *</label>
+                    <div className="input-icon-box">
+                      <Lock size={18} className="icon-amber" />
                       <input
                         type="password"
-                        className="form-input icon-padded"
-                        placeholder="Enter admin password"
+                        className="colorful-input"
+                        placeholder="Enter password"
                         value={adminPassword}
                         onChange={(e) => setAdminPassword(e.target.value)}
                         required
                       />
                     </div>
                   </div>
+
+                  <button type="submit" className="submit-btn-colorful btn-admin-theme">
+                    <span>🛡️ Enter Directorate Command Center</span>
+                    <ArrowRight size={18} />
+                  </button>
                 </>
               )}
-
-
-              {/* SUBMIT BUTTON */}
-              <button type="submit" className="primary-btn-sm auth-submit-btn">
-                <LogIn size={20} />
-                <span>
-                  {loginRole === 'Farmer'
-                    ? 'Login to Farmer Dashboard'
-                    : loginRole === 'Agronomist'
-                    ? 'Login to Expert Validation Portal'
-                    : 'Login to Directorate Command Center'}
-                </span>
-              </button>
-
-              <div className="auth-switch-prompt">
-                <span>New to CropShield AI?</span>
-                <button
-                  type="button"
-                  className="auth-inline-link"
-                  onClick={() => setMode('register')}
-                >
-                  Create an account &rarr;
-                </button>
-              </div>
             </form>
           </div>
         )}
 
         {/* =========================================================================
-            MODE 2: CREATE ACCOUNT (REGISTER FORM)
+            MODE 2: REGISTER (CREATE ACCOUNT FORM)
            ========================================================================= */}
         {mode === 'register' && (
-          <div className="auth-form-body">
-            <div className="auth-form-title-group">
-              <h2>Join CropShield AI</h2>
-              <p>Select your role and create an account for early crop risk forecasting</p>
-            </div>
-
+          <div className="auth-form-card-body">
             {regError && (
-              <div className="notice-banner banner-danger mb-12">
-                <AlertTriangle size={16} /> {regError}
+              <div className="auth-error-alert">
+                <AlertTriangle size={18} />
+                <span>{regError}</span>
               </div>
             )}
 
-            <form onSubmit={handleRegisterSubmit} className="auth-form">
-
-              {/* ROLE SELECTION CARDS */}
-              <div className="form-group">
-                <label className="form-label">Select Your Role *</label>
-                <div className="role-selector-grid">
-                  <div
-                    className={`role-box-card ${regRole === 'Farmer' ? 'selected' : ''}`}
-                    onClick={() => setRegRole('Farmer')}
-                  >
-                    <div className="role-card-header">
-                      <Tractor size={22} className="role-icon" />
-                      {regRole === 'Farmer' && (
-                        <CheckCircle2 size={16} className="role-check-icon" />
-                      )}
-                    </div>
-                    <div className="role-card-title">Farmer</div>
-                    <div className="role-card-desc">AI Scan & Dashboard</div>
-                  </div>
-
-                  <div
-                    className={`role-box-card ${regRole === 'Agronomist' ? 'selected' : ''}`}
-                    onClick={() => setRegRole('Agronomist')}
-                  >
-                    <div className="role-card-header">
-                      <UserCheck size={22} className="role-icon" />
-                      {regRole === 'Agronomist' && (
-                        <CheckCircle2 size={16} className="role-check-icon" />
-                      )}
-                    </div>
-                    <div className="role-card-title">Agronomist</div>
-                    <div className="role-card-desc">KVK Clinical Review</div>
-                  </div>
-
-                  <div
-                    className={`role-box-card ${regRole === 'Admin' ? 'selected' : ''}`}
-                    onClick={() => setRegRole('Admin')}
-                  >
-                    <div className="role-card-header">
-                      <ShieldCheck size={22} className="role-icon" />
-                      {regRole === 'Admin' && (
-                        <CheckCircle2 size={16} className="role-check-icon" />
-                      )}
-                    </div>
-                    <div className="role-card-title">Directorate Admin</div>
-                    <div className="role-card-desc">Outbreak Radar & Broadcast</div>
-                  </div>
+            <form onSubmit={handleRegisterSubmit} className="colorful-auth-form">
+              <div className="form-group-colorful">
+                <label className="form-label-colorful">Account Role</label>
+                <div className="role-pill-select-group">
+                  {['Farmer', 'Agronomist', 'Admin'].map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      className={`role-pill-btn ${regRole === r ? 'role-pill-selected' : ''}`}
+                      onClick={() => setRegRole(r)}
+                    >
+                      {r === 'Farmer' && '🌾 Farmer'}
+                      {r === 'Agronomist' && '🔬 Agronomist'}
+                      {r === 'Admin' && '🛡️ Admin'}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Full Name *</label>
-                <div className="input-with-icon">
-                  <User size={18} className="input-icon" />
+              <div className="form-group-colorful">
+                <label className="form-label-colorful">Full Name *</label>
+                <div className="input-icon-box">
+                  <User size={18} className="icon-green" />
                   <input
                     type="text"
-                    className="form-input icon-padded"
-                    placeholder="e.g. Gurpreet Singh"
+                    className="colorful-input"
+                    placeholder="Enter your full name"
                     value={regName}
                     onChange={(e) => setRegName(e.target.value)}
                     required
@@ -765,47 +657,41 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
 
               {regRole === 'Farmer' && (
                 <>
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label className="form-label">Primary Crop</label>
+                  <div className="form-grid-2">
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">Primary Crop</label>
                       <select
-                        className="form-input"
+                        className="colorful-select"
                         value={regCrop}
                         onChange={(e) => setRegCrop(e.target.value)}
                       >
-                        <option value="Wheat">Wheat</option>
-                        <option value="Rice">Rice</option>
-                        <option value="Cotton">Cotton</option>
-                        <option value="Tomato">Tomato</option>
-                        <option value="Potato">Potato</option>
-                        <option value="Maize">Maize</option>
-                        <option value="Chilli">Chilli / Pepper</option>
+                        {['Tomato', 'Wheat', 'Paddy / Rice', 'Cotton', 'Chilli', 'Potato', 'Maize'].map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
                       </select>
                     </div>
-
-                    <div className="form-group">
-                      <label className="form-label">Village / Gram Panchayat</label>
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">Farm Land Size</label>
                       <input
                         type="text"
-                        className="form-input"
-                        placeholder="e.g. Rampur, Kothapalli"
-                        value={regVillage}
-                        onChange={(e) => setRegVillage(e.target.value)}
+                        className="colorful-input"
+                        placeholder="e.g. 5 Acres"
+                        value={regFarmSize}
+                        onChange={(e) => setRegFarmSize(e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label className="form-label">Farm State / UT (All India)</label>
+                  <div className="form-grid-2">
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">State</label>
                       <select
-                        className="form-input"
+                        className="colorful-select"
                         value={regState}
                         onChange={(e) => {
-                          const newState = e.target.value;
-                          setRegState(newState);
-                          const dists = stateDistrictMap[newState] || [];
-                          setRegDistrict(dists[0] || '');
+                          const ns = e.target.value;
+                          setRegState(ns);
+                          setRegDistrict((stateDistrictMap[ns] || [])[0] || '');
                         }}
                       >
                         {indianStates.map((st) => (
@@ -813,11 +699,10 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                         ))}
                       </select>
                     </div>
-
-                    <div className="form-group">
-                      <label className="form-label">Farm District</label>
+                    <div className="form-group-colorful">
+                      <label className="form-label-colorful">District</label>
                       <select
-                        className="form-input"
+                        className="colorful-select"
                         value={regDistrict}
                         onChange={(e) => setRegDistrict(e.target.value)}
                       >
@@ -827,29 +712,18 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                       </select>
                     </div>
                   </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Farm Land Size (Acres)</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="e.g. 12.5 Acres, 5 Acres"
-                      value={regFarmSize}
-                      onChange={(e) => setRegFarmSize(e.target.value)}
-                    />
-                  </div>
                 </>
               )}
 
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label className="form-label">Create Password *</label>
-                  <div className="input-with-icon">
-                    <Lock size={18} className="input-icon" />
+              <div className="form-grid-2">
+                <div className="form-group-colorful">
+                  <label className="form-label-colorful">Password *</label>
+                  <div className="input-icon-box">
+                    <Lock size={18} className="icon-green" />
                     <input
                       type="password"
-                      className="form-input icon-padded"
-                      placeholder="Min 6 characters"
+                      className="colorful-input"
+                      placeholder="Create password"
                       value={regPassword}
                       onChange={(e) => setRegPassword(e.target.value)}
                       required
@@ -857,14 +731,14 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Confirm Password *</label>
-                  <div className="input-with-icon">
-                    <Lock size={18} className="input-icon" />
+                <div className="form-group-colorful">
+                  <label className="form-label-colorful">Confirm Password *</label>
+                  <div className="input-icon-box">
+                    <Lock size={18} className="icon-green" />
                     <input
                       type="password"
-                      className="form-input icon-padded"
-                      placeholder="Repeat password"
+                      className="colorful-input"
+                      placeholder="Confirm password"
                       value={regConfirmPassword}
                       onChange={(e) => setRegConfirmPassword(e.target.value)}
                       required
@@ -873,26 +747,15 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                 </div>
               </div>
 
-              <button type="submit" className="primary-btn-sm auth-submit-btn">
-                <UserPlus size={20} /> Create {regRole} Account
+              <button type="submit" className="submit-btn-colorful btn-farmer-theme">
+                <span>✨ Create {regRole} Account</span>
+                <ArrowRight size={18} />
               </button>
-
-              <div className="auth-switch-prompt">
-                <span>Already have an account?</span>
-                <button
-                  type="button"
-                  className="auth-inline-link"
-                  onClick={() => setMode('login')}
-                >
-                  Sign in instead &rarr;
-                </button>
-              </div>
             </form>
           </div>
         )}
 
       </div>
-
     </div>
   );
 }
