@@ -29,6 +29,7 @@ import { fetchLiveWeatherTelemetry } from '../services/weatherService';
 import { evaluateWeatherRisk } from '../services/cropRiskEngine';
 import { generateEarlyWarnings } from '../services/earlyWarningService';
 import { mockWeather } from '../data/mockData';
+import '../styles/WeatherRisk.css';
 
 export default function WeatherRisk() {
   const [selectedDistrict, setSelectedDistrict] = useState(() => {

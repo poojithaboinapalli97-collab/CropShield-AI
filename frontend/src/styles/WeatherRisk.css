@@ -1,0 +1,314 @@
+/* ==========================================================================
+   CROPSHIELD AI - WEATHER RISK & AGRO-CLIMATIC ENGINE STYLES
+   ========================================================================== */
+
+.weather-risk-page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+  width: 100%;
+}
+
+/* 1. DISTRICT SELECTOR BAR */
+.district-selector-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+  padding: 16px 24px;
+  border-radius: 16px;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  margin-bottom: 28px;
+}
+
+[data-theme="dark"] .district-selector-bar,
+body.dark-mode .district-selector-bar {
+  background: #111827 !important;
+  border-color: #26334d !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.selector-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .selector-label,
+body.dark-mode .selector-label {
+  color: #f8fafc !important;
+}
+
+.district-select {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #cbd5e1;
+  background: #f8fafc;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  cursor: pointer;
+  min-width: 220px;
+}
+
+[data-theme="dark"] .district-select,
+body.dark-mode .district-select {
+  background: #162035 !important;
+  border-color: #2b3a58 !important;
+  color: #f8fafc !important;
+}
+
+/* 2. 4-METRICS TELEMETRY GRID */
+.metrics-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.w-metric-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1.5px solid #e2e8f0;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s ease;
+}
+
+[data-theme="dark"] .w-metric-card,
+body.dark-mode .w-metric-card {
+  background: #111827 !important;
+  border-color: #26334d !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.w-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.w-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.highlight-temp .w-icon-box {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #d97706;
+}
+
+.highlight-humidity .w-icon-box {
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+  color: #0284c7;
+}
+
+.highlight-rain .w-icon-box {
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+  color: #7c3aed;
+}
+
+.highlight-wind .w-icon-box {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  color: #16a34a;
+}
+
+.w-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  display: block;
+}
+
+[data-theme="dark"] .w-label,
+body.dark-mode .w-label {
+  color: #94a3b8 !important;
+}
+
+.w-value {
+  font-family: 'Outfit', var(--font-heading, sans-serif);
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 2px 0;
+}
+
+[data-theme="dark"] .w-value,
+body.dark-mode .w-value {
+  color: #f8fafc !important;
+}
+
+.w-sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  display: block;
+}
+
+/* 3. WHY IS THIS RISKY SECTION */
+.why-risky-section {
+  margin-bottom: 32px;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.section-title-row h2 {
+  font-family: 'Outfit', var(--font-heading, sans-serif);
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .section-title-row h2,
+body.dark-mode .section-title-row h2 {
+  color: #f8fafc !important;
+}
+
+.why-risky-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  padding: 24px 28px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="dark"] .why-risky-card,
+body.dark-mode .why-risky-card {
+  background: #111827 !important;
+  border-color: #26334d !important;
+}
+
+.why-risky-lead {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+[data-theme="dark"] .why-risky-lead,
+body.dark-mode .why-risky-lead {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+.why-risky-highlight {
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+[data-theme="dark"] .why-risky-highlight,
+body.dark-mode .why-risky-highlight {
+  color: #fcd34d !important;
+}
+
+.why-risky-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.why-factor-card {
+  border-radius: 14px;
+  padding: 16px;
+  border: 1.5px solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.factor-danger {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+[data-theme="dark"] .factor-danger,
+body.dark-mode .factor-danger {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.factor-warning {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+[data-theme="dark"] .factor-warning,
+body.dark-mode .factor-warning {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+.factor-ok {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+[data-theme="dark"] .factor-ok,
+body.dark-mode .factor-ok {
+  background: rgba(34, 197, 94, 0.1) !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
+}
+
+.why-factor-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.why-factor-header h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .why-factor-header h4,
+body.dark-mode .why-factor-header h4 {
+  color: #f8fafc !important;
+}
+
+.why-factor-text {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+
+[data-theme="dark"] .why-factor-text,
+body.dark-mode .why-factor-text {
+  color: #94a3b8 !important;
+}
+
+.why-factor-status {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.8);
+  width: fit-content;
+}
+
+[data-theme="dark"] .why-factor-status,
+body.dark-mode .why-factor-status {
+  background: rgba(0, 0, 0, 0.4) !important;
+}
