@@ -1987,57 +1987,7 @@ export default function FarmerDashboard() {
         }}
       />
 
-      {/* ================= MODAL: APMC MANDI & MARKET INTELLIGENCE ================= */}
-      <MandiMarketModal
-        isOpen={showMandiModal}
-        onClose={() => setShowMandiModal(false)}
-        currentCrop={selectedCrop}
-        selectedDistrict={selectedDistrict}
-      />
 
-      {/* ================= MODAL: NOTIFICATION & EARLY WARNING HUB ================= */}
-      <NotificationCenterModal
-        isOpen={showNotifModal}
-        onClose={() => setShowNotifModal(false)}
-      />
-
-      {/* ================= MODAL: KISAN SPRAY TANK & CHEMICAL DOSAGE CALCULATOR ================= */}
-      <KisanSprayCalcModal
-        isOpen={showSprayModal}
-        onClose={() => setShowSprayModal(false)}
-        cropName={selectedCrop}
-        initialChemical=""
-        detectedDisease={latestScan ? latestScan.disease : ''}
-      />
-
-      {/* ================= MODAL: PM KISAN & GOVT SCHEME NAVIGATOR ================= */}
-      <KisanYojanaModal
-        isOpen={showYojanaModal}
-        onClose={() => setShowYojanaModal(false)}
-        userState={selectedState}
-      />
-
-      {/* ================= MODAL: NPK SOIL NUTRIENT & FERTILIZER CALCULATOR ================= */}
-      <KisanFertilizerModal
-        isOpen={showFertilizerModal}
-        onClose={() => setShowFertilizerModal(false)}
-        defaultCrop={selectedCrop}
-      />
-
-      {/* ================= MODAL: CROP CALENDAR & PHENOLOGICAL TIMELINE ================= */}
-      <CropCalendarModal
-        isOpen={showCalendarModal}
-        onClose={() => setShowCalendarModal(false)}
-        currentCrop={selectedCrop}
-      />
-
-      {/* ================= MODAL: NEARBY KRISHI KENDRA & LABS DIRECTORY ================= */}
-      <KisanKendraModal
-        isOpen={showKendraModal}
-        onClose={() => setShowKendraModal(false)}
-        initialState={selectedState}
-        initialDistrict={selectedDistrict}
-      />
 
       {/* ================= ASK AN EXPERT & ANSWERS CONSULTATION MODAL ================= */}
       {showExpertModal && (
