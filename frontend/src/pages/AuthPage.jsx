@@ -22,7 +22,6 @@ import {
   Award,
 } from 'lucide-react';
 import { indianStates, stateDistrictMap } from '../data/indiaLocations';
-import '../styles/AuthPage.css';
 
 export default function AuthPage({ initialRole = 'Farmer' }) {
   const navigate = useNavigate();
@@ -247,96 +246,417 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
   };
 
   return (
-    <div className="auth-fullscreen-container">
-      <div className="auth-card-wrapper">
+    <div className="auth-root-wrapper">
+      <style>{`
+        .auth-root-wrapper {
+          min-height: 100vh;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px 16px;
+          box-sizing: border-box;
+          background: linear-gradient(135deg, rgba(6, 78, 59, 0.88) 0%, rgba(15, 23, 42, 0.92) 50%, rgba(30, 58, 138, 0.88) 100%),
+                      url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=85') center/cover no-repeat fixed;
+          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
+        .auth-main-card {
+          width: 100%;
+          max-width: 480px;
+          background: #ffffff !important;
+          border-radius: 24px;
+          box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+          overflow: hidden;
+          color: #0f172a;
+          box-sizing: border-box;
+        }
+
+        .auth-header-strip {
+          padding: 24px 20px 18px;
+          text-align: center;
+          background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 55%, #ffffff 100%);
+          border-bottom: 1.5px solid #a7f3d0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .auth-logo-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .auth-icon-badge {
+          width: 48px;
+          height: 48px;
+          border-radius: 14px;
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff;
+          box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .auth-brand-text {
+          margin: 0;
+          font-size: 26px;
+          font-weight: 900;
+          color: #0f172a;
+          line-height: 1.1;
+        }
+
+        .auth-tagline {
+          margin: 0;
+          font-size: 12px;
+          color: #475569;
+          font-weight: 600;
+        }
+
+        .auth-portal-selector {
+          display: flex;
+          background: #f1f5f9;
+          padding: 6px;
+          gap: 6px;
+          border-bottom: 1px solid #e2e8f0;
+        }
+
+        .portal-btn {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: 10px 8px;
+          border-radius: 12px;
+          font-size: 12px;
+          font-weight: 800;
+          color: #475569;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .portal-btn:hover {
+          background: rgba(255, 255, 255, 0.8);
+          color: #0f172a;
+        }
+
+        .portal-btn.active-farmer {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+          color: #ffffff !important;
+          box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        }
+
+        .portal-btn.active-expert {
+          background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%) !important;
+          color: #ffffff !important;
+          box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+        }
+
+        .portal-btn.active-admin {
+          background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%) !important;
+          color: #ffffff !important;
+          box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+        }
+
+        .auth-portal-banner {
+          padding: 9px 16px;
+          font-size: 12px;
+          font-weight: 750;
+          text-align: center;
+          border-bottom: 1px solid #e2e8f0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+
+        .auth-portal-banner.bg-farmer {
+          background: #ecfdf5;
+          color: #047857;
+        }
+
+        .auth-portal-banner.bg-expert {
+          background: #e0f2fe;
+          color: #0369a1;
+        }
+
+        .auth-portal-banner.bg-admin {
+          background: #fff7ed;
+          color: #c2410c;
+        }
+
+        .auth-mode-tabs {
+          display: flex;
+          background: #f8fafc;
+          padding: 4px;
+          margin: 14px 20px 0;
+          border-radius: 12px;
+          border: 1px solid #e2e8f0;
+          gap: 6px;
+        }
+
+        .mode-tab {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: 9px 14px;
+          border-radius: 9px;
+          border: none;
+          font-size: 13px;
+          font-weight: 800;
+          color: #64748b;
+          background: transparent;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .mode-tab.active {
+          background: #ffffff;
+          color: #059669;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .auth-body-content {
+          padding: 18px 22px 26px;
+          background: #ffffff;
+        }
+
+        .quick-demo-row {
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 12px;
+        }
+
+        .quick-demo-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          border-radius: 9999px;
+          background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+          border: 1px solid #fcd34d;
+          color: #b45309;
+          font-size: 11.5px;
+          font-weight: 800;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+          transition: all 0.2s ease;
+        }
+
+        .quick-demo-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .form-colorful-stack {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .field-group {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        }
+
+        .field-label {
+          font-size: 12px;
+          font-weight: 800;
+          color: #334155;
+        }
+
+        .input-box {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+
+        .input-box svg {
+          position: absolute;
+          left: 12px;
+          pointer-events: none;
+        }
+
+        .input-field,
+        .select-field {
+          width: 100%;
+          padding: 11px 14px 11px 40px;
+          background: #f8fafc;
+          border: 1.5px solid #cbd5e1;
+          border-radius: 12px;
+          font-size: 13.5px;
+          font-weight: 600;
+          color: #0f172a;
+          outline: none;
+          box-sizing: border-box;
+          transition: all 0.2s ease;
+        }
+
+        .field-group > .input-field,
+        .field-group > .select-field {
+          padding-left: 12px;
+        }
+
+        .input-field:focus,
+        .select-field:focus {
+          background: #ffffff;
+          border-color: #10b981;
+          box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+
+        .grid-2-col {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+
+        .auth-submit-btn {
+          width: 100%;
+          padding: 13px 20px;
+          border-radius: 14px;
+          border: none;
+          font-size: 14.5px;
+          font-weight: 900;
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          cursor: pointer;
+          margin-top: 6px;
+          transition: all 0.2s ease;
+        }
+
+        .submit-farmer {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+        }
+
+        .submit-farmer:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 26px rgba(16, 185, 129, 0.6);
+        }
+
+        .submit-expert {
+          background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%);
+          box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+        }
+
+        .submit-expert:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 26px rgba(2, 132, 199, 0.6);
+        }
+
+        .submit-admin {
+          background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+          box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+        }
+
+        .submit-admin:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 26px rgba(245, 158, 11, 0.6);
+        }
+
+        .auth-error-box {
+          padding: 10px 14px;
+          background: #fef2f2;
+          border: 1px solid #fecaca;
+          color: #dc2626;
+          border-radius: 12px;
+          font-size: 13px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+        }
+      `}</style>
+
+      <div className="auth-main-card">
         
         {/* VIBRANT TOP BRAND HEADER */}
-        <div className="auth-colorful-header">
-          <div className="auth-brand-logo-row">
-            <div className="auth-brand-icon-box">
-              <Sprout size={28} className="auth-sprout-icon" />
+        <div className="auth-header-strip">
+          <div className="auth-logo-row">
+            <div className="auth-icon-badge">
+              <Sprout size={28} />
             </div>
-            <div className="auth-brand-text-col">
-              <h1 className="auth-brand-title">CropShield <span className="text-gradient-emerald">AI</span></h1>
-              <span className="auth-sih-badge">🌿 AI Precision Agriculture System</span>
+            <div style={{ textAlign: 'left' }}>
+              <h1 className="auth-brand-text">CropShield <span style={{ color: '#059669' }}>AI</span></h1>
+              <span style={{ fontSize: '11px', fontWeight: 800, color: '#047857', background: '#dcfce7', padding: '2px 8px', borderRadius: '12px' }}>
+                🌿 AI Precision Agriculture System
+              </span>
             </div>
           </div>
-          <p className="auth-brand-tagline">Early Foliar Disease Detection • IPDM Dosage • Outbreak Surveillance</p>
+          <p className="auth-tagline">Early Foliar Disease Detection • IPDM Dosage • Outbreak Surveillance</p>
         </div>
 
         {/* 3-PORTAL VIBRANT ROLE SELECTOR BAR */}
-        <div className="auth-portal-tabs-bar">
+        <div className="auth-portal-selector">
           <button
             type="button"
-            className={`auth-portal-tab-btn ${loginRole === 'Farmer' ? 'portal-tab-farmer-active' : ''}`}
+            className={`portal-btn ${loginRole === 'Farmer' ? 'active-farmer' : ''}`}
             onClick={() => handleRoleTabChange('Farmer')}
           >
-            <Tractor size={18} className="tab-icon" />
+            <Tractor size={16} />
             <span>🌾 Farmer Portal</span>
           </button>
           <button
             type="button"
-            className={`auth-portal-tab-btn ${loginRole === 'Agronomist' ? 'portal-tab-expert-active' : ''}`}
+            className={`portal-btn ${loginRole === 'Agronomist' ? 'active-expert' : ''}`}
             onClick={() => handleRoleTabChange('Agronomist')}
           >
-            <UserCheck size={18} className="tab-icon" />
+            <UserCheck size={16} />
             <span>🔬 Expert / KVK</span>
           </button>
           <button
             type="button"
-            className={`auth-portal-tab-btn ${loginRole === 'Admin' ? 'portal-tab-admin-active' : ''}`}
+            className={`portal-btn ${loginRole === 'Admin' ? 'active-admin' : ''}`}
             onClick={() => handleRoleTabChange('Admin')}
           >
-            <ShieldCheck size={18} className="tab-icon" />
+            <ShieldCheck size={16} />
             <span>🛡️ Admin Portal</span>
           </button>
         </div>
 
         {/* ROLE STATUS BANNER */}
-        <div className={`auth-role-status-banner banner-theme-${loginRole.toLowerCase()}`}>
-          {loginRole === 'Farmer' && (
-            <div className="role-banner-content">
-              <Tractor size={16} />
-              <span>👨‍🌾 Kisan / Farmer Sign-In • Access Crop Scans & Weather Advisory</span>
-            </div>
-          )}
-          {loginRole === 'Agronomist' && (
-            <div className="role-banner-content">
-              <UserCheck size={16} />
-              <span>🔬 ICAR & KVK Scientist Portal • Clinical Image Validation</span>
-            </div>
-          )}
-          {loginRole === 'Admin' && (
-            <div className="role-banner-content">
-              <ShieldCheck size={16} />
-              <span>🏛️ Agricultural Directorate Command & Outbreak Center</span>
-            </div>
-          )}
+        <div className={`auth-portal-banner ${loginRole === 'Farmer' ? 'bg-farmer' : loginRole === 'Agronomist' ? 'bg-expert' : 'bg-admin'}`}>
+          {loginRole === 'Farmer' && <span>👨‍🌾 Kisan / Farmer Sign-In • Access Crop Scans & Weather Advisory</span>}
+          {loginRole === 'Agronomist' && <span>🔬 ICAR & KVK Scientist Portal • Clinical Image Validation</span>}
+          {loginRole === 'Admin' && <span>🏛️ Agricultural Directorate Command & Outbreak Center</span>}
         </div>
 
         {/* MODE TOGGLE: SIGN IN / CREATE ACCOUNT */}
-        <div className="auth-mode-toggle-bar">
+        <div className="auth-mode-tabs">
           <button
             type="button"
-            className={`mode-toggle-btn ${mode === 'login' ? 'mode-active' : ''}`}
+            className={`mode-tab ${mode === 'login' ? 'active' : ''}`}
             onClick={() => {
               setMode('login');
               setLoginError('');
               setRegError('');
             }}
           >
-            <LogIn size={16} /> Sign In
+            <LogIn size={15} /> Sign In
           </button>
           <button
             type="button"
-            className={`mode-toggle-btn ${mode === 'register' ? 'mode-active' : ''}`}
+            className={`mode-tab ${mode === 'register' ? 'active' : ''}`}
             onClick={() => {
               setMode('register');
               setLoginError('');
               setRegError('');
             }}
           >
-            <UserPlus size={16} /> Create Account
+            <UserPlus size={15} /> Create Account
           </button>
         </div>
 
@@ -344,38 +664,36 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
             MODE 1: SIGN IN (LOGIN FORM)
            ========================================================================= */}
         {mode === 'login' && (
-          <div className="auth-form-card-body">
+          <div className="auth-body-content">
             {loginError && (
-              <div className="auth-error-alert">
-                <AlertTriangle size={18} />
+              <div className="auth-error-box">
+                <AlertTriangle size={16} />
                 <span>{loginError}</span>
               </div>
             )}
 
-            <div className="auth-quick-fill-row">
+            <div className="quick-demo-row">
               <button
                 type="button"
                 onClick={handleQuickFill}
-                className="quick-fill-glow-btn"
+                className="quick-demo-btn"
               >
-                <Sparkles size={14} className="icon-sparkle" />
+                <Sparkles size={13} color="#d97706" />
                 <span>⚡ Auto Fill Demo ({loginRole})</span>
               </button>
             </div>
 
-            <form onSubmit={handleLoginSubmit} className="colorful-auth-form">
-              {/* -------------------------------------------------------------
-                  A. ROLE: FARMER LOGIN FIELDS
-                  ------------------------------------------------------------- */}
+            <form onSubmit={handleLoginSubmit} className="form-colorful-stack">
+              {/* FARMER LOGIN */}
               {loginRole === 'Farmer' && (
                 <>
-                  <div className="form-group-colorful">
-                    <label className="form-label-colorful">Farmer / Kisan Name *</label>
-                    <div className="input-icon-box">
-                      <User size={18} className="icon-green" />
+                  <div className="field-group">
+                    <label className="field-label">Farmer / Kisan Name *</label>
+                    <div className="input-box">
+                      <User size={18} color="#059669" />
                       <input
                         type="text"
-                        className="colorful-input"
+                        className="input-field"
                         placeholder="Enter your Name (e.g. Boinapalli Poojitha)"
                         value={farmerName}
                         onChange={(e) => setFarmerName(e.target.value)}
@@ -384,13 +702,13 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-group-colorful">
-                    <label className="form-label-colorful">Kisan Mobile / Registered ID</label>
-                    <div className="input-icon-box">
-                      <Phone size={18} className="icon-green" />
+                  <div className="field-group">
+                    <label className="field-label">Kisan Mobile / Registered ID</label>
+                    <div className="input-box">
+                      <Phone size={18} color="#059669" />
                       <input
                         type="tel"
-                        className="colorful-input"
+                        className="input-field"
                         placeholder="Enter mobile (e.g. +91 98480 12345)"
                         value={farmerMobile}
                         onChange={(e) => setFarmerMobile(e.target.value)}
@@ -398,13 +716,13 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-group-colorful">
-                    <label className="form-label-colorful">Village / Gram Panchayat</label>
-                    <div className="input-icon-box">
-                      <MapPin size={18} className="icon-green" />
+                  <div className="field-group">
+                    <label className="field-label">Village / Gram Panchayat</label>
+                    <div className="input-box">
+                      <MapPin size={18} color="#059669" />
                       <input
                         type="text"
-                        className="colorful-input"
+                        className="input-field"
                         placeholder="e.g. Rampur, Kothapalli, Tadikonda"
                         value={farmerVillage}
                         onChange={(e) => setFarmerVillage(e.target.value)}
@@ -412,11 +730,11 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-grid-2">
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">State / UT (All India)</label>
+                  <div className="grid-2-col">
+                    <div className="field-group">
+                      <label className="field-label">State / UT</label>
                       <select
-                        className="colorful-select"
+                        className="select-field"
                         value={farmerState}
                         onChange={(e) => {
                           const newState = e.target.value;
@@ -431,10 +749,10 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                       </select>
                     </div>
 
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">District</label>
+                    <div className="field-group">
+                      <label className="field-label">District</label>
                       <select
-                        className="colorful-select"
+                        className="select-field"
                         value={farmerDistrict}
                         onChange={(e) => setFarmerDistrict(e.target.value)}
                       >
@@ -445,26 +763,26 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-grid-2">
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">Farm Land Size</label>
+                  <div className="grid-2-col">
+                    <div className="field-group">
+                      <label className="field-label">Farm Land Size</label>
                       <input
                         type="text"
-                        className="colorful-input"
-                        placeholder="e.g. 5 Acres, 10 Bigha"
+                        className="input-field"
+                        placeholder="e.g. 5 Acres"
                         value={farmerSize}
                         onChange={(e) => setFarmerSize(e.target.value)}
                       />
                     </div>
 
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">Password / Kisan PIN *</label>
-                      <div className="input-icon-box">
-                        <Lock size={18} className="icon-green" />
+                    <div className="field-group">
+                      <label className="field-label">Password / PIN *</label>
+                      <div className="input-box">
+                        <Lock size={18} color="#059669" />
                         <input
                           type="password"
-                          className="colorful-input"
-                          placeholder="Enter password or PIN"
+                          className="input-field"
+                          placeholder="Enter PIN"
                           value={farmerPassword}
                           onChange={(e) => setFarmerPassword(e.target.value)}
                           required
@@ -473,25 +791,23 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <button type="submit" className="submit-btn-colorful btn-farmer-theme">
+                  <button type="submit" className="auth-submit-btn submit-farmer">
                     <span>🚀 Login to Farmer Dashboard</span>
-                    <ArrowRight size={18} />
+                    <ArrowRight size={17} />
                   </button>
                 </>
               )}
 
-              {/* -------------------------------------------------------------
-                  B. ROLE: AGRONOMIST LOGIN FIELDS
-                  ------------------------------------------------------------- */}
+              {/* AGRONOMIST LOGIN */}
               {loginRole === 'Agronomist' && (
                 <>
-                  <div className="form-group-colorful">
-                    <label className="form-label-colorful">Agronomist Full Name *</label>
-                    <div className="input-icon-box">
-                      <User size={18} className="icon-blue" />
+                  <div className="field-group">
+                    <label className="field-label">Agronomist Full Name *</label>
+                    <div className="input-box">
+                      <User size={18} color="#0284c7" />
                       <input
                         type="text"
-                        className="colorful-input"
+                        className="input-field"
                         placeholder="e.g. Dr. A. K. Sharma"
                         value={agronomistName}
                         onChange={(e) => setAgronomistName(e.target.value)}
@@ -500,27 +816,27 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-group-colorful">
-                    <label className="form-label-colorful">KVK Extension Center / Ag-Station</label>
-                    <div className="input-icon-box">
-                      <MapPin size={18} className="icon-blue" />
+                  <div className="field-group">
+                    <label className="field-label">KVK Center / Ag-Station</label>
+                    <div className="input-box">
+                      <MapPin size={18} color="#0284c7" />
                       <input
                         type="text"
-                        className="colorful-input"
-                        placeholder="e.g. ANGRAU Regional Agricultural Research Station"
+                        className="input-field"
+                        placeholder="e.g. Regional Ag-Station Guntur"
                         value={agronomistKvk}
                         onChange={(e) => setAgronomistKvk(e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="form-group-colorful">
-                    <label className="form-label-colorful">Password *</label>
-                    <div className="input-icon-box">
-                      <Lock size={18} className="icon-blue" />
+                  <div className="field-group">
+                    <label className="field-label">Password *</label>
+                    <div className="input-box">
+                      <Lock size={18} color="#0284c7" />
                       <input
                         type="password"
-                        className="colorful-input"
+                        className="input-field"
                         placeholder="Enter password"
                         value={agronomistPassword}
                         onChange={(e) => setAgronomistPassword(e.target.value)}
@@ -529,25 +845,23 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <button type="submit" className="submit-btn-colorful btn-expert-theme">
+                  <button type="submit" className="auth-submit-btn submit-expert">
                     <span>🔬 Access KVK Validation Portal</span>
-                    <ArrowRight size={18} />
+                    <ArrowRight size={17} />
                   </button>
                 </>
               )}
 
-              {/* -------------------------------------------------------------
-                  C. ROLE: ADMIN LOGIN FIELDS
-                  ------------------------------------------------------------- */}
+              {/* ADMIN LOGIN */}
               {loginRole === 'Admin' && (
                 <>
-                  <div className="form-group-colorful">
-                    <label className="form-label-colorful">Directorate Officer Name *</label>
-                    <div className="input-icon-box">
-                      <User size={18} className="icon-amber" />
+                  <div className="field-group">
+                    <label className="field-label">Directorate Officer Name *</label>
+                    <div className="input-box">
+                      <User size={18} color="#d97706" />
                       <input
                         type="text"
-                        className="colorful-input"
+                        className="input-field"
                         placeholder="e.g. Dr. Rajeshwar Rao, IAS"
                         value={adminName}
                         onChange={(e) => setAdminName(e.target.value)}
@@ -556,15 +870,15 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-grid-2">
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">Officer Badge ID *</label>
-                      <div className="input-icon-box">
-                        <Tag size={18} className="icon-amber" />
+                  <div className="grid-2-col">
+                    <div className="field-group">
+                      <label className="field-label">Badge ID *</label>
+                      <div className="input-box">
+                        <Tag size={18} color="#d97706" />
                         <input
                           type="text"
-                          className="colorful-input"
-                          placeholder="e.g. DIR-AGRI-0428"
+                          className="input-field"
+                          placeholder="e.g. DIR-0428"
                           value={adminBadge}
                           onChange={(e) => setAdminBadge(e.target.value)}
                           required
@@ -572,11 +886,11 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                       </div>
                     </div>
 
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">Designation</label>
+                    <div className="field-group">
+                      <label className="field-label">Designation</label>
                       <input
                         type="text"
-                        className="colorful-input"
+                        className="input-field"
                         placeholder="e.g. Joint Director"
                         value={adminDesignation}
                         onChange={(e) => setAdminDesignation(e.target.value)}
@@ -584,13 +898,13 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <div className="form-group-colorful">
-                    <label className="form-label-colorful">Password *</label>
-                    <div className="input-icon-box">
-                      <Lock size={18} className="icon-amber" />
+                  <div className="field-group">
+                    <label className="field-label">Password *</label>
+                    <div className="input-box">
+                      <Lock size={18} color="#d97706" />
                       <input
                         type="password"
-                        className="colorful-input"
+                        className="input-field"
                         placeholder="Enter password"
                         value={adminPassword}
                         onChange={(e) => setAdminPassword(e.target.value)}
@@ -599,9 +913,9 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                     </div>
                   </div>
 
-                  <button type="submit" className="submit-btn-colorful btn-admin-theme">
-                    <span>🛡️ Enter Directorate Command Center</span>
-                    <ArrowRight size={18} />
+                  <button type="submit" className="auth-submit-btn submit-admin">
+                    <span>🛡️ Enter Command Center</span>
+                    <ArrowRight size={17} />
                   </button>
                 </>
               )}
@@ -610,27 +924,37 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
         )}
 
         {/* =========================================================================
-            MODE 2: REGISTER (CREATE ACCOUNT FORM)
+            MODE 2: REGISTER (CREATE ACCOUNT)
            ========================================================================= */}
         {mode === 'register' && (
-          <div className="auth-form-card-body">
+          <div className="auth-body-content">
             {regError && (
-              <div className="auth-error-alert">
-                <AlertTriangle size={18} />
+              <div className="auth-error-box">
+                <AlertTriangle size={16} />
                 <span>{regError}</span>
               </div>
             )}
 
-            <form onSubmit={handleRegisterSubmit} className="colorful-auth-form">
-              <div className="form-group-colorful">
-                <label className="form-label-colorful">Account Role</label>
-                <div className="role-pill-select-group">
+            <form onSubmit={handleRegisterSubmit} className="form-colorful-stack">
+              <div className="field-group">
+                <label className="field-label">Account Role</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
                   {['Farmer', 'Agronomist', 'Admin'].map((r) => (
                     <button
                       key={r}
                       type="button"
-                      className={`role-pill-btn ${regRole === r ? 'role-pill-selected' : ''}`}
                       onClick={() => setRegRole(r)}
+                      style={{
+                        flex: 1,
+                        padding: '8px 10px',
+                        borderRadius: '10px',
+                        border: regRole === r ? '1.5px solid #10b981' : '1.5px solid #cbd5e1',
+                        background: regRole === r ? '#ecfdf5' : '#f8fafc',
+                        color: regRole === r ? '#047857' : '#475569',
+                        fontWeight: 800,
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                      }}
                     >
                       {r === 'Farmer' && '🌾 Farmer'}
                       {r === 'Agronomist' && '🔬 Agronomist'}
@@ -640,13 +964,13 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                 </div>
               </div>
 
-              <div className="form-group-colorful">
-                <label className="form-label-colorful">Full Name *</label>
-                <div className="input-icon-box">
-                  <User size={18} className="icon-green" />
+              <div className="field-group">
+                <label className="field-label">Full Name *</label>
+                <div className="input-box">
+                  <User size={18} color="#059669" />
                   <input
                     type="text"
-                    className="colorful-input"
+                    className="input-field"
                     placeholder="Enter your full name"
                     value={regName}
                     onChange={(e) => setRegName(e.target.value)}
@@ -655,74 +979,14 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                 </div>
               </div>
 
-              {regRole === 'Farmer' && (
-                <>
-                  <div className="form-grid-2">
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">Primary Crop</label>
-                      <select
-                        className="colorful-select"
-                        value={regCrop}
-                        onChange={(e) => setRegCrop(e.target.value)}
-                      >
-                        {['Tomato', 'Wheat', 'Paddy / Rice', 'Cotton', 'Chilli', 'Potato', 'Maize'].map((c) => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">Farm Land Size</label>
-                      <input
-                        type="text"
-                        className="colorful-input"
-                        placeholder="e.g. 5 Acres"
-                        value={regFarmSize}
-                        onChange={(e) => setRegFarmSize(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-grid-2">
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">State</label>
-                      <select
-                        className="colorful-select"
-                        value={regState}
-                        onChange={(e) => {
-                          const ns = e.target.value;
-                          setRegState(ns);
-                          setRegDistrict((stateDistrictMap[ns] || [])[0] || '');
-                        }}
-                      >
-                        {indianStates.map((st) => (
-                          <option key={st} value={st}>{st}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="form-group-colorful">
-                      <label className="form-label-colorful">District</label>
-                      <select
-                        className="colorful-select"
-                        value={regDistrict}
-                        onChange={(e) => setRegDistrict(e.target.value)}
-                      >
-                        {(stateDistrictMap[regState] || []).map((dist) => (
-                          <option key={dist} value={dist}>{dist}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              <div className="form-grid-2">
-                <div className="form-group-colorful">
-                  <label className="form-label-colorful">Password *</label>
-                  <div className="input-icon-box">
-                    <Lock size={18} className="icon-green" />
+              <div className="grid-2-col">
+                <div className="field-group">
+                  <label className="field-label">Password *</label>
+                  <div className="input-box">
+                    <Lock size={18} color="#059669" />
                     <input
                       type="password"
-                      className="colorful-input"
+                      className="input-field"
                       placeholder="Create password"
                       value={regPassword}
                       onChange={(e) => setRegPassword(e.target.value)}
@@ -731,14 +995,14 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                   </div>
                 </div>
 
-                <div className="form-group-colorful">
-                  <label className="form-label-colorful">Confirm Password *</label>
-                  <div className="input-icon-box">
-                    <Lock size={18} className="icon-green" />
+                <div className="field-group">
+                  <label className="field-label">Confirm *</label>
+                  <div className="input-box">
+                    <Lock size={18} color="#059669" />
                     <input
                       type="password"
-                      className="colorful-input"
-                      placeholder="Confirm password"
+                      className="input-field"
+                      placeholder="Confirm"
                       value={regConfirmPassword}
                       onChange={(e) => setRegConfirmPassword(e.target.value)}
                       required
@@ -747,9 +1011,9 @@ export default function AuthPage({ initialRole = 'Farmer' }) {
                 </div>
               </div>
 
-              <button type="submit" className="submit-btn-colorful btn-farmer-theme">
+              <button type="submit" className="auth-submit-btn submit-farmer">
                 <span>✨ Create {regRole} Account</span>
-                <ArrowRight size={18} />
+                <ArrowRight size={17} />
               </button>
             </form>
           </div>
