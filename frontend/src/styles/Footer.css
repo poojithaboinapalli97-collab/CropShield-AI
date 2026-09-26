@@ -1,0 +1,275 @@
+/* ==========================================================================
+   CROPSHIELD AI - MODERN VIBRANT FOOTER STYLES
+   ========================================================================== */
+
+.crop-main-footer {
+  background: #0f172a;
+  color: #f8fafc;
+  border-top: 1.5px solid #1e293b;
+  position: relative;
+  overflow: hidden;
+  margin-top: 60px;
+  width: 100%;
+}
+
+[data-theme="dark"] .crop-main-footer,
+body.dark-mode .crop-main-footer {
+  background: #060913 !important;
+  border-top-color: #1a2236 !important;
+}
+
+.footer-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 60px 24px 40px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 40px;
+}
+
+@media (max-width: 1024px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 40px 20px 30px;
+  }
+}
+
+/* 1. COLUMN 1: BRAND */
+.footer-brand-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-brand-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+.footer-brand-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  display: block;
+}
+
+.brand-ai-text {
+  background: linear-gradient(135deg, #34d399, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+}
+
+.footer-sih-tag {
+  font-size: 10px;
+  font-weight: 800;
+  color: #f59e0b;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  display: block;
+}
+
+.footer-tagline-desc {
+  font-size: 14px;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.footer-sub-desc {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.6;
+  max-width: 360px;
+}
+
+.footer-helpline-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  width: fit-content;
+  margin-top: 6px;
+}
+
+.icon-emerald {
+  color: #10b981;
+}
+
+.helpline-lbl {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.helpline-num {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #34d399;
+  letter-spacing: 0.5px;
+}
+
+/* 2. COLUMNS 2 & 3: LINKS */
+.footer-links-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-col-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.footer-col-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 28px;
+  height: 2px;
+  background: #10b981;
+  border-radius: 2px;
+}
+
+.footer-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links-list li a {
+  font-size: 13.5px;
+  color: #94a3b8;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.footer-links-list li a:hover {
+  color: #34d399;
+  transform: translateX(4px);
+}
+
+/* 3. COLUMN 4: ARCHITECTURE BADGES */
+.footer-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-badge-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(51, 65, 85, 0.7);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.footer-badge-item:hover {
+  background: rgba(30, 41, 59, 1);
+  border-color: rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+}
+
+.footer-badge-item strong {
+  display: block;
+  font-size: 13px;
+  color: #f8fafc;
+  font-weight: 700;
+}
+
+.footer-badge-item p {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* 4. FOOTER BOTTOM BAR */
+.footer-bottom-bar {
+  border-top: 1px solid #1e293b;
+  background: #090e1a;
+  padding: 18px 24px;
+}
+
+.footer-bottom-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.copyright-txt {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.copyright-txt strong {
+  color: #cbd5e1;
+}
+
+.footer-bottom-badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bottom-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid #334155;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
