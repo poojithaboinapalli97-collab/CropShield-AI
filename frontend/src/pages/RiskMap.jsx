@@ -122,16 +122,156 @@ export default function RiskMap() {
 
   return (
     <div className="riskmap-page">
-      {/* 1. TOP HEADER & METRIC KPI BOXES */}
-      <div className="riskmap-header-box">
-        <div className="riskmap-title-area">
-          <span className="sih-badge-inline">
+      <style>{`
+        .riskmap-page {
+          max-width: 1400px !important;
+          margin: 0 auto !important;
+          padding: 24px 16px 60px !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+        }
+
+        /* 1. TOP HERO HEADER BOX */
+        .riskmap-hero-box {
+          background: linear-gradient(135deg, #7c2d12 0%, #0f172a 60%, #064e3b 100%) !important;
+          border-radius: 20px !important;
+          padding: 28px 32px !important;
+          margin-bottom: 24px !important;
+          color: #ffffff !important;
+          border: 1px solid rgba(251, 146, 60, 0.35) !important;
+          box-shadow: 0 12px 32px rgba(124, 45, 18, 0.25) !important;
+          display: flex !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          flex-wrap: wrap !important;
+          gap: 16px !important;
+        }
+
+        .riskmap-badge-pill {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 6px !important;
+          padding: 4px 12px !important;
+          border-radius: 20px !important;
+          background: rgba(251, 146, 60, 0.25) !important;
+          border: 1px solid #fb923c !important;
+          color: #fed7aa !important;
+          font-size: 11px !important;
+          font-weight: 800 !important;
+          letter-spacing: 0.8px !important;
+          margin-bottom: 8px !important;
+        }
+
+        .riskmap-box-title {
+          font-family: 'Outfit', sans-serif !important;
+          font-size: 28px !important;
+          font-weight: 800 !important;
+          color: #ffffff !important;
+          margin: 0 0 6px 0 !important;
+          letter-spacing: -0.02em !important;
+        }
+
+        .riskmap-box-subtitle {
+          font-size: 14px !important;
+          color: #cbd5e1 !important;
+          margin: 0 !important;
+          max-width: 720px !important;
+          line-height: 1.5 !important;
+        }
+
+        /* 2. 4-KPI SUMMARY GRID */
+        .riskmap-kpi-summary-grid {
+          display: grid !important;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+          gap: 16px !important;
+          margin-bottom: 24px !important;
+        }
+
+        .risk-kpi-box {
+          background: #ffffff !important;
+          border: 1.5px solid #e2e8f0 !important;
+          border-radius: 16px !important;
+          padding: 18px 20px !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 16px !important;
+          box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+          transition: transform 0.2s ease !important;
+        }
+
+        [data-theme="dark"] .risk-kpi-box,
+        body.dark-mode .risk-kpi-box {
+          background: #111827 !important;
+          border-color: #26334d !important;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .risk-kpi-box:hover {
+          transform: translateY(-2px) !important;
+        }
+
+        .kpi-icon-circle {
+          width: 48px !important;
+          height: 48px !important;
+          border-radius: 12px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          flex-shrink: 0 !important;
+        }
+
+        .kpi-icon-red { background: #fee2e2 !important; color: #dc2626 !important; }
+        .kpi-icon-amber { background: #fef3c7 !important; color: #d97706 !important; }
+        .kpi-icon-green { background: #dcfce7 !important; color: #15803d !important; }
+        .kpi-icon-purple { background: #f3e8ff !important; color: #9333ea !important; }
+
+        .kpi-num-val {
+          font-family: 'Outfit', sans-serif !important;
+          font-size: 20px !important;
+          font-weight: 800 !important;
+          color: #0f172a !important;
+        }
+
+        [data-theme="dark"] .kpi-num-val,
+        body.dark-mode .kpi-num-val {
+          color: #f8fafc !important;
+        }
+
+        .kpi-num-lbl {
+          font-size: 12.5px !important;
+          font-weight: 700 !important;
+          color: #64748b !important;
+        }
+
+        [data-theme="dark"] .kpi-num-lbl,
+        body.dark-mode .kpi-num-lbl {
+          color: #94a3b8 !important;
+        }
+
+        .kpi-num-sub {
+          font-size: 11px !important;
+          color: #94a3b8 !important;
+        }
+      `}</style>
+
+      {/* 1. TOP HERO HEADER BOX */}
+      <div className="riskmap-hero-box">
+        <div>
+          <span className="riskmap-badge-pill">
             <Sparkles size={13} /> GEOSPATIAL SURVEILLANCE & HOTSPOT RADAR
           </span>
-          <h1 className="page-title">Regional Outbreak & Epidemic Surveillance Map</h1>
-          <p className="page-subtitle">
+          <h1 className="riskmap-box-title">Regional Outbreak & Epidemic Surveillance Map</h1>
+          <p className="riskmap-box-subtitle">
             Real-time geospatial intelligence fusing AI vision diagnoses, smart pheromone trap threshold breaches, microclimate IoT telemetry, and 25km containment zones.
           </p>
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <span style={{ background: 'rgba(255,255,255,0.15)', padding: '6px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: '700' }}>
+            📡 25km Spatial Radius
+          </span>
+          <span style={{ background: 'rgba(255,255,255,0.15)', padding: '6px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: '700' }}>
+            🛡️ ICAR Outbreak Protocols
+          </span>
         </div>
       </div>
 

@@ -1,0 +1,168 @@
+/* ==========================================================================
+   CROPSHIELD AI - UNIVERSAL MODAL & DIALOG CARD STYLES
+   ========================================================================== */
+
+.modal-backdrop-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(15, 23, 42, 0.78) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  animation: fadeIn 0.2s ease-out !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content-card {
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 22px !important;
+  box-shadow: 
+    0 24px 60px -12px rgba(15, 23, 42, 0.35),
+    0 12px 24px -6px rgba(15, 23, 42, 0.2) !important;
+  width: 100% !important;
+  max-width: 760px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  padding: 24px 28px !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="dark"] .modal-content-card,
+body.dark-mode .modal-content-card {
+  background: #111827 !important;
+  border-color: #26334d !important;
+  color: #f8fafc !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8) !important;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px) scale(0.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* MODAL HEADER */
+.modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 20px !important;
+  border-bottom: 1.5px solid #f1f5f9 !important;
+}
+
+[data-theme="dark"] .modal-header,
+body.dark-mode .modal-header {
+  border-bottom-color: #1e293b !important;
+}
+
+.modal-close-btn {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 10px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #64748b !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="dark"] .modal-close-btn,
+body.dark-mode .modal-close-btn {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+.modal-close-btn:hover {
+  background: #fee2e2 !important;
+  border-color: #fca5a5 !important;
+  color: #dc2626 !important;
+}
+
+/* MODAL BOX CARDS */
+.modal-box-section {
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  padding: 16px 20px !important;
+  margin-bottom: 16px !important;
+}
+
+[data-theme="dark"] .modal-box-section,
+body.dark-mode .modal-box-section {
+  background: #162035 !important;
+  border-color: #26334d !important;
+}
+
+/* FORM ELEMENTS INSIDE MODALS */
+.modal-form-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.modal-form-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+.modal-form-group label {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+}
+
+[data-theme="dark"] .modal-form-group label,
+body.dark-mode .modal-form-group label {
+  color: #cbd5e1 !important;
+}
+
+.modal-form-group select,
+.modal-form-group input {
+  padding: 9px 12px !important;
+  border-radius: 10px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  outline: none !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="dark"] .modal-form-group select,
+[data-theme="dark"] .modal-form-group input,
+body.dark-mode .modal-form-group select,
+body.dark-mode .modal-form-group input {
+  background: #141c2e !important;
+  border-color: #2b3a58 !important;
+  color: #f8fafc !important;
+}
+
+.modal-form-group select:focus,
+.modal-form-group input:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}

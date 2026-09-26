@@ -14,6 +14,7 @@ import ExpertValidation from './pages/ExpertValidation';
 import AdminDashboard from './pages/AdminDashboard';
 import AuthPage from './pages/AuthPage';
 import './App.css';
+import './styles/Modals.css';
 
 // Guard component that redirects unauthenticated users on first visit to /login
 function ProtectedRoute({ children }) {
